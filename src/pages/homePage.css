@@ -1,0 +1,39 @@
+:root {
+  
+  --hue: 245;
+
+  /* BACKGROUND (60%) - Very dark, low saturation */
+  --color-background: hsl(var(--hue), 10%, 15%);
+
+  /* SURFACE (30%) - The main content cards */
+  --color-surface: hsl(var(--hue), 12%, 22%);
+
+  /* ELEMENT (10%) - The smaller info cards */
+  --color-card: hsl(var(--hue), 15%, 30%);
+  --color-card-hover: hsl(var(--hue), 15%, 35%); /* A slightly lighter hover state */
+
+  /* TEXT */
+  --text-primary: hsl(var(--hue), 20%, 95%); /* A very light, slightly purplish white */
+  --text-secondary: hsl(var(--hue), 10%, 75%); /* A dimmer, grayer purple for labels */
+
+  /* ACCENT (+): A contrasting color for primary actions */
+  --color-accent: hsl(180, 65%, 55%); /* A bright cyan */
+  --color-accent-hover: hsl(180, 65%, 65%);
+}
+
+
+.rotating-square {
+    width: 100px;
+    height: 100px;
+    background-color: blueviolet;
+    margin: 15px
+}
+
+
+.card-showcase {
+  border-radius: 5px;
+  background-color: var(--color-surface);
+  padding: 15px;
+  margin-top: 10px;
+  width: 25vw
+}
