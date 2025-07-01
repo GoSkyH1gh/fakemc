@@ -1,5 +1,6 @@
-function InfoCard({ label, value }) {
+import { motion } from "motion/react"
 
+function InfoCard({ label, value }) {
   return (
     <motion.li
       className='info-card'

@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 function Searchbar({ handleInputChange, inputValue, handleKeyPress }) {
   return (
     <>
@@ -36,4 +38,4 @@ function SearchRow({ onSearch, disabled }) {
   )
 }
 
-export default Searchbar
+export default SearchRow

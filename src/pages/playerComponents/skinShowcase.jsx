@@ -1,3 +1,5 @@
+import { motion } from "motion/react"
+
 function SkinShowcase({ skin_showcase_b64, reloadAnimations }) {
   const initialAnimationState = reloadAnimations ? { scale: 0 } : { scale: 1 };
   return (

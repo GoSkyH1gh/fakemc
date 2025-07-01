@@ -1,3 +1,5 @@
+import { motion } from "motion/react"
+
 function GuildMembers({ guild_members, onGuildMemberClick }) {
   const handleGuildMemberClick = (username) => {
     console.log("searching for "+ username);

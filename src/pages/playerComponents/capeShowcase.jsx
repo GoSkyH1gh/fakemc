@@ -1,3 +1,6 @@
+import { motion } from "motion/react"
+import { useState } from "react";
+
 function CapeShowcase( {cape_showcase_b64, cape_back_b64, has_cape, cape_name, reloadAnimations} ) {
   const defaultCapePath = 'data:image/png;base64,' + cape_showcase_b64;
   const hoveredCapePath = 'data:image/png;base64,' + cape_back_b64;

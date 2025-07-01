@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import './playerPage.css'
 import { easeInOut, motion, transform, AnimatePresence, spring, scale } from "motion/react"
+import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx"
+import HypixelDataDisplay from "./playerComponents/hypixelDataDisplay.jsx"
+import SearchRow from "./playerComponents/searchRow.jsx"
+
 
 export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);

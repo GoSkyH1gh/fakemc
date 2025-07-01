@@ -1,3 +1,5 @@
+import { motion } from "motion/react"
+
 function CopyIcon({ textToCopy }) {
   return (
   <motion.img

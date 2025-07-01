@@ -1,3 +1,8 @@
+import SkinShowcase from "./skinShowcase.jsx"
+import CapeShowcase from "./capeShowcase.jsx"
+import CopyIcon from "./copyIcon.jsx"
+import { motion } from "motion/react"
+
 function MojangDataDisplay({ mojang_response: mojangResponse, reloadAnimations }) {
   return (
     <motion.div

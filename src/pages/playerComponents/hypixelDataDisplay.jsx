@@ -1,3 +1,7 @@
+import InfoCard from "./infoCard.jsx"
+import GuildMembers from "./guildMembers.jsx"
+import { motion } from "motion/react"
+
 function HypixelDataDisplay({ hypixel_response: hypixelResponse, onGuildMemberClick, playerStatus }) {
   return (
   <motion.div
