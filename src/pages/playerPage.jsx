@@ -4,6 +4,7 @@ import { easeInOut, motion, transform, AnimatePresence, spring, scale } from "mo
 import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx"
 import HypixelDataDisplay from "./playerComponents/hypixelDataDisplay.jsx"
 import SearchRow from "./playerComponents/searchRow.jsx"
+import LoadingIndicator from './playerComponents/loadingIndicator.jsx'
 
 
 export function PlayerPage() {

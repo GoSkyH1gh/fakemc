@@ -1,16 +1,35 @@
 import { useState } from "react"
+import { motion } from "motion/react"
 
 function Searchbar({ handleInputChange, inputValue, handleKeyPress }) {
   return (
     <>
       <label className='visually-hidden' htmlFor='search'>searchbar</label>
-      <input type='text' placeholder='search by username or UUID' className='searchbar' name='search' onChange={handleInputChange} value={inputValue} onKeyDown={handleKeyPress} />
+      <motion.input
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        type='text'
+        placeholder='search by username or UUID'
+        className='searchbar'
+        name='search'
+        onChange={handleInputChange}
+        value={inputValue}
+        onKeyDown={handleKeyPress} />
     </>
 )
 }
 
 function SearchButton({ onClick, disabled }) {
-  return <button className='search-button' onClick={onClick} disabled={disabled}>Search</button>
+  return (
+  <motion.button
+    className='search-button'
+    onClick={onClick}
+    disabled={disabled}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, ease: "easeInOut", delay: 0.2 }}>Search</motion.button>
+)
 }
 
 function SearchRow({ onSearch, disabled }) {

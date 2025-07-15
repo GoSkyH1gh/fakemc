@@ -228,3 +228,8 @@ button {
     transform: scale(0.7);
   }
 }
+
+.loading-container {
+  background: var(--color-card);
+  padding: 15px;
+}

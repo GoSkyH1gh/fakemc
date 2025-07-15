@@ -22,10 +22,11 @@ function HypixelDataDisplay({ hypixel_response: hypixelResponse, onGuildMemberCl
       }}
       initial="hidden"
       animate="show">
-      <InfoCard label="Status" value={playerStatus.status}/>
-      <InfoCard label="First seen on" value={hypixelResponse.first_login}/>
-      <InfoCard label="Rank" value={hypixelResponse.player_rank}/>
-      <InfoCard label="Guild" value={hypixelResponse.guild_name || "No guild"}/>
+      <InfoCard label="Status" value={playerStatus.status} />
+      <InfoCard label="First seen on" value={hypixelResponse.first_login} />
+      <InfoCard label="Last seen" value={hypixelResponse.last_login} />
+      <InfoCard label="Rank" value={hypixelResponse.player_rank} />
+      <InfoCard label="Guild" value={hypixelResponse.guild_name || "No guild"} />
     </motion.ul>
     {hypixelResponse.guild_name && (
       <><p>{hypixelResponse.guild_name}'s members: </p><GuildMembers guild_members={hypixelResponse.guild_members} onGuildMemberClick={onGuildMemberClick} /></>
