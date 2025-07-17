@@ -10,7 +10,8 @@ import AdvancedInfoTabs from './playerComponents/advancedInfoTabs.jsx'
 export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);
   const [hypixelData, setHypixelData] = useState(null);
-  const [playerStatus, setPlayerStatus] = useState(null)
+  const [playerStatus, setPlayerStatus] = useState(null);
+  const [wynncraftData, setWynncraftData] = useState(null);
 
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null)
@@ -19,12 +20,14 @@ export function PlayerPage() {
   const fetchDataForPlayer = async (search_term) => {
     setMojangData(null);
     setHypixelData(null);
+    setWynncraftData(null);
     setStatus("loading");
     setError(null);
 
     const mojangUrl = "http://127.0.0.1:8000/v1/players/mojang/";
     const hypixelUrl = "http://127.0.0.1:8000/v1/players/hypixel/";
     const statusUrl = "http://127.0.0.1:8000/v1/players/status/";
+    const wynncraftUrl = "http://127.0.0.1:8000/v1/players/wynncraft/"
 
     try {
       let response = await fetch(mojangUrl + search_term);
@@ -51,6 +54,23 @@ export function PlayerPage() {
       console.log("got hypixel response: ", hypixelResponse);
       setHypixelData(hypixelResponse);
       setStatus("success")
+
+      // wynncraft
+      let wynnResponseRaw = await fetch(wynncraftUrl + mojangResponse.uuid);
+      const wynnResponse = await wynnResponseRaw.json();
+      console.log("got wynncraft response: ", wynnResponse);
+      if (wynnResponseRaw.ok) {
+        setWynncraftData(wynnResponse)
+      }
+      else if (wynnResponseRaw.status === 404) {
+        setWynncraftData('not found')
+      }
+      else {
+        setWynncraftData('not found (server error)');
+        throw new Error('error for Wynncraft data')
+      }
+      
+      
     }
     catch (error) {
       console.error("An error occurred:", error);
@@ -72,7 +92,7 @@ export function PlayerPage() {
       <div>
         <MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
         <QuickInfo hypixel_response={hypixelData} onGuildMemberClick={fetchDataForPlayer} playerStatus={playerStatus} />
-        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer}/>
+        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer} wynncraftData={wynncraftData}/>
       </div>
     )}
   </>
