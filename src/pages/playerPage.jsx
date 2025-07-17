@@ -2,10 +2,10 @@ import { useState } from 'react'
 import './playerPage.css'
 import { easeInOut, motion, transform, AnimatePresence, spring, scale } from "motion/react"
 import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx"
-import HypixelDataDisplay from "./playerComponents/hypixelDataDisplay.jsx"
+import QuickInfo from "./playerComponents/quickInfo.jsx"
 import SearchRow from "./playerComponents/searchRow.jsx"
 import LoadingIndicator from './playerComponents/loadingIndicator.jsx'
-
+import AdvancedInfoTabs from './playerComponents/advancedInfoTabs.jsx'
 
 export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);
@@ -22,9 +22,9 @@ export function PlayerPage() {
     setStatus("loading");
     setError(null);
 
-    const mojangUrl = "http://127.0.0.1:8000/player/";
-    const hypixelUrl = "http://127.0.0.1:8000/hypixel/";
-    const statusUrl = "http://127.0.0.1:8000/status/";
+    const mojangUrl = "http://127.0.0.1:8000/v1/players/mojang/";
+    const hypixelUrl = "http://127.0.0.1:8000/v1/players/hypixel/";
+    const statusUrl = "http://127.0.0.1:8000/v1/players/status/";
 
     try {
       let response = await fetch(mojangUrl + search_term);
@@ -69,8 +69,11 @@ export function PlayerPage() {
 
     {status === 'loadedMojang' && (<div><MojangDataDisplay mojang_response={mojangData} reloadAnimations={true}/></div>)}
     {status === 'success' && (
-      <div><MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
-    <HypixelDataDisplay hypixel_response={hypixelData} onGuildMemberClick={fetchDataForPlayer} playerStatus={playerStatus} /></div>
+      <div>
+        <MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
+        <QuickInfo hypixel_response={hypixelData} onGuildMemberClick={fetchDataForPlayer} playerStatus={playerStatus} />
+        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer}/>
+      </div>
     )}
   </>
   )

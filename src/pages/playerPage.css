@@ -125,7 +125,8 @@ button:hover {
 }
 
 .mojang-data,
-.hypixel-data {
+.hypixel-data,
+.advanced-info-tabs {
   background-color: var(--color-surface);
   padding: 25px;
   border-radius: 5px;
@@ -232,4 +233,9 @@ button {
 .loading-container {
   background: var(--color-card);
   padding: 15px;
+}
+
+.advanced-tabs {
+  display: flex;
+  gap: 15px
 }

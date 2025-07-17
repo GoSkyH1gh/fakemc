@@ -31,7 +31,7 @@ function GuildMembers({ guild_members, onGuildMemberClick }) {
   return (
     <motion.ul
       className='guild-list'
-      variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1, duration: 0.3, delayChildren: 0.9, ease: "easeInOut" } } }}
+      variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1, duration: 0.3, delayChildren: 0, ease: "easeInOut" } } }}
       initial="hidden"
       animate="show">{guildMembersArray}</motion.ul>
   )
