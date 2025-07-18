@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
 import InfoCard from './infoCard'
 import WynncraftCharacters from './wynncraftCharacters'
+import formatISOTimestamp from './formatISOTimestamp'
 
 function WynncraftTabbedData({ wynncraftData }) {
   return (
@@ -9,8 +10,8 @@ function WynncraftTabbedData({ wynncraftData }) {
     <ul className='info-card-list'>
       <InfoCard label='Total playtime' value={wynncraftData.playtime_hours + ' hours'}/>
       <InfoCard label='Rank' value={wynncraftData.rank} />
-      <InfoCard label='First Login' value={wynncraftData.first_login} />
-      <InfoCard label='Last Login' value={wynncraftData.last_login}/>
+      <InfoCard label='First Login' value={formatISOTimestamp(wynncraftData.first_login)} />
+      <InfoCard label='Last Login' value={formatISOTimestamp(wynncraftData.last_login)}/>
     </ul>
     <ul className='info-card-list'>
       <InfoCard label='Guild' value={wynncraftData.guild_name}/>
@@ -24,6 +25,8 @@ function WynncraftTabbedData({ wynncraftData }) {
       <InfoCard label='Raids completed' value={wynncraftData.raids_completed}/>
     </ul>
     <h3>Characters</h3>
+    <p>{wynncraftData.username} has {wynncraftData.characters.length} characters.<br/>
+    Click on a character to expand</p>
     <WynncraftCharacters characterList={wynncraftData.characters}/>
   </>
 )

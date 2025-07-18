@@ -3,7 +3,7 @@ import { useState } from 'react'
 import GuildMembers from './guildMembers';
 import WynncraftTabbedData from './wynncraftTabbedData';
 
-function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData }) {
+function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData, wynncraftStatus }) {
   const [selectedTab, setSelectedTab] = useState('hypixel');
   let tabContents;
   if (selectedTab === 'hypixel') {
@@ -15,7 +15,8 @@ function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData }
   )
   }
   else if (selectedTab === 'wynncraft') {
-    if (wynncraftData === 'not found') {
+    if (wynncraftStatus === 'loaded') {
+      if (wynncraftData === 'not found') {
       tabContents = (<p>Wynncraft data not found for player</p>)
     }
     else if (wynncraftData === 'not found (server error)') {
@@ -24,12 +25,17 @@ function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData }
     else {
       tabContents = <WynncraftTabbedData wynncraftData={wynncraftData}/>
     }
+    }
+    else if (wynncraftStatus === 'loading') {
+      tabContents = <p>Loading Wynncraft data...</p>
+    }
+    
   }
   return (
     <div className='advanced-info-tabs'>
       <div className='advanced-tabs'>
-        <button onClick={(e) => setSelectedTab('hypixel')}>Hypixel</button>
-        <button onClick={(e) => setSelectedTab('wynncraft')}>Wynncraft</button>
+        <button onClick={() => setSelectedTab('hypixel')}>Hypixel</button>
+        <button onClick={() => setSelectedTab('wynncraft')}>Wynncraft</button>
       </div>
       <div>
         {tabContents}

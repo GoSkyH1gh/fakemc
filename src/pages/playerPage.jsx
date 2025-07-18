@@ -13,6 +13,8 @@ export function PlayerPage() {
   const [playerStatus, setPlayerStatus] = useState(null);
   const [wynncraftData, setWynncraftData] = useState(null);
 
+  const [wynncraftStatus, setWynncraftStatus] = useState(null)
+
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null)
   
@@ -23,6 +25,8 @@ export function PlayerPage() {
     setWynncraftData(null);
     setStatus("loading");
     setError(null);
+
+    setWynncraftStatus('loading')
 
     const mojangUrl = "http://127.0.0.1:8000/v1/players/mojang/";
     const hypixelUrl = "http://127.0.0.1:8000/v1/players/hypixel/";
@@ -61,12 +65,15 @@ export function PlayerPage() {
       console.log("got wynncraft response: ", wynnResponse);
       if (wynnResponseRaw.ok) {
         setWynncraftData(wynnResponse)
+        setWynncraftStatus("loaded")
       }
       else if (wynnResponseRaw.status === 404) {
         setWynncraftData('not found')
+        setWynncraftStatus("loaded")
       }
       else {
         setWynncraftData('not found (server error)');
+        setWynncraftStatus("loaded")
         throw new Error('error for Wynncraft data')
       }
       
@@ -76,6 +83,7 @@ export function PlayerPage() {
       console.error("An error occurred:", error);
       setError(error);
       setStatus("error")
+      setWynncraftStatus(null)
     }
   }
   
@@ -92,7 +100,7 @@ export function PlayerPage() {
       <div>
         <MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
         <QuickInfo hypixel_response={hypixelData} onGuildMemberClick={fetchDataForPlayer} playerStatus={playerStatus} />
-        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer} wynncraftData={wynncraftData}/>
+        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer} wynncraftData={wynncraftData} wynncraftStatus={wynncraftStatus}/>
       </div>
     )}
   </>
