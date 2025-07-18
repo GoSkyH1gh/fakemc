@@ -1,5 +1,5 @@
 :root {
-  
+  --wynn-green: #55FF55;
   --hue: 245;
 
   /* BACKGROUND (60%) - Very dark, low saturation */
@@ -22,16 +22,37 @@
 }
 
 .wynncraft-character-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    padding: 0px
+  display: grid;
+  gap: 30px;
+  padding: 0px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  
 }
 
 .wynncraft-character-item {
-    display: block;
-    margin: 0px;
-    padding: 10px;
-    background-color: var(--color-card);
-    border-radius: 5px;
+  display: block;
+  margin: 0px;
+  padding: 10px;
+  background-color: var(--color-card);
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--color-card);
+}
+
+.wynncraft-character-item:hover {
+  border: 1px solid var(--color-accent);
+}
+
+.wynncraft-character-item.expanded {
+  grid-column: 1 / -1;
+}
+
+.wynn-nametag {
+  color: var(--wynn-green);
+}
+
+.profession-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
