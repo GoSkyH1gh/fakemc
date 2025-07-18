@@ -3,7 +3,7 @@ import { useState } from 'react'
 import GuildMembers from './guildMembers';
 import WynncraftTabbedData from './wynncraftTabbedData';
 
-function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData, wynncraftStatus }) {
+function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData, wynncraftStatus, wynncraftGuildData }) {
   const [selectedTab, setSelectedTab] = useState('hypixel');
   let tabContents;
   if (selectedTab === 'hypixel') {
@@ -23,7 +23,7 @@ function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData, 
       tabContents = (<p>Wynncraft data unavailable due to server error</p>)
     }
     else {
-      tabContents = <WynncraftTabbedData wynncraftData={wynncraftData}/>
+      tabContents = <WynncraftTabbedData wynncraftData={wynncraftData} wynncraftGuildData={wynncraftGuildData} onGuildMemberClick={onGuildMemberClick}/>
     }
     }
     else if (wynncraftStatus === 'loading') {

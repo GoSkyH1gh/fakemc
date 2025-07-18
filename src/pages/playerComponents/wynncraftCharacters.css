@@ -41,7 +41,7 @@
 }
 
 .wynncraft-character-item:hover {
-  border: 1px solid var(--color-accent);
+  border: 1px solid var(--wynn-green);
 }
 
 .wynncraft-character-item.expanded {
@@ -55,4 +55,25 @@
 .profession-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.wynn-guild-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 0;
+  
+}
+
+.wynn-guild-member-item:hover {
+  border: 1px solid var(--wynn-green)
+}
+
+.wynn-guild-member-item {
+  display: block;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: var(--color-card);
+  padding: 10px;
+  border: 1px solid var(--color-card);
 }

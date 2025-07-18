@@ -11,9 +11,10 @@ export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);
   const [hypixelData, setHypixelData] = useState(null);
   const [playerStatus, setPlayerStatus] = useState(null);
-  const [wynncraftData, setWynncraftData] = useState(null);
 
+  const [wynncraftData, setWynncraftData] = useState(null);
   const [wynncraftStatus, setWynncraftStatus] = useState(null)
+  const [wynncraftGuildData, setWynncraftGuildData] = useState(null)
 
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null)
@@ -23,15 +24,18 @@ export function PlayerPage() {
     setMojangData(null);
     setHypixelData(null);
     setWynncraftData(null);
+    setWynncraftGuildData(null);
     setStatus("loading");
     setError(null);
+    
 
     setWynncraftStatus('loading')
 
     const mojangUrl = "http://127.0.0.1:8000/v1/players/mojang/";
     const hypixelUrl = "http://127.0.0.1:8000/v1/players/hypixel/";
     const statusUrl = "http://127.0.0.1:8000/v1/players/status/";
-    const wynncraftUrl = "http://127.0.0.1:8000/v1/players/wynncraft/"
+    const wynncraftUrl = "http://127.0.0.1:8000/v1/players/wynncraft/";
+    const wynncraftGuildUrl = "http://127.0.0.1:8000/v1/wynncraft/guilds/";
 
     try {
       let response = await fetch(mojangUrl + search_term);
@@ -49,7 +53,7 @@ export function PlayerPage() {
       // status response
       let statusResponse = await fetch(statusUrl + mojangResponse.uuid);
       const statusJSON = await statusResponse.json();
-      console.log("got status response: ", statusResponse)
+      console.log("got status response: ", statusJSON)
       setPlayerStatus(statusJSON)
       
       // hypixel api
@@ -65,7 +69,20 @@ export function PlayerPage() {
       console.log("got wynncraft response: ", wynnResponse);
       if (wynnResponseRaw.ok) {
         setWynncraftData(wynnResponse)
-        setWynncraftStatus("loaded")
+        setWynncraftStatus("playerloaded")
+        if (wynnResponse.guild_name != null) {
+          let wynnGuildResponseRaw = await fetch(wynncraftGuildUrl + wynnResponse.guild_name);
+          const wynnGuildResponse = await wynnGuildResponseRaw.json();
+          console.log("got wynncraft guild response: ", wynnGuildResponse);
+          setWynncraftGuildData(wynnGuildResponse);
+          setWynncraftStatus("loaded")
+        }
+        else {
+          setWynncraftStatus("loaded")
+          setWynncraftGuildData("no guild")
+          console.log("no guild for searched player")
+        }
+        
       }
       else if (wynnResponseRaw.status === 404) {
         setWynncraftData('not found')
@@ -100,7 +117,12 @@ export function PlayerPage() {
       <div>
         <MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
         <QuickInfo hypixel_response={hypixelData} onGuildMemberClick={fetchDataForPlayer} playerStatus={playerStatus} />
-        <AdvancedInfoTabs hypixelResponse={hypixelData} onGuildMemberClick={fetchDataForPlayer} wynncraftData={wynncraftData} wynncraftStatus={wynncraftStatus}/>
+        <AdvancedInfoTabs
+          hypixelResponse={hypixelData}
+          onGuildMemberClick={fetchDataForPlayer}
+          wynncraftData={wynncraftData}
+          wynncraftStatus={wynncraftStatus}
+          wynncraftGuildData={wynncraftGuildData}/>
       </div>
     )}
   </>
