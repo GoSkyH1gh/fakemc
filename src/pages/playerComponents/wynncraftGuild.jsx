@@ -7,7 +7,7 @@ function WynncraftGuild({ wynncraftGuildData, onGuildMemberClick }) {
     return (
       <motion.li
         className='wynn-guild-member-item'
-        whileHover={{ scale: 1.2 }}
+        whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => onGuildMemberClick(member.username)}>
         <p className='em-text'>{member.username}</p>

@@ -23,6 +23,7 @@ function CharacterDetails({ character }) {
         Opened {character.chests_opened} chests<br/>
         Completed {character.quests_completed} quests
       </p>
+      <h3>Professions</h3>
       <ul className='profession-list'>
         {professionElements}
       </ul>

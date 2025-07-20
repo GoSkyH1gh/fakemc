@@ -4,7 +4,7 @@ import { motion } from "motion/react"
 function Searchbar({ handleInputChange, inputValue, handleKeyPress }) {
   return (
     <>
-      <label className='visually-hidden' htmlFor='search'>searchbar</label>
+      <label className='visually-hidden' htmlFor='search'>Search by username or UUID</label>
       <motion.input
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

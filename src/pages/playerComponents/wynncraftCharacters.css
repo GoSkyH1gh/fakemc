@@ -1,24 +1,5 @@
 :root {
   --wynn-green: #55FF55;
-  --hue: 245;
-
-  /* BACKGROUND (60%) - Very dark, low saturation */
-  --color-background: hsl(var(--hue), 10%, 15%);
-
-  /* SURFACE (30%) - The main content cards */
-  --color-surface: hsl(var(--hue), 12%, 22%);
-
-  /* ELEMENT (10%) - The smaller info cards */
-  --color-card: hsl(var(--hue), 15%, 30%);
-  --color-card-hover: hsl(var(--hue), 15%, 35%); /* A slightly lighter hover state */
-
-  /* TEXT */
-  --text-primary: hsl(var(--hue), 20%, 95%); /* A very light, slightly purplish white */
-  --text-secondary: hsl(var(--hue), 10%, 75%); /* A dimmer, grayer purple for labels */
-
-  /* ACCENT (+): A contrasting color for primary actions */
-  --color-accent: hsl(180, 65%, 55%); /* A bright cyan */
-  --color-accent-hover: hsl(180, 65%, 65%);
 }
 
 .wynncraft-character-list {
@@ -33,15 +14,16 @@
   display: block;
   margin: 0px;
   padding: 10px;
-  background-color: var(--color-card);
+  background-color: var(--color-surfact-layer-2);
   border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--color-card);
+  border: 1px solid var(--color-surfact-layer-2);
 }
 
 .wynncraft-character-item:hover {
-  border: 1px solid var(--wynn-green);
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(2px);
 }
 
 .wynncraft-character-item.expanded {
@@ -55,25 +37,27 @@
 .profession-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0;
+  gap: 15px
 }
 
 .wynn-guild-member-list {
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  padding: 0;
-  
+  padding: 0;  
 }
 
 .wynn-guild-member-item:hover {
-  border: 1px solid var(--wynn-green)
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(2px);
 }
 
 .wynn-guild-member-item {
   display: block;
   cursor: pointer;
   border-radius: 5px;
-  background-color: var(--color-card);
+  background-color: var(--color-surfact-layer-2);
   padding: 10px;
-  border: 1px solid var(--color-card);
+  border: 1px solid var(--color-surfact-layer-2);
 }

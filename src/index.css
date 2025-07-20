@@ -43,9 +43,12 @@ button:focus-visible {
 .sidebar {
   width: 3.5vw;
   min-width: 50px;
-  background-color: rgb(67, 65, 88);
-  height: 100vh;
+  backdrop-filter: blur(100px);
+  background-color: #ccc1;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   position: fixed;
+  border-radius: 15px;
+  margin: 20px;
 }
 
 .sidebar > img {
