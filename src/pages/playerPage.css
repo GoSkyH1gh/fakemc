@@ -1,7 +1,8 @@
-#root {
+.main-content {
   max-width: 1280px;
-  margin: 4vh 10vw 4vh 10vw;
+  margin: 4vh 20vw 4vh 20vw;
   padding: 2rem;
+  min-width: 60vw;
 }
 
 :root {

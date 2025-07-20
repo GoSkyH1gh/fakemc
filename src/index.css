@@ -36,6 +36,35 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.app-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 3.5vw;
+  min-width: 50px;
+  background-color: rgb(67, 65, 88);
+  height: 100vh;
+  position: fixed;
+}
+
+.sidebar > img {
+  transition: transform 0.2s ease, color 0.2 ease;
+  color: #ccc
+}
+
+.sidebar > ul  {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 30px ;
+}
+
+.sidebar > ul > li {
+  display: block;
+  align-self: center;
+}
+
 /*
 h1 {
   font-size: 3.2em;
@@ -57,3 +86,41 @@ h1 {
   }
 }
 */
+
+.icon {
+  font-variation-settings: 
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  transition: transform 0.2s ease, color 0.2s ease;
+  color: #aaa;
+  cursor: pointer;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
