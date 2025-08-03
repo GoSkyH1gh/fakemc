@@ -8,9 +8,11 @@ function WynncraftGuilds() {
   const [status, setStatus] = useState('idle')
   const [guildList, setGuildList] = useState([]);
 
+  const baseUrl = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchGuildList = async () => {
-      const guildListResponseRaw = await fetch('http://127.0.0.1:8000/v1/wynncraft/guild-list')
+      const guildListResponseRaw = await fetch(`${baseUrl}/v1/wynncraft/guild-list`)
       const guildList = await guildListResponseRaw.json()
       setGuildList(guildList)
     };
@@ -18,8 +20,9 @@ function WynncraftGuilds() {
   }, []);
 
   const fetchGuildData = async (searchTerm) => {
+    
     setStatus('loading')
-    const guildDataUrl = 'http://127.0.0.1:8000/v1/wynncraft/guilds/'
+    const guildDataUrl = `${baseUrl}/v1/wynncraft/guilds/`
     setGuildData(null)
     let guildResponseRaw = await fetch(guildDataUrl + searchTerm);
     let guildResponse = await guildResponseRaw.json();

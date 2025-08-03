@@ -31,11 +31,13 @@ export function PlayerPage() {
 
     setWynncraftStatus('loading')
 
-    const mojangUrl = "http://127.0.0.1:8000/v1/players/mojang/";
-    const hypixelUrl = "http://127.0.0.1:8000/v1/players/hypixel/";
-    const statusUrl = "http://127.0.0.1:8000/v1/players/status/";
-    const wynncraftUrl = "http://127.0.0.1:8000/v1/players/wynncraft/";
-    const wynncraftGuildUrl = "http://127.0.0.1:8000/v1/wynncraft/guilds/";
+    const baseUrl = import.meta.env.VITE_API_URL;
+
+    const mojangUrl = `${baseUrl}/v1/players/mojang/`;
+    const hypixelUrl = `${baseUrl}/v1/players/hypixel/`;
+    const statusUrl = `${baseUrl}/v1/players/status/`;
+    const wynncraftUrl = `${baseUrl}/v1/players/wynncraft/`;
+    const wynncraftGuildUrl = `${baseUrl}/v1/wynncraft/guilds/`;
 
     try {
       let response = await fetch(mojangUrl + search_term);

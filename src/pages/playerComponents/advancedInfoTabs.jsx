@@ -32,15 +32,23 @@ function AdvancedInfoTabs({ onGuildMemberClick, hypixelResponse, wynncraftData, 
     
   }
   return (
-    <div className='advanced-info-tabs'>
-      <div className='advanced-tabs'>
-        <button onClick={() => setSelectedTab('hypixel')}>Hypixel</button>
-        <button onClick={() => setSelectedTab('wynncraft')}>Wynncraft</button>
-      </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.4 }}
+      className='advanced-info-tabs'>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.6 }}
+        className='advanced-tabs'>
+        <motion.button onClick={() => setSelectedTab('hypixel')}>Hypixel</motion.button>
+        <motion.button onClick={() => setSelectedTab('wynncraft')}>Wynncraft</motion.button>
+      </motion.div>
       <div>
         {tabContents}
       </div>
-    </div>
+    </motion.div>
   )
 }
 

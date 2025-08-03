@@ -60,7 +60,10 @@ function WynncraftCharacters({ characterList }) {
   })
 
   return (
-    <ul className='wynncraft-character-list'>{mappedCharacters}</ul>
+    <ul
+      className='wynncraft-character-list'>
+      {mappedCharacters}
+    </ul>
   )  
 }
 
