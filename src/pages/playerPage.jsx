@@ -31,7 +31,7 @@ export function PlayerPage() {
 
     setWynncraftStatus('loading')
 
-    const baseUrl = import.meta.env.VITE_API_URL;
+    const baseUrl = import.meta.env.VITE_API_URL ?? 'https://fastapi-fakemc.onrender.com';
 
     const mojangUrl = `${baseUrl}/v1/players/mojang/`;
     const hypixelUrl = `${baseUrl}/v1/players/hypixel/`;
