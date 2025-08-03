@@ -110,11 +110,11 @@ export function PlayerPage() {
   <>
     <SearchRow onSearch={fetchDataForPlayer} disabled={status === 'loading'} /><br />
 
-    {status === 'loading' && (<div />)}
+    {status === 'loading' && (<div><LoadingIndicator /></div>)}
     {status === 'idle' && (<p>Enter a player to search</p>)}
     {status === 'error' && (<div><h3>An error occured</h3><p>{error.message}</p></div>)}
 
-    {status === 'loadedMojang' && (<div><MojangDataDisplay mojang_response={mojangData} reloadAnimations={true}/></div>)}
+    {status === 'loadedMojang' && (<div><MojangDataDisplay mojang_response={mojangData} reloadAnimations={true}/><LoadingIndicator /></div>)}
     {status === 'success' && (
       <div>
         <MojangDataDisplay mojang_response={mojangData} reloadAnimations={false}/>
