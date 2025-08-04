@@ -1,18 +1,11 @@
 import { useState } from "react";
 import "./playerPage.css";
-import {
-  easeInOut,
-  motion,
-  transform,
-  AnimatePresence,
-  spring,
-  scale,
-} from "motion/react";
 import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx";
 import QuickInfo from "./playerComponents/quickInfo.jsx";
 import SearchRow from "./playerComponents/searchRow.jsx";
 import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
 import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
+import SkinView from "./playerComponents/skinViewer.jsx";
 
 export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);
@@ -179,6 +172,7 @@ export function PlayerPage() {
             wynncraftStatus={wynncraftStatus}
             wynncraftGuildData={wynncraftGuildData}
           />
+          <SkinView skinUrl={mojangData.skin_url} capeUrl={mojangData.cape_url}/>
         </div>
       )}
     </>
