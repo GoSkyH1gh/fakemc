@@ -131,10 +131,8 @@ export function PlayerPage() {
       />
       <br />
 
-      {status === "loading" && (
-        <div>
-          <LoadingIndicator />
-        </div>
+      {(status === "loading") && (
+        <LoadingIndicator />
       )}
       {status === "idle" && <p>Enter a player to search</p>}
       {status === "error" && (
@@ -144,21 +142,20 @@ export function PlayerPage() {
         </div>
       )}
 
-      {(status === "loadedMojang" && (hypixelStatus != "playerloaded" && hypixelStatus != "loaded")) && (
+      {(status === "loadedMojang") && (
         <div>
           <MojangDataDisplay
             mojang_response={mojangData}
-            reloadAnimations={true}
           />
-          <LoadingIndicator />
         </div>
       )}
+
+      {(hypixelStatus === "loading" && status === "loadedMojang") && (
+        <LoadingIndicator />
+      )}
+
       {(hypixelStatus === "playerloaded" || hypixelStatus === "loaded") && (
         <div>
-          <MojangDataDisplay
-            mojang_response={mojangData}
-            reloadAnimations={false}
-          />
           <QuickInfo
             hypixel_response={hypixelData}
             playerStatus={playerStatus}
@@ -172,7 +169,6 @@ export function PlayerPage() {
             wynncraftStatus={wynncraftStatus}
             wynncraftGuildData={wynncraftGuildData}
           />
-          <SkinView skinUrl={mojangData.skin_url} capeUrl={mojangData.cape_url}/>
         </div>
       )}
     </>

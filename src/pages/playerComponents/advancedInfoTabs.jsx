@@ -17,7 +17,7 @@ function AdvancedInfoTabs({
   let tabContents;
   if (selectedTab === "hypixel") {
     if (hypixelStatus === "playerloaded") {
-      tabContents = <LoadingIndicator />;
+      tabContents = <><br /><LoadingIndicator /></>;
     }
     if (hypixelStatus === "loaded") {
       if (hypixelResponse.guild_name) {
