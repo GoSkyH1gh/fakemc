@@ -29,6 +29,8 @@ class CacheManager:
             skin_showcase_b64 TEXT,
             cape_front_b64 TEXT,
             cape_back_b64 TEXT,
+            skin_url TEXT,
+            cape_url Text,
             timestamp INTEGER NOT NULL);
         """)
 
@@ -85,7 +87,9 @@ class CacheManager:
                 "skin_showcase_b64": results[4],
                 "cape_front_b64": results[5],
                 "cape_back_b64": results[6],
-                "timestamp": results[7]
+                "skin_url": results[7],
+                "cape_url": results[8],
+                "timestamp": results[9]
             }
         else:
             logger.info(f"No cache found for UUID: {search_term}")
@@ -93,13 +97,14 @@ class CacheManager:
 
     def add_mojang_cache(
             self, uuid: str, username: str, has_cape: bool = False, cape_name: str = None,
-            skin_showcase_b64: str = None, cape_front_b64: str = None, cape_back_b64: str = None
+            skin_showcase_b64: str = None, cape_front_b64: str = None, cape_back_b64: str = None,
+            skin_url: str = None, cape_url: str = None
             ):
         """Add or update Mojang cache data for a given UUID."""
 
         self.cursor.execute(
-            """INSERT OR REPLACE INTO mojang_cache (uuid, username, has_cape, cape_name, skin_showcase_b64, cape_front_b64, cape_back_b64, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%s', 'now'))""", (uuid, username, has_cape, cape_name, skin_showcase_b64, cape_front_b64, cape_back_b64))
+            """INSERT OR REPLACE INTO mojang_cache (uuid, username, has_cape, cape_name, skin_showcase_b64, cape_front_b64, cape_back_b64, skin_url, cape_url, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, strftime('%s', 'now'))""", (uuid, username, has_cape, cape_name, skin_showcase_b64, cape_front_b64, cape_back_b64, skin_url, cape_url))
         self.conn.commit()
     
     def add_hypixel_cache(self, uuid, hypixel_data: dict):

@@ -30,6 +30,8 @@ class DataManager:
         - skin_showcase_b64: base64 encoded string of the player's skin showcase
         - cape_showcase_b64: base64 encoded string of the player's cape showcase
         - cape_back_b64: base64 encoded string of the player's cape back image
+        - skin_url
+        - cape_url
         """
 
         status = "error"
@@ -48,6 +50,8 @@ class DataManager:
                 skin_showcase_b64 = data_from_cache["skin_showcase_b64"]
                 cape_showcase_b64 = data_from_cache["cape_front_b64"]
                 cape_back_b64 = data_from_cache["cape_back_b64"]
+                skin_url = data_from_cache["skin_url"]
+                cape_url = data_from_cache["cape_url"]
                 status = "success"
                 source = "cache"
             except KeyError as e:
@@ -60,7 +64,9 @@ class DataManager:
                     "has_cape": None,
                     "skin_showcase_b64": None,
                     "cape_showcase_b64": None,
-                    "cape_back_b64": None
+                    "cape_back_b64": None,
+                    "skin_url": None,
+                    "cape_url": None
                 }
                 
             logger.debug(f"data from cache: {data_from_cache}")
@@ -70,15 +76,30 @@ class DataManager:
                 mojang_instance = GetMojangAPIData(search_term)
             else:
                 mojang_instance = GetMojangAPIData(None, search_term)
-            formated_username, uuid, has_cape, skin_id, cape_id, lookup_failed, cape_showcase_b64, cape_back_b64, cape_showcase, skin_showcase_b64 = mojang_instance.get_data()
-            if not lookup_failed:
-                logger.info(f"added cache for {formated_username}")
+            player_data = mojang_instance.get_data()
+            if player_data is not None:
+                logger.info(f"added cache for {player_data.username}")
                 status = "success"
                 source = "mojang_api"
+
+                uuid = player_data.uuid
+                formated_username = player_data.username
+                has_cape = player_data.has_cape
+                cape_id = player_data.cape_name
+                skin_showcase_b64 = player_data.skin_showcase_b64
+                cape_showcase_b64 = player_data.cape_front_b64
+                cape_back_b64 = player_data.cape_back_b64
+                skin_url = player_data.skin_url
+                cape_url = player_data.cape_url
+
                 if self.cache_enabled:
-                    self.cache_instance.add_mojang_cache(uuid, formated_username, has_cape, cape_id, skin_showcase_b64, cape_showcase_b64, cape_back_b64)
+                    self.cache_instance.add_mojang_cache(
+                        player_data.uuid, player_data.username, player_data.has_cape, player_data.cape_name,
+                        player_data.skin_showcase_b64, player_data.cape_front_b64, player_data.cape_back_b64,
+                        player_data.skin_url, player_data.cape_url
+                        )
                 else:
-                    logger.info(f"result is valid for {formated_username}, but cache is disabled")
+                    logger.info(f"result is valid for {player_data.username}, but cache is disabled")
             else:
                 logger.info(f"lookup failed for {search_term}, not adding to cache")
                 status = "lookup_failed"
@@ -93,7 +114,9 @@ class DataManager:
             "cape_name": cape_id,
             "skin_showcase_b64": skin_showcase_b64,
             "cape_showcase_b64": cape_showcase_b64,
-            "cape_back_b64": cape_back_b64
+            "cape_back_b64": cape_back_b64,
+            "skin_url": skin_url,
+            "cape_url": cape_url
         }
 
         return response

@@ -4,8 +4,20 @@ import json
 import base64
 import io
 from PIL import Image
-import os
 import logging
+from pydantic import BaseModel
+from typing import Optional
+
+class MojangData(BaseModel):
+    username: str
+    uuid: str
+    has_cape: bool
+    cape_name: Optional[str]
+    skin_url: str
+    cape_url: Optional[str]
+    skin_showcase_b64: str
+    cape_front_b64: Optional[str]
+    cape_back_b64: Optional[str]
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +61,7 @@ class GetMojangAPIData:
         self.cape_url = None
         self.has_cape = None
         self.skin_id = None
-        self.cape_id = None
+        self.cape_name = None
         self.cape_back = None
         self.cape_showcase = None
         self.skin_showcase_b64 = None
@@ -57,10 +69,11 @@ class GetMojangAPIData:
         self.cape_showcase_b64 = None
 
     
-    def get_data(self):
+    def get_data(self) -> Optional[MojangData]:
         """
         master function, gets uuid if not provided and then calls get_skin_data
-        returns case-sensitive username, uuid, has_cape(bool), skin_id, cape_id, cape_showcase(b64), cape_back(b64), cape_showcase(PIL)
+        returns a MojangData object on success
+        returns None on fail
         """
         lookup_failed = False
         if not self.uuid:
@@ -74,8 +87,24 @@ class GetMojangAPIData:
         
         if self.skin_url is not None: # only tries to get skin and cape data if they exist
             self.get_skin_images()
-        return self.username, self.uuid, self.has_cape, self.skin_id, self.cape_id, lookup_failed, self.cape_showcase_b64, self.cape_back_b64, self.cape_showcase, self.skin_showcase_b64
         
+        if lookup_failed:
+            return None
+        
+        player_profile = MojangData(
+            username=self.username,
+            uuid=self.uuid,
+            has_cape=self.has_cape,
+            skin_showcase_b64=self.skin_showcase_b64,
+            cape_name=self.cape_name,
+            skin_url=self.skin_url,
+            cape_url=self.cape_url,
+            cape_front_b64=self.cape_showcase_b64,
+            cape_back_b64=self.cape_back_b64
+            )
+        
+        return player_profile
+
         
     def get_uuid(self) -> bool:
         """
@@ -155,9 +184,6 @@ class GetMojangAPIData:
                 self.skin_showcase.paste(skin_showcase_overlay, paste_area, mask = alpha_mask)
 
                 self.skin_showcase_b64 = pillow_to_b64(self.skin_showcase)
-
-                # Removed image saving
-                # self.store_img(self.skin_showcase, "skin", "showcase")
                 
             except Exception as e:
                 logger.error(f"something went wrong while cropping skin image: {e}")
@@ -193,19 +219,14 @@ class GetMojangAPIData:
             self.cape_showcase_b64 = pillow_to_b64(self.cape_showcase)
             self.cape_back_b64 = pillow_to_b64(self.cape_back)
 
-            # Removed image saving
-            # self.store_img(self.cape_showcase, "cape", "showcase")
-            # self.store_img(full_cape_image, "cape", "full")
-            # self.store_img(self.cape_back, "cape", "back")
-
             raw_cape_data = self.cape_url[-32:]
             try:
                 logger.info(f"trying to access {raw_cape_data}")
-                self.cape_id = CAPE_MAP[raw_cape_data]
-                logger.info(f"Identified {self.cape_id} cape!")
+                self.cape_name = CAPE_MAP[raw_cape_data]
+                logger.info(f"Identified {self.cape_name} cape!")
             except:
                 logger.warning("Cape not regonized")
-                self.cape_id = "Unkown cape"
+                self.cape_name = "Unkown cape"
 
             return self.skin_showcase_b64, self.cape_showcase_b64, self.cape_back_b64
             
@@ -213,51 +234,6 @@ class GetMojangAPIData:
             logger.info(f"no cape for user {self.username}")
 
             return self.skin_showcase_b64, None, None
-
-    # Removed store_img method
-    """
-    def store_img(self, image, type, format) -> None:
-        "
-        stores an image
-        type -> skin / cape
-        format -> full / showcase / back
-        "
-        try:
-            parent_folder = os.path.dirname(__file__)
-            subfolder_filepath = os.path.join(parent_folder, type)
-
-            filename = ""
-            if format == "full":
-                filename += "raw_"
-            if format == "back":
-                filename += "back_"
-
-            if type == "cape":
-                raw_cape_data = self.cape_url[-32:]
-                try:
-                    logger.info(f"trying to access {raw_cape_data}")
-                    self.cape_id = CAPE_MAP[raw_cape_data]
-                    logger.info(f"Identified {self.cape_id} cape!")
-                except:
-                    logger.warning("Cape not regonized")
-                    self.cape_id = raw_cape_data
-                filename += f"{self.cape_id}.png"
-
-
-            elif type == "skin":
-                filename += f"{self.skin_url[-32:]}.png"
-                self.skin_id = self.skin_url[-32:]
-            
-            filepath = os.path.join(subfolder_filepath, filename)
-
-            os.makedirs(subfolder_filepath, exist_ok=True)
-            image.save(filepath) # save once with unique id
-            logger.info(f"image stored at {filepath}")
-            
-            
-        except Exception as e: 
-            logger.error(f"something went wrong in store_img: {e}")
-    """
 
     def get_name(self):
         try:
@@ -281,4 +257,4 @@ class GetMojangAPIData:
         
 if __name__ == "__main__":
     user = GetMojangAPIData("goskyhigh")
-    user.get_data()
+    print(user.get_data())
