@@ -82,6 +82,8 @@ class DataManager:
                 status = "success"
                 source = "mojang_api"
 
+                print(player_data)
+
                 uuid = player_data.uuid
                 formated_username = player_data.username
                 has_cape = player_data.has_cape
@@ -104,6 +106,7 @@ class DataManager:
                 logger.info(f"lookup failed for {search_term}, not adding to cache")
                 status = "lookup_failed"
                 source = "mojang_api"
+                return HTTPException(404, {"message": "player not found"})
         
         response = {
             "status": status,
@@ -269,17 +272,17 @@ class DataManager:
             # Fetch missing or incomplete data from Mojang API
             for uuid in uuids_to_fetch_from_api:
                 mojang_data = self.get_mojang_data(uuid)
+
+                if isinstance(mojang_data, HTTPException): # skip if its an exception
+                    continue
+
                 if mojang_data and mojang_data["status"] == "success":
                     resolved_members[uuid] = {
                         "username": mojang_data["username"],
                         "skin_showcase_b64": mojang_data["skin_showcase_b64"]
                     }
-                else:
-                    # Handle failed lookups, provide default values
-                    resolved_members[uuid] = {
-                        "username": "N/A",
-                        "skin_showcase_b64": None
-                    }
+                else: # also skip if its not successful
+                    continue
 
         # Create the final list of dictionaries, maintaining the original order
         final_list = []

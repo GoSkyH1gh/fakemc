@@ -88,88 +88,96 @@ class GetWynncraftData:
                 detail=f'Wynncraft Player with UUID {dashed_uuid} not found'
             )
 
-        raw_wynn_response.raise_for_status()
-        wynn_response = raw_wynn_response.json()
-        
-        if wynn_response['guild'] is not None:
-            player_guild = wynn_response['guild']['name']
-            guild_prefix = wynn_response['guild']['prefix']
-        else:
-            player_guild = None
-            guild_prefix = None
-        
-        if wynn_response['rank'] != 'Player':
-            player_rank = wynn_response['rank']
-        else:
-            if wynn_response['supportRank'] is not None:
-                player_rank = wynn_response['supportRank']
+        try:
+
+            raw_wynn_response.raise_for_status()
+            wynn_response = raw_wynn_response.json()
+            
+            if wynn_response['guild'] is not None:
+                player_guild = wynn_response['guild']['name']
+                guild_prefix = wynn_response['guild']['prefix']
             else:
-                player_rank = 'Player'
-        
-        characters = wynn_response['characters']
-
-        pydantic_characters = []
-        for character in characters:
-            # creating a ProfessionInfo pydantic instance
-            profession_names = [
-                "fishing", "woodcutting", "mining", "farming", "scribing",
-                "jeweling", "alchemism", "cooking", "weaponsmithing",
-                "tailoring", "woodworking", "armouring"
-            ]
-
-            profession_args = {}
-            # accessing the level for each profession and creating a dict that looks like
-            # {'fishing': '100', 'mining': 33, ...}
-            for profession in profession_names:
-                try:
-                    profession_args[profession] = characters[character]['professions'][profession]['level']
-                except:
-                    profession_args[profession] = 0
-
-            character_professions = ProfessionInfo(**profession_args)
-
-            if characters[character]['deaths'] is None:
-                deaths = 0
+                player_guild = None
+                guild_prefix = None
+            
+            if wynn_response['rank'] != 'Player':
+                player_rank = wynn_response['rank']
             else:
-                deaths = characters[character]['deaths']
+                if wynn_response['supportRank'] is not None:
+                    player_rank = wynn_response['supportRank']
+                else:
+                    player_rank = 'Player'
+            
+            characters = wynn_response['characters']
 
-            modeled_character = CharacterInfo(
-                character_uuid=character,
-                character_class=characters[character]['type'].title(),
-                reskin=characters[character]['reskin'],
-                level=characters[character]['level'],
-                playtime=characters[character]['playtime'],
-                mobs_killed=characters[character]['mobsKilled'],
-                chests_opened=characters[character]['chestsFound'],
-                logins=characters[character]['logins'],
-                deaths=deaths,
-                gamemodes=characters[character]['gamemode'],
-                professions=character_professions,
-                quests_completed=len(characters[character]['quests'])
+            pydantic_characters = []
+            for character in characters:
+                # creating a ProfessionInfo pydantic instance
+                profession_names = [
+                    "fishing", "woodcutting", "mining", "farming", "scribing",
+                    "jeweling", "alchemism", "cooking", "weaponsmithing",
+                    "tailoring", "woodworking", "armouring"
+                ]
+
+                profession_args = {}
+                # accessing the level for each profession and creating a dict that looks like
+                # {'fishing': '100', 'mining': 33, ...}
+                for profession in profession_names:
+                    try:
+                        profession_args[profession] = characters[character]['professions'][profession]['level']
+                    except:
+                        profession_args[profession] = 0
+
+                character_professions = ProfessionInfo(**profession_args)
+
+                if characters[character]['deaths'] is None:
+                    deaths = 0
+                else:
+                    deaths = characters[character]['deaths']
+
+                modeled_character = CharacterInfo(
+                    character_uuid=character,
+                    character_class=characters[character]['type'].title(),
+                    reskin=characters[character]['reskin'],
+                    level=characters[character]['level'],
+                    playtime=characters[character]['playtime'],
+                    mobs_killed=characters[character]['mobsKilled'],
+                    chests_opened=characters[character]['chestsFound'],
+                    logins=characters[character]['logins'],
+                    deaths=deaths,
+                    gamemodes=characters[character]['gamemode'],
+                    professions=character_professions,
+                    quests_completed=len(characters[character]['quests'])
+                )
+
+                pydantic_characters.append(modeled_character)
+
+            
+            player_summary = PlayerSummary(
+                username=wynn_response['username'],
+                uuid=wynn_response['uuid'],
+                online=wynn_response['online'],
+                rank=player_rank,
+                first_login=wynn_response['firstJoin'],
+                last_login=wynn_response['lastJoin'],
+                playtime_hours=wynn_response['playtime'],
+                wars=wynn_response['globalData']['wars'],
+                mobs_killed=wynn_response['globalData']['killedMobs'],
+                chests_opened=wynn_response['globalData']['chestsFound'],
+                dungeons_completed=wynn_response['globalData']['dungeons']['total'],
+                raids_completed=wynn_response['globalData']['raids']['total'],
+                characters=pydantic_characters,
+                guild_name=player_guild,
+                guild_prefix=guild_prefix
+
             )
-
-            pydantic_characters.append(modeled_character)
-
-        
-        player_summary = PlayerSummary(
-            username=wynn_response['username'],
-            uuid=wynn_response['uuid'],
-            online=wynn_response['online'],
-            rank=player_rank,
-            first_login=wynn_response['firstJoin'],
-            last_login=wynn_response['lastJoin'],
-            playtime_hours=wynn_response['playtime'],
-            wars=wynn_response['globalData']['wars'],
-            mobs_killed=wynn_response['globalData']['killedMobs'],
-            chests_opened=wynn_response['globalData']['chestsFound'],
-            dungeons_completed=wynn_response['globalData']['dungeons']['total'],
-            raids_completed=wynn_response['globalData']['raids']['total'],
-            characters=pydantic_characters,
-            guild_name=player_guild,
-            guild_prefix=guild_prefix
-
-        )
-        return player_summary
+            return player_summary
+        except Exception as e:
+            print(f"Something went wrong while proccessing wynncaraft player {dashed_uuid}: {e}")
+            raise HTTPException(
+                status_code=404,
+                detail=f'Wynncraft Player with UUID {dashed_uuid} not found'
+            )
 
 
     def get_guild_data(self, guild_name: str) -> GuildInfo:
@@ -231,7 +239,8 @@ class GetWynncraftData:
 
 
 if __name__ == "__main__":
-    uuid = "3ff2e63ad63045e0b96f57cd0eae708d"
+    uuid = "c1efa28064bc438d9379970fb614f53c"
+    # uuid = "f3659880e6444485a6515d6f66e9360e"
     wynn_instance = GetWynncraftData()
     #wynn_instance.get_guild_list()
     print(wynn_instance.get_player_data(uuid))

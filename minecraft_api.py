@@ -90,18 +90,21 @@ class GetMojangAPIData:
         
         if lookup_failed:
             return None
-        
-        player_profile = MojangData(
-            username=self.username,
-            uuid=self.uuid,
-            has_cape=self.has_cape,
-            skin_showcase_b64=self.skin_showcase_b64,
-            cape_name=self.cape_name,
-            skin_url=self.skin_url,
-            cape_url=self.cape_url,
-            cape_front_b64=self.cape_showcase_b64,
-            cape_back_b64=self.cape_back_b64
-            )
+        try:
+            player_profile = MojangData(
+                username=self.username,
+                uuid=self.uuid,
+                has_cape=self.has_cape,
+                skin_showcase_b64=self.skin_showcase_b64,
+                cape_name=self.cape_name,
+                skin_url=self.skin_url,
+                cape_url=self.cape_url,
+                cape_front_b64=self.cape_showcase_b64,
+                cape_back_b64=self.cape_back_b64
+                )
+        except Exception as e:
+            logger.error(f"Could not build object MojangData: {e}")
+            return None
         
         return player_profile
 
@@ -256,5 +259,5 @@ class GetMojangAPIData:
             return None
         
 if __name__ == "__main__":
-    user = GetMojangAPIData("goskyhigh")
+    user = GetMojangAPIData(None, "d63a3a136e8a43e6918fddc5a1eb6c84")
     print(user.get_data())
