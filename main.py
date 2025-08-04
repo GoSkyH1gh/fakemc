@@ -40,9 +40,16 @@ async def get_hypixel(uuid):
     data_instance = DataManager(hypixel_api_key)
     return data_instance.get_hypixel_data(uuid)
 
+@app.get("/v1/hypixel/guilds/{uuid}")
+async def get_guild(uuid):
+    data_instance = DataManager(hypixel_api_key)
+    return data_instance.get_hypixel_guild_members(uuid)
+
 @app.get("/v1/players/status/{uuid}")
 async def get_status(uuid):
     return await get_online_status(uuid, hypixel_api_key)
+
+# wynncraft endpoints
 
 @app.get('/v1/players/wynncraft/{uuid}')
 async def get_wynncraft(uuid) -> PlayerSummary:

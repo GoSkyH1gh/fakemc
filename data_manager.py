@@ -1,6 +1,7 @@
 from cache_manager import CacheManager
 from hypixel_api import GetHypixelData
 from minecraft_api import GetMojangAPIData
+from fastapi import HTTPException
 from utils import load_base64_to_pillow
 import logging
 import os
@@ -165,11 +166,11 @@ class DataManager:
         Fetches Hypixel data for a given UUID.
         Returns a dictionary with the Hypixel data.
         """
-        hypxiel_data_instance = GetHypixelData(uuid, self.hypixel_api_key, guild_members_to_fetch)
-        first_login, player_rank, last_login, hypixel_request_status = hypxiel_data_instance.get_basic_data()
+        hypixel_data_instance = GetHypixelData(uuid, self.hypixel_api_key, guild_members_to_fetch)
+        first_login, player_rank, last_login, hypixel_request_status = hypixel_data_instance.get_basic_data()
 
         guild_members = []
-        guild_members, guild_name, guild_id = hypxiel_data_instance.get_guild_info()
+        guild_members, guild_name, guild_id = hypixel_data_instance.get_guild_info()
 
         # Prepare data to cache, only store raw uuids
         data_to_cache = {
@@ -187,14 +188,15 @@ class DataManager:
         if hypixel_request_status == "success" and self.cache_enabled:
             self.cache_instance.add_hypixel_cache(uuid, data_to_cache)
 
-        resolved_guild_members = self._resolve_guild_member_names(guild_members)
+        # resolved_guild_members = self._resolve_guild_member_names(guild_members)
+        # "guild_members": resolved_guild_members,
         response = {
             "status": hypixel_request_status,
             "source": "hypixel_api",
             "first_login": first_login,
             "last_login": last_login,
             "player_rank": player_rank,
-            "guild_members": resolved_guild_members,
+            "guild_uuids": guild_members,
             "guild_name": guild_name,
             "guild_id": guild_id
         }
@@ -267,6 +269,22 @@ class DataManager:
             })
 
         return final_list
+
+    def get_hypixel_guild_members(self, uuid):
+        hypixel_data_instance = GetHypixelData(uuid, self.hypixel_api_key)
+
+        guild_members, guild_name, guild_id = hypixel_data_instance.get_guild_info()
+
+        if guild_members:
+            resolved_guild_members = self._resolve_guild_member_names(guild_members)
+            guild_response = {
+                "guild_members": resolved_guild_members,
+                "guild_name": guild_name,
+                "guild_id": guild_id
+            }
+            return guild_response
+        else:
+            return HTTPException(404, {"message": "guild not found"})
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
