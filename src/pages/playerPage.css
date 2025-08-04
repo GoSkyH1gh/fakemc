@@ -238,6 +238,7 @@ button {
 
 .copy-icon {
   padding-left: 10px;
+  cursor: pointer;
 }
 
 .copy-icon-clicked {

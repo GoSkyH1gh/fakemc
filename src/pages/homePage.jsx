@@ -70,7 +70,7 @@ export function HomePage() {
             transition={{ duration: 0.5, ease: "easeInOut", delay: 3 }}><Link to="./player" className='main-explore-button'>Explore players</Link><br /></motion.div>
         </div>
       </div>
-      <footer>Not associated with Mojang or Hypixel.</footer>
+      <footer>Not associated with Mojang, Hypixel or Wynncraft.</footer>
     </>
   )
 }
