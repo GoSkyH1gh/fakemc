@@ -2,7 +2,7 @@ import InfoCard from "./infoCard.jsx"
 import GuildMembers from "./guildMembers.jsx"
 import { motion } from "motion/react"
 
-function QuickInfo({ hypixel_response: hypixelResponse, onGuildMemberClick, playerStatus }) {
+function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
   return (
     <motion.div
       className='hypixel-data'
