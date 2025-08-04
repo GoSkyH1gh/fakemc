@@ -20,15 +20,20 @@ function AdvancedInfoTabs({
       tabContents = <LoadingIndicator />;
     }
     if (hypixelStatus === "loaded") {
-      tabContents = (
-        <>
-          <p>{hypixelResponse.guild_name}'s members: </p>
-          <GuildMembers
-            guild_members={hypixelGuildResponse.guild_members}
-            onGuildMemberClick={onGuildMemberClick}
-          />
-        </>
-      );
+      if (hypixelResponse.guild_name) {
+        tabContents = (
+          <>
+            <p>{hypixelResponse.guild_name}'s members: </p>
+            <GuildMembers
+              guild_members={hypixelGuildResponse.guild_members}
+              onGuildMemberClick={onGuildMemberClick}
+            />
+          </>
+        );
+      }
+      if (!hypixelGuildResponse.guild_name) {
+        tabContents = <p>No more information to show for player</p>;
+      }
     }
   } else if (selectedTab === "wynncraft") {
     if (wynncraftStatus === "loaded") {
