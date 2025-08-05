@@ -82,8 +82,6 @@ class DataManager:
                 status = "success"
                 source = "mojang_api"
 
-                print(player_data)
-
                 uuid = player_data.uuid
                 formated_username = player_data.username
                 has_cape = player_data.has_cape

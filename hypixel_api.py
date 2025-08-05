@@ -27,7 +27,7 @@ class GetHypixelData:
     def get_basic_data(self):
         """
         requires uuid and api key
-        returns first login date (as month/year format) and player rank and last_login_date formatted and request_status 
+        returns first login date (in ISO) and player rank and last_login_date_iso (in ISO) and request_status 
         returns None, None, None, None if player is not found
         """
         payload = {
@@ -45,10 +45,10 @@ class GetHypixelData:
 
             json_player_data = player_data.json()
 
-            first_login_formatted = None
+            first_login_iso = None
             player_rank = None
             last_login_timestamp = None
-            time_since_last_login_formatted = "Unknown"
+            last_login_iso = "Unknown"
 
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 403:
@@ -77,8 +77,7 @@ class GetHypixelData:
         
         try:
             first_login = json_player_data["player"]["firstLogin"] / 1000 # transforms to standard (non milliseconds) UNIX time
-            first_login_formatted = datetime.datetime.fromtimestamp(first_login).strftime("%m/%Y")
-            
+            first_login_iso = datetime.datetime.fromtimestamp(first_login).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
             
         except Exception as e:
             logger.warning(f"something went wrong with first login date: {e}")
@@ -87,24 +86,9 @@ class GetHypixelData:
         
         try:
             last_login_timestamp = json_player_data["player"]["lastLogin"] // 1000
-            
-            time_since_last_login = round(time.time()) - last_login_timestamp
-            print(time_since_last_login)
-            if time_since_last_login < 60:
-                time_since_last_login_formatted = "< 1 minute ago"
-            elif time_since_last_login < 3600: # smaller than an hour
-                time_since_last_login_formatted = f"{time_since_last_login / 60:.0f} minutes ago"
-            elif time_since_last_login < 86400: # smaller than a day
-                time_since_last_login_formatted = f"{time_since_last_login / 3600:.0f} hours ago"
-            elif time_since_last_login < 2629800: # smaller than a month
-                time_since_last_login_formatted = f"{time_since_last_login / 86400:.0f} days ago"
-            elif time_since_last_login < 31536000: # smaller than a year
-                time_since_last_login_formatted = f"{time_since_last_login / 2629800:.0f} months ago"
-            else:
-                time_since_last_login_formatted = f"{time_since_last_login / 31536000:.1f} years ago"
-            print(time_since_last_login_formatted)
+            last_login_iso = datetime.datetime.fromtimestamp(last_login_timestamp).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         except Exception as e:
-            print(f"Last login not available: {e}")
+            logger.warning(f"Last login could not be converted to ISO: {e}")
 
         try:
             player_rank = json_player_data["player"]["rank"]
@@ -114,7 +98,7 @@ class GetHypixelData:
             except KeyError:
                 logger.info("player has no rank")
                 request_status = "success"
-                return first_login_formatted, "No rank", time_since_last_login_formatted, request_status
+                return first_login_iso, "No rank", last_login_iso, request_status
         
         try:
             player_rank_formatted = rank_map[player_rank]
@@ -124,7 +108,7 @@ class GetHypixelData:
             player_rank_formatted = player_rank
             logging.warning(f"rank not identified: {player_rank_formatted}")
             request_status = "success"
-        return first_login_formatted, player_rank_formatted, time_since_last_login_formatted, request_status
+        return first_login_iso, player_rank_formatted, last_login_iso, request_status
         
 
     def get_guild_info(self):
