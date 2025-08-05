@@ -31,7 +31,12 @@
 }
 
 .wynn-nametag {
-  color: var(--wynn-green);
+  /*color: var(--wynn-green);*/
+  font-family: "Google Sans Code", monospace;
+}
+
+.wynn-username {
+  margin-left: 6px;
 }
 
 .profession-list {

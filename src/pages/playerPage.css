@@ -112,6 +112,7 @@ button:hover {
   margin: 0;
   padding: 0 10px;
   font-size: 1.1em;
+  font-family: "Google Sans Code", monospace;
 }
 
 .cape-name-label {
@@ -128,6 +129,7 @@ button:hover {
 .username {
   font-size: 1.4rem;
   margin: 0;
+  font-family: "Google Sans Code", monospace;
 }
 
 .uuid {
@@ -135,6 +137,7 @@ button:hover {
   align-items: center;
   margin: 0 0 15px 0;
   color: var(--text-secondary);
+  font-family: "Google Sans Code", monospace;
 }
 
 .mojang-data,
@@ -194,12 +197,14 @@ button:hover {
 
 .info-card-label {
   color: var(--text-secondary);
-  font-size: 0.9em;
+  font-size: 0.85em;
   margin: 0;
+  font-family: "Google Sans Code", monospace;
 }
 
 .info-card-value {
   font-size: 1.1em;
+  font-family: "Google Sans Code", monospace;
 }
 
 .guild-member-image {

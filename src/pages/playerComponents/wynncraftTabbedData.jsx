@@ -19,7 +19,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData, onGuildMemberC
   }
   return (
   <>
-    <h2 className='wynn-nametag'>{wynncraftData.guild_prefix && ('[' + wynncraftData.guild_prefix + '] ')}{wynncraftData.username}</h2>
+    <h2 className='wynn-nametag'>{wynncraftData.guild_prefix && ('[' + wynncraftData.guild_prefix + ']')}<span className='wynn-username'>{wynncraftData.username}</span></h2>
     <ul className='info-card-list'>
       <InfoCard label='Total playtime' value={wynncraftData.playtime_hours + ' hours'}/>
       <InfoCard label='Rank' value={wynncraftData.rank} />

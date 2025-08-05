@@ -1,6 +1,7 @@
 import InfoCard from "./infoCard.jsx"
 import GuildMembers from "./guildMembers.jsx"
 import { motion } from "motion/react"
+import formatISOTimestamp from './formatISOTimestamp'
 
 function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
   return (
@@ -24,8 +25,8 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
         initial="hidden"
         animate="show">
         <InfoCard label="Status" value={playerStatus.status} />
-        <InfoCard label="First seen on" value={hypixelResponse.first_login} />
-        <InfoCard label="Last seen" value={hypixelResponse.last_login} />
+        <InfoCard label="First seen on" value={formatISOTimestamp(hypixelResponse.first_login)} />
+        <InfoCard label="Last seen" value={formatISOTimestamp(hypixelResponse.last_login)} />
         <InfoCard label="Hypixel rank" value={hypixelResponse.player_rank} />
         <InfoCard label="Hypixel guild" value={hypixelResponse.guild_name || "No guild"} />
       </motion.ul>
