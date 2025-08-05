@@ -5,6 +5,7 @@ from wynncraft_api import GetWynncraftData, PlayerSummary, GuildInfo
 from online_status import get_online_status
 from dotenv import load_dotenv
 from wynn_data_manager import WynnDataManager
+from donut_api import get_donut_stats, DonutPlayerStats
 import os
 
 load_dotenv()
@@ -66,3 +67,8 @@ async def get_wynncraft_guild_list():
     wynn_data_manager = WynnDataManager()
     guild_list = wynn_data_manager.get_guild_list()
     return guild_list
+
+# donutsmp endpoint
+@app.get('/v1/players/donutsmp/{username}')
+async def get_donut(username) -> DonutPlayerStats:
+    return get_donut_stats(username)

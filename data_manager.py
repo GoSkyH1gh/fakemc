@@ -56,18 +56,7 @@ class DataManager:
                 source = "cache"
             except KeyError as e:
                 logger.error(f"KeyError while getting data from cache: {e}")
-                return {
-                    "status": "failed",
-                    "source": "cache",
-                    "uuid": None,
-                    "username": None,
-                    "has_cape": None,
-                    "skin_showcase_b64": None,
-                    "cape_showcase_b64": None,
-                    "cape_back_b64": None,
-                    "skin_url": None,
-                    "cape_url": None
-                }
+                raise HTTPException(404, {"message": "player not found"})
                 
             logger.debug(f"data from cache: {data_from_cache}")
 
@@ -104,7 +93,7 @@ class DataManager:
                 logger.info(f"lookup failed for {search_term}, not adding to cache")
                 status = "lookup_failed"
                 source = "mojang_api"
-                return HTTPException(404, {"message": "player not found"})
+                raise HTTPException(404, {"message": "player not found"})
         
         response = {
             "status": status,

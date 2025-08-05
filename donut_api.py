@@ -1,0 +1,107 @@
+import requests
+from dotenv import load_dotenv
+import os
+from pydantic import BaseModel
+from typing import Optional
+from fastapi import HTTPException
+
+load_dotenv()
+
+donut_api_key = os.getenv("donut_api_key")
+
+class DonutPlayerStats(BaseModel):
+    money: int
+    shards: int
+    kills: int
+    deaths: int
+    playtime_hours: float
+    placed_blocks: int
+    broken_blocks: int
+    mobs_killed: int
+    money_spent: int
+    money_earned: int
+    online: bool
+
+
+def get_donut_stats(username) -> DonutPlayerStats:
+    try:
+        donut_response_raw = requests.get(f"https://api.donutsmp.net/v1/stats/{username}", headers={"Authorization": donut_api_key})
+        donut_response_raw.raise_for_status()
+        donut_response = donut_response_raw.json()
+        
+        online_status = get_donut_status(username)
+
+    except Exception as e:
+        print(f"could not retrieve stats: {e}")
+        raise HTTPException(404, {"message": f"player {username} was not found"})
+    
+    stats_to_convert = {
+        "money": "money",
+        "shards": "shards",
+        "kills": "kills",
+        "deaths": "deaths",
+        "placed_blocks": "placed_blocks",
+        "broken_blocks": "broken_blocks",
+        "mobs_killed": "mobs_killed",
+        "money_spent_on_shop": "money_spent",
+        "money_made_from_sell": "money_earned"
+        }
+    
+    converted_stats = {}
+
+    for stat in stats_to_convert:
+        try:
+            raw_stat = donut_response['result'][stat]
+            converted_stat = int(float(raw_stat))
+            # the reason to float and then int is because money_earned_from_sell
+            # can be a float and that cant be directly converted to an int
+        except Exception as e:
+            print(f"conversion failed for {raw_stat}: {e}")
+            converted_stat = 0 # if conversion fails reset to 0
+
+        converted_stats[stats_to_convert[stat]] = converted_stat
+    
+    try:
+        playtime_miliseconds = int(donut_response['result']['playtime'])
+        playtime_hours = playtime_miliseconds / 3600000
+        playtime_hours = round(playtime_hours, 1)
+    except Exception as e:
+        print(f"could not convert playtime, setting playtime as 0: {e}")
+        playtime_hours = 0
+
+    player_stats = DonutPlayerStats(
+        money=converted_stats['money'],
+        shards=converted_stats['shards'],
+        kills=converted_stats['kills'],
+        deaths=converted_stats['deaths'],
+        playtime_hours=playtime_hours,
+        placed_blocks=converted_stats['placed_blocks'],
+        broken_blocks=converted_stats['broken_blocks'],
+        mobs_killed=converted_stats['mobs_killed'],
+        money_spent=converted_stats['money_spent'],
+        money_earned=converted_stats['money_earned'],
+        online=online_status
+    )
+    return player_stats
+    
+def get_donut_status(username) -> bool:
+    """Returns true if the player is online, false if offline"""
+    # so the donutapi is really dumb it only shows rank if the player is online like who designed this 💀
+    try:
+        donut_status_response = requests.get(f"https://api.donutsmp.net/v1/lookup/{username}", headers={"Authorization": donut_api_key})
+
+        if donut_status_response.status_code == 500: # if the player is offline, the server returns a 500
+            return False
+        
+        donut_status_response.raise_for_status()
+
+        if donut_status_response.json()['result'] is not None:
+            return True
+    except Exception as e:
+        print(f"could not retrieve status: {e}")
+        return False
+    
+
+if __name__ == "__main__":
+    data = get_donut_stats("2b3t")
+    print(data)
