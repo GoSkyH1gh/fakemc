@@ -6,6 +6,7 @@ from online_status import get_online_status
 from dotenv import load_dotenv
 from wynn_data_manager import WynnDataManager
 from donut_api import get_donut_stats, DonutPlayerStats
+from mcci_api import MCCIPlayer, get_mcci_data
 import os
 
 load_dotenv()
@@ -72,3 +73,8 @@ async def get_wynncraft_guild_list():
 @app.get('/v1/players/donutsmp/{username}')
 async def get_donut(username) -> DonutPlayerStats:
     return get_donut_stats(username)
+
+# mcci endpoint
+@app.get('/v1/players/mccisland/{uuid}')
+async def get_mcc_island(uuid) -> MCCIPlayer:
+    return get_mcci_data(uuid)
