@@ -9,6 +9,9 @@ load_dotenv()
 
 donut_api_key = os.getenv("donut_api_key")
 
+if not donut_api_key:
+    raise RuntimeError("Donut API key not set in environment variables.")
+
 class DonutPlayerStats(BaseModel):
     money: int
     shards: int
@@ -24,6 +27,7 @@ class DonutPlayerStats(BaseModel):
 
 
 def get_donut_stats(username) -> DonutPlayerStats:
+    """Returns a DonutPlayerStats object on success, 404 on fail"""
     try:
         donut_response_raw = requests.get(f"https://api.donutsmp.net/v1/stats/{username}", headers={"Authorization": donut_api_key})
         donut_response_raw.raise_for_status()
@@ -56,14 +60,14 @@ def get_donut_stats(username) -> DonutPlayerStats:
             # the reason to float and then int is because money_earned_from_sell
             # can be a float and that cant be directly converted to an int
         except Exception as e:
-            print(f"conversion failed for {raw_stat}: {e}")
+            print(f"conversion failed for {stat}: {e}")
             converted_stat = 0 # if conversion fails reset to 0
 
         converted_stats[stats_to_convert[stat]] = converted_stat
     
     try:
-        playtime_miliseconds = int(donut_response['result']['playtime'])
-        playtime_hours = playtime_miliseconds / 3600000
+        playtime_milliseconds = int(donut_response['result']['playtime'])
+        playtime_hours = playtime_milliseconds / 3600000
         playtime_hours = round(playtime_hours, 1)
     except Exception as e:
         print(f"could not convert playtime, setting playtime as 0: {e}")
