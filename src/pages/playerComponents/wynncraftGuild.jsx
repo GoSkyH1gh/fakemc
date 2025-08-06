@@ -22,10 +22,10 @@ function WynncraftGuild({ wynncraftGuildData, onGuildMemberClick }) {
     <>
       <ul className='info-card-list'>
         <InfoCard label='Level' value={wynncraftGuildData.level}/>
-        <InfoCard label='Wars' value={wynncraftGuildData.wars}/>
-        <InfoCard label='Territories held' value={wynncraftGuildData.territories}/>
+        <InfoCard label='Wars' value={wynncraftGuildData.wars.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
+        <InfoCard label='Territories held' value={wynncraftGuildData.territories.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
         <InfoCard label='Created on' value={formatISOTimestamp(wynncraftGuildData.created)}/>
-        <InfoCard label='Member count' value={wynncraftGuildData.member_count}/>
+        <InfoCard label='Member count' value={wynncraftGuildData.member_count.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
       </ul>
       <p>{wynncraftGuildData.name}'s members</p>
       <ul className='wynn-guild-member-list'>

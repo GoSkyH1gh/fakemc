@@ -5,7 +5,6 @@ import QuickInfo from "./playerComponents/quickInfo.jsx";
 import SearchRow from "./playerComponents/searchRow.jsx";
 import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
 import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
-import SkinView from "./playerComponents/skinViewer.jsx";
 
 export function PlayerPage() {
   const [mojangData, setMojangData] = useState(null);
@@ -19,6 +18,12 @@ export function PlayerPage() {
   const [wynncraftStatus, setWynncraftStatus] = useState(null);
   const [wynncraftGuildData, setWynncraftGuildData] = useState(null);
 
+  const [donutData, setDonutData] = useState(null);
+  const [donutStatus, setDonutStatus] = useState(null);
+
+  const [mcciData, setMcciData] = useState(null);
+  const [mcciStatus, setMcciStatus] = useState(null);
+
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
@@ -31,8 +36,13 @@ export function PlayerPage() {
     setStatus("loading");
     setError(null);
 
+    setDonutData(null);
+    setMcciData(null);
+
     setWynncraftStatus("loading");
     setHypixelStatus("loading");
+    setDonutStatus("loading");
+    setMcciStatus("loading");
 
     const baseUrl =
       import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com";
@@ -43,10 +53,14 @@ export function PlayerPage() {
     const statusUrl = `${baseUrl}/v1/players/status/`;
     const wynncraftUrl = `${baseUrl}/v1/players/wynncraft/`;
     const wynncraftGuildUrl = `${baseUrl}/v1/wynncraft/guilds/`;
+    const donutUrl = `${baseUrl}/v1/players/donutsmp/`;
+    const mcciUrl = `${baseUrl}/v1/players/mccisland/`;
 
     try {
       let mojangResponseRaw = await fetch(mojangUrl + search_term);
-      if (!mojangResponseRaw.ok) {
+      if (mojangResponseRaw.status == 404) {
+        throw new Error("Player not found");
+      } else if (!mojangResponseRaw.ok) {
         throw new Error("server error");
       }
       const mojangResponse = await mojangResponseRaw.json();
@@ -76,15 +90,14 @@ export function PlayerPage() {
           );
           const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
           setHypixelStatus("loaded");
-          setHypixelGuildData(hypixelGuildResponse)
+          setHypixelGuildData(hypixelGuildResponse);
           console.log(hypixelGuildResponse);
         } else {
           setHypixelStatus("loaded");
           setHypixelGuildData("no guild");
         }
-      }
-      else {
-        setHypixelStatus("error")
+      } else {
+        setHypixelStatus("error");
       }
 
       // wynncraft
@@ -115,12 +128,33 @@ export function PlayerPage() {
         setWynncraftStatus("loaded");
         throw new Error("error for Wynncraft data");
       }
+
+      // donut
+      let donutResponseRaw = await fetch(donutUrl + mojangResponse.username);
+      if (!donutResponseRaw.ok) {
+        if (donutResponseRaw.status === 404) {
+          setDonutData("not found");
+        } else {
+          setDonutData("error");
+          throw new Error("error for donut data");
+        }
+        setDonutStatus("loaded");
+      } else {
+        const donutResponse = await donutResponseRaw.json();
+        console.log("got donut response: ", donutResponse)
+        setDonutData(donutResponse)
+        setDonutStatus("loaded");
+      }
+
+
     } catch (error) {
       console.error("An error occurred:", error);
       setError(error);
       setStatus("error");
       setWynncraftStatus(null);
     }
+
+
   };
 
   return (
@@ -131,9 +165,7 @@ export function PlayerPage() {
       />
       <br />
 
-      {(status === "loading") && (
-        <LoadingIndicator />
-      )}
+      {status === "loading" && <LoadingIndicator />}
       {status === "idle" && <p>Enter a player to search</p>}
       {status === "error" && (
         <div>
@@ -142,15 +174,13 @@ export function PlayerPage() {
         </div>
       )}
 
-      {(status === "loadedMojang") && (
+      {status === "loadedMojang" && (
         <div>
-          <MojangDataDisplay
-            mojang_response={mojangData}
-          />
+          <MojangDataDisplay mojang_response={mojangData} />
         </div>
       )}
 
-      {(hypixelStatus === "loading" && status === "loadedMojang") && (
+      {hypixelStatus === "loading" && status === "loadedMojang" && (
         <LoadingIndicator />
       )}
 
@@ -168,6 +198,8 @@ export function PlayerPage() {
             wynncraftData={wynncraftData}
             wynncraftStatus={wynncraftStatus}
             wynncraftGuildData={wynncraftGuildData}
+            donutData={donutData}
+            donutStatus={donutStatus}
           />
         </div>
       )}

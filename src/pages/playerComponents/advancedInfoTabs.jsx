@@ -3,6 +3,7 @@ import { useState } from "react";
 import GuildMembers from "./guildMembers";
 import WynncraftTabbedData from "./wynncraftTabbedData";
 import LoadingIndicator from "./loadingIndicator";
+import DonutTabbedData from "./donutTabbedData";
 
 function AdvancedInfoTabs({
   onGuildMemberClick,
@@ -12,12 +13,19 @@ function AdvancedInfoTabs({
   wynncraftData,
   wynncraftStatus,
   wynncraftGuildData,
+  donutData,
+  donutStatus,
 }) {
   const [selectedTab, setSelectedTab] = useState("hypixel");
   let tabContents;
   if (selectedTab === "hypixel") {
     if (hypixelStatus === "playerloaded") {
-      tabContents = <><br /><LoadingIndicator /></>;
+      tabContents = (
+        <>
+          <br />
+          <LoadingIndicator />
+        </>
+      );
     }
     if (hypixelStatus === "loaded") {
       if (hypixelResponse.guild_name) {
@@ -53,6 +61,15 @@ function AdvancedInfoTabs({
     } else if (wynncraftStatus === "loading") {
       tabContents = <p>Loading Wynncraft data...</p>;
     }
+  } else if (selectedTab === "donut") {
+    if (donutStatus === "loading") {
+      tabContents = <p>loading donut data...</p>
+    }
+    else if (donutStatus === "loaded") {
+      tabContents = (
+        <DonutTabbedData donutData={donutData}/>
+      )
+    }
   }
   return (
     <motion.div
@@ -72,6 +89,9 @@ function AdvancedInfoTabs({
         </motion.button>
         <motion.button onClick={() => setSelectedTab("wynncraft")}>
           Wynncraft
+        </motion.button>
+        <motion.button onClick={() => setSelectedTab("donut")}>
+          Donut SMP
         </motion.button>
       </motion.div>
       <div>{tabContents}</div>

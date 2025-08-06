@@ -31,11 +31,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData, onGuildMemberC
     </ul>
     <h3>Global Stats</h3>
     <ul className='info-card-list'>
-      <InfoCard label='Wars' value={wynncraftData.wars}/>
-      <InfoCard label='Mobs killed' value={wynncraftData.mobs_killed}/>
-      <InfoCard label='Chests opened' value={wynncraftData.chests_opened}/>
-      <InfoCard label='Dungeons completed' value={wynncraftData.dungeons_completed}/>
-      <InfoCard label='Raids completed' value={wynncraftData.raids_completed}/>
+      <InfoCard label='Wars' value={wynncraftData.wars.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
+      <InfoCard label='Mobs killed' value={wynncraftData.mobs_killed.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
+      <InfoCard label='Chests opened' value={wynncraftData.chests_opened.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
+      <InfoCard label='Dungeons completed' value={wynncraftData.dungeons_completed.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
+      <InfoCard label='Raids completed' value={wynncraftData.raids_completed.toLocaleString('en-US', { notation: "compact", maximumFractionDigits: 1 })}/>
     </ul>
     <h3>Characters</h3>
     <p>{wynncraftData.username} has {wynncraftData.characters.length} characters.<br/>
