@@ -4,6 +4,7 @@ import GuildMembers from "./guildMembers";
 import WynncraftTabbedData from "./wynncraftTabbedData";
 import LoadingIndicator from "./loadingIndicator";
 import DonutTabbedData from "./donutTabbedData";
+import McciTabbedData from "./mcciTabbedData";
 
 function AdvancedInfoTabs({
   onGuildMemberClick,
@@ -15,6 +16,9 @@ function AdvancedInfoTabs({
   wynncraftGuildData,
   donutData,
   donutStatus,
+  mcciData,
+  mcciStatus,
+  loadedTabs
 }) {
   const [selectedTab, setSelectedTab] = useState("hypixel");
   let tabContents;
@@ -70,6 +74,12 @@ function AdvancedInfoTabs({
         <DonutTabbedData donutData={donutData}/>
       )
     }
+  } else if (selectedTab === "mcci") {
+    if (mcciStatus === "loading") {
+      tabContents = <p>loading MCC Island data...</p>
+    }  else if (mcciStatus === "loaded") {
+      tabContents = <McciTabbedData mcciData={mcciData}/>
+    }
   }
   return (
     <motion.div
@@ -84,15 +94,18 @@ function AdvancedInfoTabs({
         transition={{ duration: 0.5, ease: "easeInOut", delay: 0.6 }}
         className="advanced-tabs"
       >
-        <motion.button onClick={() => setSelectedTab("hypixel")}>
+        {loadedTabs.includes('hypixel') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("hypixel")}>
           Hypixel
-        </motion.button>
-        <motion.button onClick={() => setSelectedTab("wynncraft")}>
+        </motion.button>}
+        {loadedTabs.includes('wynncraft') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("wynncraft")}>
           Wynncraft
-        </motion.button>
-        <motion.button onClick={() => setSelectedTab("donut")}>
+        </motion.button>}
+        {loadedTabs.includes('donut') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("donut")}>
           Donut SMP
-        </motion.button>
+        </motion.button>}
+        {loadedTabs.includes('mcci') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("mcci")}>
+          MCC Island
+        </motion.button>}
       </motion.div>
       <div>{tabContents}</div>
     </motion.div>

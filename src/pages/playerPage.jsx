@@ -27,6 +27,10 @@ export function PlayerPage() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
+  const [loadedTabs, setLoadedTabs] = useState([])
+
+  const addLoadedTab = (tabToAdd) => {setLoadedTabs(prev => [...prev, tabToAdd])}
+
   const fetchDataForPlayer = async (search_term) => {
     setMojangData(null);
     setHypixelData(null);
@@ -43,6 +47,8 @@ export function PlayerPage() {
     setHypixelStatus("loading");
     setDonutStatus("loading");
     setMcciStatus("loading");
+
+    setLoadedTabs([])
 
     const baseUrl =
       import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com";
@@ -84,6 +90,7 @@ export function PlayerPage() {
         console.log("got hypixel response: ", hypixelResponse);
         setHypixelData(hypixelResponse);
         setHypixelStatus("playerloaded");
+        addLoadedTab("hypixel");
         if (hypixelResponse.guild_name) {
           let hypixelGuildResponseRaw = await fetch(
             hypixelGuildUrl + mojangResponse.uuid
@@ -107,6 +114,7 @@ export function PlayerPage() {
       if (wynnResponseRaw.ok) {
         setWynncraftData(wynnResponse);
         setWynncraftStatus("playerloaded");
+        addLoadedTab("wynncraft");
         if (wynnResponse.guild_name != null) {
           let wynnGuildResponseRaw = await fetch(
             wynncraftGuildUrl + wynnResponse.guild_name
@@ -141,11 +149,29 @@ export function PlayerPage() {
         setDonutStatus("loaded");
       } else {
         const donutResponse = await donutResponseRaw.json();
-        console.log("got donut response: ", donutResponse)
-        setDonutData(donutResponse)
+        console.log("got donut response: ", donutResponse);
+        setDonutData(donutResponse);
         setDonutStatus("loaded");
+        addLoadedTab("donut");
       }
 
+      // mcc island
+      let mcciResponseRaw = await fetch(mcciUrl + mojangResponse.uuid);
+      if (!mcciResponseRaw.ok) {
+        if (donutResponseRaw.status === 404) {
+          setMcciData("not found");
+        } else {
+          setMcciData("error");
+          throw new Error("error for mcc island data");
+        }
+        setMcciStatus("loaded");
+      } else {
+        const mcciResponse = await mcciResponseRaw.json();
+        console.log("got mcc island response: ", mcciResponse);
+        setMcciData(mcciResponse);
+        setMcciStatus("loaded");
+        addLoadedTab("mcci");
+      }
 
     } catch (error) {
       console.error("An error occurred:", error);
@@ -153,8 +179,6 @@ export function PlayerPage() {
       setStatus("error");
       setWynncraftStatus(null);
     }
-
-
   };
 
   return (
@@ -200,6 +224,9 @@ export function PlayerPage() {
             wynncraftGuildData={wynncraftGuildData}
             donutData={donutData}
             donutStatus={donutStatus}
+            mcciData={mcciData}
+            mcciStatus={mcciStatus}
+            loadedTabs={loadedTabs}
           />
         </div>
       )}
