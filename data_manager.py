@@ -201,6 +201,11 @@ class DataManager:
         if hypixel_request_status == "success" and self.cache_enabled:
             self.cache_instance.add_hypixel_cache(uuid, data_to_cache)
 
+        if hypixel_request_status == "date_error":
+            raise HTTPException(404, {"message": "Player not found"})
+        if hypixel_request_status in ["invalid_api_key", "http_error", "request_error", "unkown_error"]:
+            raise HTTPException(502, {"error": hypixel_request_status})
+
         # resolved_guild_members = self._resolve_guild_member_names(guild_members)
         # "guild_members": resolved_guild_members,
         response = {

@@ -5,6 +5,7 @@ import os
 import json
 import logging
 import time
+from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
 
