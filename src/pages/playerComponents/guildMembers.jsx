@@ -1,12 +1,15 @@
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 
-function GuildMembers({ guild_members, onGuildMemberClick }) {
+function GuildMembers({ guild_members }) {
+  let navigate = useNavigate();
+  
   if (!guild_members) {
     return <p>No guild members to show</p>;
   }
   const handleGuildMemberClick = (username) => {
     console.log("searching for " + username);
-    onGuildMemberClick(username);
+    navigate(`/player/${username}`);
   };
   const guildMembersArray = guild_members.map((member) => {
     return (

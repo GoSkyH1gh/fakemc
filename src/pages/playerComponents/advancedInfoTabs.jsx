@@ -7,7 +7,6 @@ import DonutTabbedData from "./donutTabbedData";
 import McciTabbedData from "./mcciTabbedData";
 
 function AdvancedInfoTabs({
-  onGuildMemberClick,
   hypixelResponse,
   hypixelGuildResponse,
   hypixelStatus,
@@ -42,7 +41,6 @@ function AdvancedInfoTabs({
             <p>{hypixelResponse.guild_name}'s members: </p>
             <GuildMembers
               guild_members={hypixelGuildResponse.guild_members}
-              onGuildMemberClick={onGuildMemberClick}
             />
           </>
         );
@@ -62,7 +60,6 @@ function AdvancedInfoTabs({
           <WynncraftTabbedData
             wynncraftData={wynncraftData}
             wynncraftGuildData={wynncraftGuildData}
-            onGuildMemberClick={onGuildMemberClick}
           />
         );
       }

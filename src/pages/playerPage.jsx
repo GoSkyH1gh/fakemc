@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./playerPage.css";
+import { useParams } from "react-router-dom";
 import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx";
 import QuickInfo from "./playerComponents/quickInfo.jsx";
 import SearchRow from "./playerComponents/searchRow.jsx";
@@ -7,6 +8,14 @@ import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
 import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
 
 export function PlayerPage() {
+  const { username } = useParams(); 
+  console.log(username);
+  useEffect(() => {
+    if (username) {
+      fetchDataForPlayer(username);
+    }
+  }, [username])
+
   const [mojangData, setMojangData] = useState(null);
   const [playerStatus, setPlayerStatus] = useState(null);
 
@@ -189,7 +198,6 @@ export function PlayerPage() {
   return (
     <>
       <SearchRow
-        onSearch={fetchDataForPlayer}
         disabled={status === "loading"}
       />
       <br />
@@ -223,7 +231,6 @@ export function PlayerPage() {
             hypixelResponse={hypixelData}
             hypixelGuildResponse={hypixelGuildData}
             hypixelStatus={hypixelStatus}
-            onGuildMemberClick={fetchDataForPlayer}
             wynncraftData={wynncraftData}
             wynncraftStatus={wynncraftStatus}
             wynncraftGuildData={wynncraftGuildData}

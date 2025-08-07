@@ -7,7 +7,6 @@ import WynncraftGuild from "./wynncraftGuild";
 function WynncraftTabbedData({
   wynncraftData,
   wynncraftGuildData,
-  onGuildMemberClick,
 }) {
   let wynnGuildElements;
   if (wynncraftGuildData != "no guild") {
@@ -16,7 +15,6 @@ function WynncraftTabbedData({
         <h3>{wynncraftData.guild_name}</h3>
         <WynncraftGuild
           wynncraftGuildData={wynncraftGuildData}
-          onGuildMemberClick={onGuildMemberClick}
         />
       </>
     );

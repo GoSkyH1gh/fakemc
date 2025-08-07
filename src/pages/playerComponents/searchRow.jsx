@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { motion } from "motion/react"
+import { useNavigate } from "react-router-dom"
 
 function Searchbar({ handleInputChange, inputValue, handleKeyPress }) {
   return (
@@ -32,7 +33,8 @@ function SearchButton({ onClick, disabled }) {
 )
 }
 
-function SearchRow({ onSearch, disabled }) {
+function SearchRow({ disabled }) {
+  let navigate = useNavigate();
   const [inputValue, setInputValue] = useState("")
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -40,7 +42,7 @@ function SearchRow({ onSearch, disabled }) {
 
   const handleSearchClick = () => {
     if (!disabled) {
-      onSearch(inputValue.trim());
+      navigate(`/player/${inputValue.trim()}`)
     }
   }
 

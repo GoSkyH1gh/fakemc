@@ -1,15 +1,17 @@
 import { motion, scale } from "motion/react";
 import InfoCard from "./infoCard";
 import { formatISOTimestamp, formatValue } from "./utils";
+import { useNavigate } from "react-router-dom";
 
-function WynncraftGuild({ wynncraftGuildData, onGuildMemberClick }) {
+function WynncraftGuild({ wynncraftGuildData }) {
+  let navigator = useNavigate();
   const guildMemberElements = wynncraftGuildData.members.map((member) => {
     return (
       <motion.li
         className="wynn-guild-member-item"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => onGuildMemberClick(member.username)}
+        onClick={() => navigator(`/player/${member.username}`)}
       >
         <p className="em-text">{member.username}</p>
         <p className="secondary-text">
