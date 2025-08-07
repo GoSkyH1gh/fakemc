@@ -1,5 +1,5 @@
 import InfoCard from "./infoCard";
-import formatISOTimestamp from "./formatISOTimestamp";
+import { formatValue, formatISOTimestamp } from "./utils";
 
 function McciTabbedData({ mcciData }) {
   if (mcciData === "not found") {
@@ -35,30 +35,21 @@ function McciTabbedData({ mcciData }) {
         <InfoCard
           label="Trophies"
           value={
-            mcciData.stats.trophies.toLocaleString("en-US", {
-              notation: "compact",
-              maximumFractionDigits: 1,
-            }) +
+            formatValue(mcciData.stats.trophies) +
             "/" +
-            mcciData.stats.max_trophies.toLocaleString("en-US", {
-              notation: "compact",
-              maximumFractionDigits: 1,
-            })
+            formatValue(mcciData.stats.max_trophies)
           }
         />
       </ul>
       <ul className="info-card-list">
-        <InfoCard
-          label="Coins"
-          value={mcciData.stats.coins ?? "Unknown"}
-        />
+        <InfoCard label="Coins" value={formatValue(mcciData.stats.coins)} />
         <InfoCard
           label="ANGLR Tokens"
-          value={mcciData.stats.anglr_token ?? "Unknown"}
+          value={formatValue(mcciData.stats.anglr_token)}
         />
         <InfoCard
           label="Royal Reputation"
-          value={mcciData.stats.royal_reputation ?? "Unknown"}
+          value={formatValue(mcciData.stats.royal_reputation)}
         />
       </ul>
     </>

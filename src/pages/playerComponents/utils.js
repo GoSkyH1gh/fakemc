@@ -17,4 +17,15 @@ function formatISOTimestamp(timestamp) {
   return readableDate;
 }
 
-export default formatISOTimestamp
+const formatValue = (value) => {
+  if (value == null) {
+    return "Unknown";
+  } else {
+    return value.toLocaleString("en-US", {
+      notation: "compact",
+      maximumFractionDigits: 1,
+    });
+  }
+};
+
+export {formatISOTimestamp, formatValue}

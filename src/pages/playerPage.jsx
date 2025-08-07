@@ -103,8 +103,13 @@ export function PlayerPage() {
           setHypixelStatus("loaded");
           setHypixelGuildData("no guild");
         }
+      } else if (hypixelResponseRaw.status === 404) {
+        setHypixelData("not found");
+        setHypixelStatus("loaded");
       } else {
-        setHypixelStatus("error");
+        setHypixelData("not found (server error)");
+        setHypixelStatus("loaded")
+        throw new Error("error for Hypixel data")
       }
 
       // wynncraft
@@ -158,7 +163,7 @@ export function PlayerPage() {
       // mcc island
       let mcciResponseRaw = await fetch(mcciUrl + mojangResponse.uuid);
       if (!mcciResponseRaw.ok) {
-        if (donutResponseRaw.status === 404) {
+        if (mcciResponseRaw.status === 404) {
           setMcciData("not found");
         } else {
           setMcciData("error");

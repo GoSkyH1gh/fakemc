@@ -20,7 +20,11 @@ function AdvancedInfoTabs({
   mcciStatus,
   loadedTabs
 }) {
-  const [selectedTab, setSelectedTab] = useState("hypixel");
+  const [selectedTab, setSelectedTab] = useState("");
+  if (selectedTab === "" && loadedTabs.length > 0) {
+    setSelectedTab(loadedTabs[0])
+  }
+  
   let tabContents;
   if (selectedTab === "hypixel") {
     if (hypixelStatus === "playerloaded") {
