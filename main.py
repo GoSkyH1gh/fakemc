@@ -58,10 +58,10 @@ async def get_wynncraft(uuid) -> PlayerSummary:
     data_instance = GetWynncraftData()
     return data_instance.get_player_data(uuid)
 
-@app.get('/v1/wynncraft/guilds/{name}')
-async def get_wynncraft_guild(name) -> GuildInfo:
+@app.get('/v1/wynncraft/guilds/{prefix}')
+async def get_wynncraft_guild(prefix) -> GuildInfo:
     data_instance = GetWynncraftData()
-    return data_instance.get_guild_data(name)
+    return data_instance.get_guild_data(prefix)
 
 @app.get('/v1/wynncraft/guild-list')
 async def get_wynncraft_guild_list():

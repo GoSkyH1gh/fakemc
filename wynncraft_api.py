@@ -162,7 +162,7 @@ class GetWynncraftData:
                 last_login=wynn_response['lastJoin'],
                 playtime_hours=wynn_response['playtime'],
                 wars=wynn_response['globalData']['wars'],
-                mobs_killed=wynn_response['globalData']['killedMobs'],
+                mobs_killed=wynn_response['globalData']['mobsKilled'],
                 chests_opened=wynn_response['globalData']['chestsFound'],
                 dungeons_completed=wynn_response['globalData']['dungeons']['total'],
                 raids_completed=wynn_response['globalData']['raids']['total'],
@@ -180,11 +180,11 @@ class GetWynncraftData:
             )
 
 
-    def get_guild_data(self, guild_name: str) -> GuildInfo:
+    def get_guild_data(self, guild_prefix: str) -> GuildInfo:
         """Gets the guild response, player_guild is req"""
-        raw_guild_response = requests.get(f"https://api.wynncraft.com/v3/guild/{guild_name}?identifier=username")
+        raw_guild_response = requests.get(f"https://api.wynncraft.com/v3/guild/prefix/{guild_prefix}?identifier=username")
         guild_response = raw_guild_response.json()
-
+        
         guild_members = []
         for rank in guild_response['members']:
             if rank == 'total':
