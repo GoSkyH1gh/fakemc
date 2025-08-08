@@ -9,7 +9,6 @@ import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
 
 export function PlayerPage() {
   const { username } = useParams(); 
-  console.log(username);
   useEffect(() => {
     if (username) {
       fetchDataForPlayer(username);
@@ -131,7 +130,7 @@ export function PlayerPage() {
         addLoadedTab("wynncraft");
         if (wynnResponse.guild_name != null) {
           let wynnGuildResponseRaw = await fetch(
-            wynncraftGuildUrl + wynnResponse.guild_name
+            wynncraftGuildUrl + wynnResponse.guild_prefix
           );
           const wynnGuildResponse = await wynnGuildResponseRaw.json();
           console.log("got wynncraft guild response: ", wynnGuildResponse);
