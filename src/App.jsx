@@ -10,6 +10,7 @@ function App() {
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route path='/' element={<HomePage />} />
+        <Route path='/player/' element={<PlayerPage />}/>
         <Route path='/player/:username' element={<PlayerPage />}/>
         <Route path='/wynncraft/guilds' element={<WynncraftGuilds />}/>
       </Route>

@@ -12,6 +12,7 @@ function WynncraftGuild({ wynncraftGuildData }) {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => navigator(`/player/${member.username}`)}
+        key={member.uuid}
       >
         <p className="em-text">{member.username}</p>
         <p className="secondary-text">
