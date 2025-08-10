@@ -70,7 +70,10 @@ export function HomePage() {
             transition={{ duration: 0.5, ease: "easeInOut", delay: 3 }}><Link to="./player" className='main-explore-button'>Explore players</Link><br /></motion.div>
         </div>
       </div>
-      <footer>Not associated with Mojang, Hypixel or Wynncraft.</footer>
+      <footer>
+        Not associated with Mojang, Hypixel, Wynncraft, Donut SMP, nor MCC Island.
+        &lt;3 to <a href='https://vzge.me'>VGZE</a>, which renders some player heads
+      </footer>
     </>
   )
 }

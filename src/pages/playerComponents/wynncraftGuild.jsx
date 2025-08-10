@@ -14,12 +14,23 @@ function WynncraftGuild({ wynncraftGuildData }) {
         onClick={() => navigator(`/player/${member.username}`)}
         key={member.uuid}
       >
-        <p className="em-text">{member.username}</p>
-        <p className="secondary-text">
-          {member.rank}
-          <br />
-          joined {formatISOTimestamp(member.joined)}
-        </p>
+        <div className="guild-member-flex-container">
+          <img
+            src={`https://vzge.me/face/128/${member.uuid}.png`}
+            className="guild-member-image"
+            height="80"
+            width="80"
+            loading="lazy"
+          />
+          <div>
+            <p className="em-text">{member.username}</p>
+            <p className="secondary-text">
+              {member.rank}
+              <br />
+              joined {formatISOTimestamp(member.joined)}
+            </p>
+          </div>
+        </div>
       </motion.li>
     );
   });
@@ -27,10 +38,7 @@ function WynncraftGuild({ wynncraftGuildData }) {
     <>
       <ul className="info-card-list">
         <InfoCard label="Level" value={wynncraftGuildData.level} />
-        <InfoCard
-          label="Wars"
-          value={formatValue(wynncraftGuildData.wars)}
-        />
+        <InfoCard label="Wars" value={formatValue(wynncraftGuildData.wars)} />
         <InfoCard
           label="Territories held"
           value={formatValue(wynncraftGuildData.territories)}
