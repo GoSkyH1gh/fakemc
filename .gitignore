@@ -3,3 +3,5 @@
 __pycache__/
 cache.db
 wynn_cache.db
+cache.db-shm
+cache.db-wal

@@ -115,6 +115,7 @@ class GetMojangAPIData:
         """
         try:
             request = requests.get(f"https://api.minecraftservices.com/minecraft/profile/lookup/name/{self.username}")
+            request.raise_for_status()
             logger.info("request success for getting UUID!")
             json_request = json.loads(request.text)
             logger.debug(json_request)
@@ -136,6 +137,7 @@ class GetMojangAPIData:
 
         try:
             request = requests.get(f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}")
+            request.raise_for_status()
             json_request = json.loads(request.text)
             logger.info("request success for getting skin and cape data!")
 
@@ -162,7 +164,7 @@ class GetMojangAPIData:
                 logger.info(f"User {self.username} has no equipped cape")
 
         except Exception as e:
-            logger.error(f"something went wrong in get_skin_data: {e}")
+            logger.error(f"something went wrong in get_skin_data: {e}\{request.headers}")
 
     def get_skin_images(self):
         """

@@ -6,6 +6,7 @@ from utils import load_base64_to_pillow
 import logging
 import os
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 logger = logging.getLogger(__name__)
@@ -262,29 +263,45 @@ class DataManager:
         else:
             logger.info(f"Fetching {len(uuids_to_fetch_from_api)} missing/incomplete member details from Mojang API.")
             # Fetch missing or incomplete data from Mojang API
-            for uuid in uuids_to_fetch_from_api:
-                mojang_data = self.get_mojang_data(uuid)
+        
+            def fetch_member(uuid):
+                try:
+                    mojang_data = self.get_mojang_data(uuid)
+                    if isinstance(mojang_data, HTTPException): # skip if its an exception
+                        print(f"skipping {uuid} because of HTTP Exception")
+                        return
+                    if mojang_data and mojang_data["status"] == "success":
+                        return {
+                            "uuid": mojang_data["uuid"],
+                            "username": mojang_data["username"],
+                            "skin_showcase_b64": mojang_data["skin_showcase_b64"]
+                        }
+                except Exception as e:
+                    logger.error(f"could not fetch member with uuid {uuid}: {e}")
 
-                if isinstance(mojang_data, HTTPException): # skip if its an exception
-                    continue
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                futures = []
+                for uuid in uuids_to_fetch_from_api:
+                    futures.append(executor.submit(fetch_member, uuid))
 
-                if mojang_data and mojang_data["status"] == "success":
-                    resolved_members[uuid] = {
-                        "username": mojang_data["username"],
-                        "skin_showcase_b64": mojang_data["skin_showcase_b64"]
-                    }
-                else: # also skip if its not successful
-                    continue
-
+                for future in as_completed(futures):
+                    data = future.result()
+                    if data is not None:
+                        # print(f" - {data} for uuid {data.get(uuid)}")
+                        resolved_members[data["uuid"]] = data
+                    else:
+                        print("data is empty")
+            # print(resolved_members)
         # Create the final list of dictionaries, maintaining the original order
         final_list = []
         for uuid in member_uuids:
-            member_data = resolved_members.get(uuid, {"username": "N/A", "skin_showcase_b64": None})
-            final_list.append({
-                "uuid": uuid,
-                "name": member_data.get("username", "N/A"),
-                "skin_showcase_b64": member_data.get("skin_showcase_b64")
-            })
+            member_data = resolved_members.get(uuid, None)
+            if member_data is not None:
+                final_list.append({
+                    "uuid": member_data.get("uuid"),
+                    "name": member_data.get("username"),
+                    "skin_showcase_b64": member_data.get("skin_showcase_b64")
+                })
 
         return final_list
 
