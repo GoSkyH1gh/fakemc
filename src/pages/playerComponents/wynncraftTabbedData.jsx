@@ -4,7 +4,7 @@ import WynncraftCharacters from "./wynncraftCharacters";
 import { formatISOTimestamp, formatValue } from "./utils";
 import WynncraftGuild from "./wynncraftGuild";
 import { useState } from "react";
-import DistributionChart from "./statHistogram";
+import DistributionChartWrapper from "./distributionChartWrapper";
 
 function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
   const [selectedMetric, setSelectedMetric] = useState("wynncraft_mobs_killed");
@@ -20,6 +20,12 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
     let metricResponse = await metricResponseRaw.json();
     setMetricData(metricResponse);
     console.log("Got metric response: ", metricResponse);
+  };
+
+  const handleStatClick = (metric_key, uuid) => {
+    setMetricData(null);
+    setSelectedMetric(metric_key);
+    fetchMetric(metric_key, uuid);
   };
 
   let wynnGuildElements;
@@ -41,9 +47,15 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
       </h2>
       <ul className="info-card-list">
         <InfoCard
+          onClick={() =>
+            handleStatClick("wynncraft_hours_played", wynncraftData.uuid)
+          }
+          hasStats={true}
           label="Total playtime"
           value={wynncraftData.playtime_hours + " hours"}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
         <InfoCard label="Rank" value={wynncraftData.rank} />
         <InfoCard
           label="First Login"
@@ -59,37 +71,55 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
       </ul>
       <h3>Global Stats</h3>
       <ul className="info-card-list">
-        <InfoCard label="Wars" value={formatValue(wynncraftData.wars)} />
         <InfoCard
+          onClick={() => handleStatClick("wynncraft_wars", wynncraftData.uuid)}
+          hasStats={true}
+          label="Wars"
+          value={formatValue(wynncraftData.wars)}
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
+        <InfoCard
+          onClick={() =>
+            handleStatClick("wynncraft_mobs_killed", wynncraftData.uuid)
+          }
+          hasStats={true}
           label="Mobs killed"
           value={formatValue(wynncraftData.mobs_killed)}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
         <InfoCard
+          onClick={() =>
+            handleStatClick("wynncraft_chests_opened", wynncraftData.uuid)
+          }
+          hasStats={true}
           label="Chests opened"
           value={formatValue(wynncraftData.chests_opened)}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
         <InfoCard
+          onClick={() =>
+            handleStatClick("wynncraft_dungeons_completed", wynncraftData.uuid)
+          }
+          hasStats={true}
           label="Dungeons completed"
           value={formatValue(wynncraftData.dungeons_completed)}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
         <InfoCard
+          onClick={() =>
+            handleStatClick("wynncraft_raids_completed", wynncraftData.uuid)
+          }
+          hasStats={true}
           label="Raids completed"
           value={formatValue(wynncraftData.raids_completed)}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
       </ul>
-      <button onClick={() => fetchMetric(selectedMetric, wynncraftData.uuid)}>
-        Load data
-      </button>
-      {metricData === "loading" || metricData === null ? (
-        <p>loading data</p>
-      ) : (
-        <DistributionChart
-          buckets={metricData.buckets}
-          counts={metricData.counts}
-          playerValue={metricData.player_value}
-          percentile={metricData.percentile}
-        />
-      )}
       <h3>Characters</h3>
       <p>
         {wynncraftData.username} has {wynncraftData.characters.length}{" "}

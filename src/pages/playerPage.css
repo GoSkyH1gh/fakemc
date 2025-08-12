@@ -306,3 +306,35 @@ button {
   text-align: right;
 }
 
+.distribution-graph {
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 15px;
+  padding: 10px;
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
+  min-width: 400px;
+  height: 250px;
+}
+
+.icon {
+  height: fit-content;
+}
+
+.info-card-row {
+  display: flex;
+}
+
+.icon-button {
+  all: unset
+}
+
+.icon-button:hover {
+  all: unset
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
