@@ -1,12 +1,14 @@
 import requests
 from utils import dashify_uuid
-from datetime import datetime 
+from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import HTTPException
+from metrics_manager import add_value, get_engine
 
 # General notes
 # * The wynncraft api requires dashed uuids so when calling something by UUID dashed_uuid should be used
+
 
 class ProfessionInfo(BaseModel):
     fishing: int
@@ -22,6 +24,7 @@ class ProfessionInfo(BaseModel):
     woodworking: int
     armouring: int
 
+
 class CharacterInfo(BaseModel):
     character_uuid: str
     character_class: str
@@ -35,6 +38,7 @@ class CharacterInfo(BaseModel):
     gamemodes: list[str]
     professions: ProfessionInfo
     quests_completed: int
+
 
 class PlayerSummary(BaseModel):
     username: str
@@ -53,7 +57,9 @@ class PlayerSummary(BaseModel):
     raids_completed: int
     characters: list[CharacterInfo]
 
+
 # guild info
+
 
 class GuildMember(BaseModel):
     username: str
@@ -61,6 +67,7 @@ class GuildMember(BaseModel):
     online: bool
     joined: str
     rank: str
+
 
 class GuildInfo(BaseModel):
     name: str
@@ -81,42 +88,53 @@ class GetWynncraftData:
     def get_player_data(self, uuid) -> PlayerSummary:
         """Gets basic data about the player"""
         dashed_uuid = dashify_uuid(uuid)
-        raw_wynn_response = requests.get(f"https://api.wynncraft.com/v3/player/{dashed_uuid}?fullResult")
+        raw_wynn_response = requests.get(
+            f"https://api.wynncraft.com/v3/player/{dashed_uuid}?fullResult"
+        )
         if raw_wynn_response.status_code == 404:
             raise HTTPException(
                 status_code=404,
-                detail=f'Wynncraft Player with UUID {dashed_uuid} not found'
+                detail=f"Wynncraft Player with UUID {dashed_uuid} not found",
             )
 
         try:
 
             raw_wynn_response.raise_for_status()
             wynn_response = raw_wynn_response.json()
-            
-            if wynn_response['guild'] is not None:
-                player_guild = wynn_response['guild']['name']
-                guild_prefix = wynn_response['guild']['prefix']
+
+            if wynn_response["guild"] is not None:
+                player_guild = wynn_response["guild"]["name"]
+                guild_prefix = wynn_response["guild"]["prefix"]
             else:
                 player_guild = None
                 guild_prefix = None
-            
-            if wynn_response['rank'] != 'Player':
-                player_rank = wynn_response['rank']
+
+            if wynn_response["rank"] != "Player":
+                player_rank = wynn_response["rank"]
             else:
-                if wynn_response['supportRank'] is not None:
-                    player_rank = wynn_response['supportRank']
+                if wynn_response["supportRank"] is not None:
+                    player_rank = wynn_response["supportRank"]
                 else:
-                    player_rank = 'Player'
-            
-            characters = wynn_response['characters']
+                    player_rank = "Player"
+
+            characters = wynn_response["characters"]
 
             pydantic_characters = []
             for character in characters:
                 # creating a ProfessionInfo pydantic instance
                 profession_names = [
-                    "fishing", "woodcutting", "mining", "farming", "scribing",
-                    "jeweling", "alchemism", "cooking", "weaponsmithing",
-                    "tailoring", "woodworking", "armouring"
+                    "fishing",
+                    "woodcutting",
+                    "mining",
+                    "farming",
+                    "scribing",
+                    "jeweling",
+                    "alchemism",
+                    "cooking",
+                    "weaponsmithing",
+                    "tailoring",
+                    "woodworking",
+                    "armouring",
                 ]
 
                 profession_args = {}
@@ -124,124 +142,144 @@ class GetWynncraftData:
                 # {'fishing': '100', 'mining': 33, ...}
                 for profession in profession_names:
                     try:
-                        profession_args[profession] = characters[character]['professions'][profession]['level']
+                        profession_args[profession] = characters[character][
+                            "professions"
+                        ][profession]["level"]
                     except:
                         profession_args[profession] = 0
 
                 character_professions = ProfessionInfo(**profession_args)
 
-                if characters[character]['deaths'] is None:
+                if characters[character]["deaths"] is None:
                     deaths = 0
                 else:
-                    deaths = characters[character]['deaths']
+                    deaths = characters[character]["deaths"]
 
                 modeled_character = CharacterInfo(
                     character_uuid=character,
-                    character_class=characters[character]['type'].title(),
-                    reskin=characters[character]['reskin'],
-                    level=characters[character]['level'],
-                    playtime=characters[character]['playtime'],
-                    mobs_killed=characters[character]['mobsKilled'],
-                    chests_opened=characters[character]['chestsFound'],
-                    logins=characters[character]['logins'],
+                    character_class=characters[character]["type"].title(),
+                    reskin=characters[character]["reskin"],
+                    level=characters[character]["level"],
+                    playtime=characters[character]["playtime"],
+                    mobs_killed=characters[character]["mobsKilled"],
+                    chests_opened=characters[character]["chestsFound"],
+                    logins=characters[character]["logins"],
                     deaths=deaths,
-                    gamemodes=characters[character]['gamemode'],
+                    gamemodes=characters[character]["gamemode"],
                     professions=character_professions,
-                    quests_completed=len(characters[character]['quests'])
+                    quests_completed=len(characters[character]["quests"]),
                 )
 
                 pydantic_characters.append(modeled_character)
 
-            
             player_summary = PlayerSummary(
-                username=wynn_response['username'],
-                uuid=wynn_response['uuid'],
-                online=wynn_response['online'],
+                username=wynn_response["username"],
+                uuid=wynn_response["uuid"],
+                online=wynn_response["online"],
                 rank=player_rank,
-                first_login=wynn_response['firstJoin'],
-                last_login=wynn_response['lastJoin'],
-                playtime_hours=wynn_response['playtime'],
-                wars=wynn_response['globalData']['wars'],
-                mobs_killed=wynn_response['globalData']['mobsKilled'],
-                chests_opened=wynn_response['globalData']['chestsFound'],
-                dungeons_completed=wynn_response['globalData']['dungeons']['total'],
-                raids_completed=wynn_response['globalData']['raids']['total'],
+                first_login=wynn_response["firstJoin"],
+                last_login=wynn_response["lastJoin"],
+                playtime_hours=wynn_response["playtime"],
+                wars=wynn_response["globalData"]["wars"],
+                mobs_killed=wynn_response["globalData"]["mobsKilled"],
+                chests_opened=wynn_response["globalData"]["chestsFound"],
+                dungeons_completed=wynn_response["globalData"]["dungeons"]["total"],
+                raids_completed=wynn_response["globalData"]["raids"]["total"],
                 characters=pydantic_characters,
                 guild_name=player_guild,
-                guild_prefix=guild_prefix
-
+                guild_prefix=guild_prefix,
             )
+            
             return player_summary
         except Exception as e:
-            print(f"Something went wrong while proccessing wynncaraft player {dashed_uuid}: {e}")
+            print(
+                f"Something went wrong while proccessing wynncaraft player {dashed_uuid}: {e}"
+            )
             raise HTTPException(
                 status_code=404,
-                detail=f'Wynncraft Player with UUID {dashed_uuid} not found'
+                detail=f"Wynncraft Player with UUID {dashed_uuid} not found",
             )
-
 
     def get_guild_data(self, guild_prefix: str) -> GuildInfo:
         """Gets the guild response, player_guild is req"""
-        raw_guild_response = requests.get(f"https://api.wynncraft.com/v3/guild/prefix/{guild_prefix}?identifier=username")
+        raw_guild_response = requests.get(
+            f"https://api.wynncraft.com/v3/guild/prefix/{guild_prefix}?identifier=username"
+        )
         guild_response = raw_guild_response.json()
-        
-        guild_members = []
-        for rank in guild_response['members']:
-            if rank == 'total':
-                continue
-            
-            for member in guild_response['members'][rank]:
-                guild_members.append(GuildMember(
-                    username=member,
-                    uuid=guild_response['members'][rank][member]['uuid'],
-                    online=guild_response['members'][rank][member]['online'],
-                    joined=guild_response['members'][rank][member]['joined'],
-                    rank=rank
-                ))
 
-        if guild_response['wars'] is not None:
-            wars = guild_response['wars']
+        guild_members = []
+        for rank in guild_response["members"]:
+            if rank == "total":
+                continue
+
+            for member in guild_response["members"][rank]:
+                guild_members.append(
+                    GuildMember(
+                        username=member,
+                        uuid=guild_response["members"][rank][member]["uuid"],
+                        online=guild_response["members"][rank][member]["online"],
+                        joined=guild_response["members"][rank][member]["joined"],
+                        rank=rank,
+                    )
+                )
+
+        if guild_response["wars"] is not None:
+            wars = guild_response["wars"]
         else:
             wars = 0
-            
 
         guild_info = GuildInfo(
-            name=guild_response['name'],
-            prefix=guild_response['prefix'],
-            guild_uuid=guild_response['uuid'],
-            level=guild_response['level'],
+            name=guild_response["name"],
+            prefix=guild_response["prefix"],
+            guild_uuid=guild_response["uuid"],
+            level=guild_response["level"],
             wars=wars,
-            created=guild_response['created'],
-            territories=guild_response['territories'],
-            member_count=guild_response['members']['total'],
-            members=guild_members
+            created=guild_response["created"],
+            territories=guild_response["territories"],
+            member_count=guild_response["members"]["total"],
+            members=guild_members,
         )
 
         return guild_info
-    
+
     def _get_total_quests(self):
         """This is the total number of quests, which changes very rarely"""
         quests_response = requests.get(f"https://api.wynncraft.com/v3/map/quests")
         quests_response = quests_response.json()
         print(quests_response)
-    
+
     def get_guild_list(self):
         try:
-            guilds_reponse = requests.get(f"https://api.wynncraft.com/v3/guild/list/guild")
+            guilds_reponse = requests.get(
+                f"https://api.wynncraft.com/v3/guild/list/guild"
+            )
             guilds_reponse.raise_for_status()
-            
+
             return guilds_reponse.json()
         except Exception as e:
             print(f"Error fetching guild list: {e}")
             return []
-        
 
+def add_wynncraft_stats_to_db(data: PlayerSummary) -> None:
+    # this is a dictionary with the corresponding id in the database for the metric
+    stats_to_add = {
+        data.chests_opened: 5,
+        data.dungeons_completed: 10,
+        data.mobs_killed: 8,
+        data.wars: 7,
+        data.raids_completed: 11,
+        data.playtime_hours: 6
+    }
+    engine = get_engine()
+    with engine.begin() as conn:
+        for stat in stats_to_add:
+            add_value(conn, data.uuid, stats_to_add[stat], stat)
 
 
 if __name__ == "__main__":
-    uuid = "c1efa28064bc438d9379970fb614f53c"
+    uuid = "3ff2e63ad63045e0b96f57cd0eae708d"
     # uuid = "f3659880e6444485a6515d6f66e9360e"
     wynn_instance = GetWynncraftData()
-    #wynn_instance.get_guild_list()
+    # wynn_instance.get_guild_list()
     print(wynn_instance.get_player_data(uuid))
-    #wynn_instance.get_guild_data('Pirates of the Black Scourge')
+    # wynn_instance.get_guild_data('Pirates of the Black Scourge')
