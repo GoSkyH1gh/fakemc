@@ -13,6 +13,7 @@ from wynn_data_manager import WynnDataManager
 from donut_api import get_donut_stats, DonutPlayerStats
 from mcci_api import MCCIPlayer, get_mcci_data
 import os
+from metrics_manager import get_stats, HistogramData
 
 load_dotenv()
 
@@ -94,3 +95,9 @@ def get_donut(username) -> DonutPlayerStats:
 @app.get("/v1/players/mccisland/{uuid}")
 def get_mcc_island(uuid) -> MCCIPlayer:
     return get_mcci_data(uuid)
+
+
+# metrics
+@app.get("/v1/metrics/{metric_key}/distribution/{player_uuid}")
+def get_metric(metric_key: str, player_uuid: str) -> HistogramData:
+    return get_stats(metric_key, player_uuid)
