@@ -96,7 +96,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
             ),
             {"metric_id": metric_id, "player_uuid": player_uuid},
         ).fetchone()[0]
-        print(player_value)
+        # print(player_value)
 
         bounds = conn.execute(
             text(
@@ -110,7 +110,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
             ),
             {"metric_id": metric_id},
         ).fetchone()
-        print(bounds)
+        # print(bounds)
 
         min_value = bounds.min_value
         max_value = bounds.max_value
@@ -147,7 +147,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
 
         buckets = [float(item[1]) for item in buckets_row]
 
-        print(buckets)
+        # print(buckets)
         bucket_edges_row = conn.execute(
             text(
                 """
@@ -164,7 +164,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
             {"bucket_count": BUCKET_COUNT, "metric_id": metric_id},
         ).fetchall()
         bucket_edges = [float(item[0]) for item in bucket_edges_row]
-        print(bucket_edges)
+        # print(bucket_edges)
 
         percentile_row = conn.execute(
             text(
@@ -180,7 +180,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
 
         percentile = percentile_row.pct
 
-        print(percentile)
+        # print(percentile)
         histogram_data = HistogramData(
             metric_key=metric_key,
             unit=unit,
@@ -193,7 +193,7 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
             percentile=float(percentile),
             player_value=float(player_value),
         )
-        print(histogram_data)
+        # print(histogram_data)
         return histogram_data
 
 

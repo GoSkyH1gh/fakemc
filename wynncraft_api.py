@@ -10,6 +10,13 @@ from metrics_manager import add_value, get_engine
 # * The wynncraft api requires dashed uuids so when calling something by UUID dashed_uuid should be used
 
 
+class PlayerRestrictions(BaseModel):
+    main_access: bool
+    character_data_access: bool
+    character_build_access: bool
+    online_status: bool
+
+
 class ProfessionInfo(BaseModel):
     fishing: int
     woodcutting: int
@@ -40,22 +47,27 @@ class CharacterInfo(BaseModel):
     quests_completed: int
 
 
-class PlayerSummary(BaseModel):
-    username: str
-    uuid: str
-    online: bool
-    rank: str
-    first_login: str
-    last_login: str
-    playtime_hours: float
-    guild_name: Optional[str]
-    guild_prefix: Optional[str]
+class PlayerStats(BaseModel):
     wars: int
     mobs_killed: int
     chests_opened: int
     dungeons_completed: int
     raids_completed: int
+    playtime_hours: float
+
+
+class PlayerSummary(BaseModel):
+    username: str
+    uuid: str
+    online: bool
+    rank: str
+    first_login: Optional[str]
+    last_login: Optional[str]
+    guild_name: Optional[str]
+    guild_prefix: Optional[str]
+    player_stats: Optional[PlayerStats]
     characters: list[CharacterInfo]
+    restrictions: PlayerRestrictions
 
 
 # guild info
@@ -96,11 +108,20 @@ class GetWynncraftData:
                 status_code=404,
                 detail=f"Wynncraft Player with UUID {dashed_uuid} not found",
             )
-
         try:
 
             raw_wynn_response.raise_for_status()
-            wynn_response = raw_wynn_response.json()
+            wynn_response: dict = raw_wynn_response.json()
+
+            restrictions_response: dict = wynn_response.get("restrictions", {})
+            restrictions = PlayerRestrictions(
+                main_access=restrictions_response.get("mainAccess"),
+                character_data_access=restrictions_response.get("characterDataAccess"),
+                character_build_access=restrictions_response.get(
+                    "characterBuildAccess", True
+                ),
+                online_status=restrictions_response.get("onlineStatus"),
+            )
 
             if wynn_response["guild"] is not None:
                 player_guild = wynn_response["guild"]["name"]
@@ -117,7 +138,9 @@ class GetWynncraftData:
                 else:
                     player_rank = "Player"
 
-            characters = wynn_response["characters"]
+            characters = wynn_response.get("characters", [])
+            if characters is None:  # if access is restricted, this is none
+                characters = []
 
             pydantic_characters = []
             for character in characters:
@@ -172,32 +195,52 @@ class GetWynncraftData:
 
                 pydantic_characters.append(modeled_character)
 
+            if restrictions.online_status:
+                first_login = None
+                last_login = None
+            else:
+                if (
+                    restrictions.main_access
+                ):  # if main access restrictions are on, firstJoin is innaccessible but lastJoin is fine
+                    first_login = None
+                else:
+                    first_login = wynn_response["firstJoin"]
+                last_login = wynn_response["lastJoin"]
+
+            if restrictions.main_access:
+                player_stats = None
+            else:
+                player_stats = PlayerStats(
+                    wars=wynn_response["globalData"]["wars"],
+                    mobs_killed=wynn_response["globalData"]["mobsKilled"],
+                    chests_opened=wynn_response["globalData"]["chestsFound"],
+                    dungeons_completed=wynn_response["globalData"]["dungeons"]["total"],
+                    raids_completed=wynn_response["globalData"]["raids"]["total"],
+                    playtime_hours=wynn_response["playtime"],
+                )
+
             player_summary = PlayerSummary(
                 username=wynn_response["username"],
                 uuid=wynn_response["uuid"],
                 online=wynn_response["online"],
                 rank=player_rank,
-                first_login=wynn_response["firstJoin"],
-                last_login=wynn_response["lastJoin"],
-                playtime_hours=wynn_response["playtime"],
-                wars=wynn_response["globalData"]["wars"],
-                mobs_killed=wynn_response["globalData"]["mobsKilled"],
-                chests_opened=wynn_response["globalData"]["chestsFound"],
-                dungeons_completed=wynn_response["globalData"]["dungeons"]["total"],
-                raids_completed=wynn_response["globalData"]["raids"]["total"],
+                first_login=first_login,
+                last_login=last_login,
                 characters=pydantic_characters,
                 guild_name=player_guild,
                 guild_prefix=guild_prefix,
+                restrictions=restrictions,
+                player_stats=player_stats,
             )
-            
+
             return player_summary
         except Exception as e:
             print(
                 f"Something went wrong while proccessing wynncaraft player {dashed_uuid}: {e}"
             )
             raise HTTPException(
-                status_code=404,
-                detail=f"Wynncraft Player with UUID {dashed_uuid} not found",
+                status_code=500,
+                detail=f"Wynncraft Player with UUID {dashed_uuid} could not be proccessed",
             )
 
     def get_guild_data(self, guild_prefix: str) -> GuildInfo:
@@ -260,20 +303,24 @@ class GetWynncraftData:
             print(f"Error fetching guild list: {e}")
             return []
 
+
 def add_wynncraft_stats_to_db(data: PlayerSummary) -> None:
+    if data.restrictions.main_access:
+        return
     # this is a dictionary with the corresponding id in the database for the metric
     stats_to_add = {
-        data.chests_opened: 5,
-        data.dungeons_completed: 10,
-        data.mobs_killed: 8,
-        data.wars: 7,
-        data.raids_completed: 11,
-        data.playtime_hours: 6
+        5: data.player_stats.chests_opened,
+        10: data.player_stats.dungeons_completed,
+        8: data.player_stats.mobs_killed,
+        7: data.player_stats.wars,
+        11: data.player_stats.raids_completed,
+        6: data.player_stats.playtime_hours,
     }
     engine = get_engine()
     with engine.begin() as conn:
         for stat in stats_to_add:
-            add_value(conn, data.uuid, stats_to_add[stat], stat)
+            if stats_to_add.get(stat, None) is not None:
+                add_value(conn, data.uuid, stat, stats_to_add[stat])
 
 
 if __name__ == "__main__":
