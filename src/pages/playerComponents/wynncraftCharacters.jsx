@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import './wynncraftCharacters.css'
 import { motion, AnimatePresence } from 'motion/react'
-import Modal from './modal'
 import InfoCard from './infoCard';
 
 
@@ -32,6 +31,9 @@ function CharacterDetails({ character }) {
 }
 
 function WynncraftCharacters({ characterList }) {
+  if (characterList.length === 0) {
+    return <p>This player has no characters.</p>
+  }
   const [expandedId, setExpandedId] = useState(null)
   const handleToggle = (characterUuid) => {
     setExpandedId(expandedId === characterUuid ? null : characterUuid);

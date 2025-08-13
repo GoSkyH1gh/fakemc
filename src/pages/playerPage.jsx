@@ -73,6 +73,7 @@ export function PlayerPage() {
     try {
       let mojangResponseRaw = await fetch(mojangUrl + search_term);
       if (mojangResponseRaw.status == 404) {
+        setStatus("notFound")
         throw new Error("Player not found");
       } else if (!mojangResponseRaw.ok) {
         throw new Error("server error");
@@ -189,7 +190,6 @@ export function PlayerPage() {
     } catch (error) {
       console.error("An error occurred:", error);
       setError(error);
-      setStatus("error");
       setWynncraftStatus(null);
     }
   };
@@ -203,7 +203,7 @@ export function PlayerPage() {
 
       {status === "loading" && <LoadingIndicator />}
       {status === "idle" && <p>Enter a player to search</p>}
-      {status === "error" && (
+      {error != null && (
         <div>
           <h3>An error occured</h3>
           <p>{error.message}</p>

@@ -326,11 +326,21 @@ button {
 }
 
 .icon-button {
-  all: unset
+  all: unset;
+  border: 1px solid #aaa0;
+  border-radius: 5px;
+  height: 20px;
 }
 
 .icon-button:hover {
-  all: unset
+  all: unset;
+  border: 1px solid #aaa0;
+  border-radius: 5px;
+  height: 20px;
+}
+
+.icon-button:focus {
+  border-color: var(--color-accent);
 }
 
 .center {

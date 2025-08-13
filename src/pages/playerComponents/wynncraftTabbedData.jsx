@@ -7,7 +7,6 @@ import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
 
 function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
-  const [selectedMetric, setSelectedMetric] = useState("wynncraft_mobs_killed");
   const [metricData, setMetricData] = useState(null);
 
   const fetchMetric = async (metric_key, player_uuid) => {
@@ -24,7 +23,6 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
 
   const handleStatClick = (metric_key, uuid) => {
     setMetricData(null);
-    setSelectedMetric(metric_key);
     fetchMetric(metric_key, uuid);
   };
 
@@ -41,6 +39,23 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
   }
   return (
     <>
+      {wynncraftData.restrictions.main_access && (
+        <p>Warning: this player has disabled API access to main stats</p>
+      )}
+      {wynncraftData.restrictions.character_data_access && (
+        <p>Warning: this player has disabled API access to their characters</p>
+      )}
+      {wynncraftData.restrictions.build_access && (
+        <p>
+          Warning: this player has disabled API access to their build
+          information
+        </p>
+      )}
+      {wynncraftData.restrictions.build_access && (
+        <p>
+          Warning: this player has disabled API access to their online status
+        </p>
+      )}
       <h2 className="wynn-nametag">
         {wynncraftData.guild_prefix && "[" + wynncraftData.guild_prefix + "]"}
         <span className="wynn-username">{wynncraftData.username}</span>
@@ -52,7 +67,10 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           }
           hasStats={true}
           label="Total playtime"
-          value={wynncraftData.playtime_hours + " hours"}
+          value={
+            formatValue(wynncraftData.player_stats?.playtime_hours, false) +
+            " hours"
+          }
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
@@ -75,7 +93,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           onClick={() => handleStatClick("wynncraft_wars", wynncraftData.uuid)}
           hasStats={true}
           label="Wars"
-          value={formatValue(wynncraftData.wars)}
+          value={formatValue(wynncraftData.player_stats?.wars)}
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
@@ -85,7 +103,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           }
           hasStats={true}
           label="Mobs killed"
-          value={formatValue(wynncraftData.mobs_killed)}
+          value={formatValue(wynncraftData.player_stats?.mobs_killed)}
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
@@ -95,7 +113,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           }
           hasStats={true}
           label="Chests opened"
-          value={formatValue(wynncraftData.chests_opened)}
+          value={formatValue(wynncraftData.player_stats?.chests_opened)}
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
@@ -105,7 +123,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           }
           hasStats={true}
           label="Dungeons completed"
-          value={formatValue(wynncraftData.dungeons_completed)}
+          value={formatValue(wynncraftData.player_stats?.dungeons_completed)}
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
@@ -115,7 +133,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
           }
           hasStats={true}
           label="Raids completed"
-          value={formatValue(wynncraftData.raids_completed)}
+          value={formatValue(wynncraftData.player_stats?.raids_completed)}
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>

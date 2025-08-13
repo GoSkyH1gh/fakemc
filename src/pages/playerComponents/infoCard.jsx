@@ -20,13 +20,8 @@ function InfoCard({ label, value, onClick, hasStats = false, children }) {
           </div>
           <Popover.Root>
             <Popover.Trigger asChild>
-              <button className="icon-button">
-                <img
-                  src={ArrowOutward}
-                  alt="View Stats"
-                  className="icon"
-                  onClick={onClick}
-                />
+              <button className="icon-button" onClick={onClick}>
+                <img src={ArrowOutward} alt="View Stats" className="icon" />
               </button>
             </Popover.Trigger>
             <Popover.Portal>

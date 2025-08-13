@@ -17,14 +17,19 @@ function formatISOTimestamp(timestamp) {
   return readableDate;
 }
 
-const formatValue = (value) => {
+const formatValue = (value, compact = true) => {
   if (value == null) {
     return "Unknown";
   } else {
-    return value.toLocaleString("en-US", {
+    if (compact) {
+      return value.toLocaleString("en-US", {
       notation: "compact",
       maximumFractionDigits: 1,
     });
+    }
+    else {
+      return value
+    }
   }
 };
 
