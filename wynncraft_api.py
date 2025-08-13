@@ -61,6 +61,7 @@ class PlayerSummary(BaseModel):
     uuid: str
     online: bool
     rank: str
+    rank_badge: Optional[str]
     first_login: Optional[str]
     last_login: Optional[str]
     guild_name: Optional[str]
@@ -224,6 +225,7 @@ class GetWynncraftData:
                 uuid=wynn_response["uuid"],
                 online=wynn_response["online"],
                 rank=player_rank,
+                rank_badge=wynn_response["rankBadge"],
                 first_login=first_login,
                 last_login=last_login,
                 characters=pydantic_characters,

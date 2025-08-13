@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from pydantic import BaseModel
 from typing import Optional, List
+from fastapi import HTTPException
 
 
 BUCKET_COUNT = 6
@@ -85,18 +86,21 @@ def get_stats(metric_key, player_uuid) -> HistogramData:
         unit = metric_row.unit
         higher_is_better = metric_row.higher_is_better
 
-        player_value = conn.execute(
-            text(
-                """
-                SELECT value
-                FROM metric_values
-                WHERE metric_id = :metric_id
-                AND player_uuid = :player_uuid
-                """
-            ),
-            {"metric_id": metric_id, "player_uuid": player_uuid},
-        ).fetchone()[0]
-        # print(player_value)
+        try:
+            player_value = conn.execute(
+                text(
+                    """
+                    SELECT value
+                    FROM metric_values
+                    WHERE metric_id = :metric_id
+                    AND player_uuid = :player_uuid
+                    """
+                ),
+                {"metric_id": metric_id, "player_uuid": player_uuid},
+            ).fetchone()[0]
+            # print(player_value)
+        except TypeError:
+            raise HTTPException(404, "Player not found in database")
 
         bounds = conn.execute(
             text(
