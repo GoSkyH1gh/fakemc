@@ -16,6 +16,14 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
     let metricResponseRaw = await fetch(
       `${baseUrl}/v1/metrics/${metric_key}/distribution/${player_uuid}`
     );
+    if (metricResponseRaw.status === 404) {
+      setMetricData("notFound");
+      return;
+    } else if (!metricResponseRaw.ok) {
+      setMetricData("error");
+      return;
+    }
+
     let metricResponse = await metricResponseRaw.json();
     setMetricData(metricResponse);
     console.log("Got metric response: ", metricResponse);
@@ -74,7 +82,20 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         >
           <DistributionChartWrapper metricData={metricData} />
         </InfoCard>
-        <InfoCard label="Rank" value={wynncraftData.rank} />
+        <InfoCard
+          label="Rank"
+          value={
+            wynncraftData.rank_badge ? (
+              <img
+                src={`https://cdn.wynncraft.com/${wynncraftData.rank_badge}`}
+                className="wynn-rank"
+                alt={wynncraftData.rank}
+              />
+            ) : (
+              wynncraftData.rank
+            )
+          }
+        />
         <InfoCard
           label="First Login"
           value={formatISOTimestamp(wynncraftData.first_login)}

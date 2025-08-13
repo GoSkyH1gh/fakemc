@@ -66,3 +66,16 @@
   padding: 10px;
   border: 1px solid var(--color-surfact-layer-2);
 }
+
+.wynn-mode {
+  height: 30px;
+}
+
+.wynn-modes {
+  display: flex;
+  gap: 6px
+}
+
+.wynn-rank {
+  width: 76px;
+}

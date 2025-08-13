@@ -3,7 +3,13 @@ import LoadingIndicator from "./loadingIndicator";
 
 function DistributionChartWrapper({ metricData }) {
   if (metricData === null) {
-    return <p className="distribution-graph">There's no data to show</p>;
+    return <p className="distribution-graph center">There's no data to show</p>;
+  }
+  if (metricData === "notFound") {
+    return <p className="distribution-graph center">Data not found for player</p>
+  }
+  if (metricData === "error") {
+    return <p className="distribution-graph center">An error occurred while fetching metrics</p>
   }
   if (metricData === "loading") {
     return (
