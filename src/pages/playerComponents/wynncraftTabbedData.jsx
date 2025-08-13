@@ -160,13 +160,22 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         </InfoCard>
       </ul>
       <h3>Characters</h3>
-      <p>
-        {wynncraftData.username} has {wynncraftData.characters.length}{" "}
-        characters.
-        <br />
-        Click on a character to expand
-      </p>
-      <WynncraftCharacters characterList={wynncraftData.characters} />
+      {!wynncraftData.restrictions.character_data_access && (
+        <>
+          <p>
+            {wynncraftData.username} has {wynncraftData.characters.length}{" "}
+            characters.
+            <br />
+            Click on a character to expand
+          </p>
+          <WynncraftCharacters characterList={wynncraftData.characters} />
+        </>
+      )}
+      {wynncraftData?.characters?.length === 0 &&
+        wynncraftData.restrictions.character_data_access && (
+          <p>{wynncraftData.username}'s characters are not available</p>
+        )}
+
       {wynnGuildElements}
     </>
   );

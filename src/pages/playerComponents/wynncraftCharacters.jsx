@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./wynncraftCharacters.css";
 import { motion, AnimatePresence } from "motion/react";
 import InfoCard from "./infoCard";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 const modesMap = {
   ironman: "https://cdn.wynncraft.com/nextgen/badges/ironman.svg",
@@ -12,6 +13,18 @@ const modesMap = {
   craftsman: "https://cdn.wynncraft.com/nextgen/badges/craftsman.svg",
   hunted: "https://cdn.wynncraft.com/nextgen/badges/hunted.svg",
 };
+
+const modeAttributeMap = {
+  ironman: "Ironman",
+  ultimate_ironman: "Ultimate Ironman",
+  hardcore: "Hardcore",
+  defeated_hardcore: "Defeated Hardcode",
+  craftsman: "Craftsman",
+  hunted: "Hunted",
+};
+
+const classImageUrl =
+  "https://cdn.wynncraft.com/nextgen/themes/journey/assets/classes/";
 
 function CharacterDetails({ character }) {
   const professionList = [
@@ -81,16 +94,46 @@ function WynncraftCharacters({ characterList }) {
         key={character.character_uuid}
       >
         <div>
-          <p className="em-text">{character.character_class}</p>
+          <div className="wynn-character-row">
+            <motion.img
+              whileHover={{ scale: 1.05, y: -10 }}
+              src={
+                classImageUrl +
+                character.character_class.toLowerCase() +
+                ".webp"
+              }
+              alt={character.character_class}
+              className="wynn-character-icon"
+            />
+            <div className="wynn-classname-c">
+              <p className="em-text">{character.character_class}</p>
+              <div className="wynn-modes">
+                {character.gamemodes.map((gamemode) => (
+                  <Tooltip.Provider>
+                    <Tooltip.Root delayDuration={100}>
+                      <Tooltip.Trigger asChild>
+                        <motion.img
+                          whileHover={{ scale: 1.3 }}
+                          src={modesMap[gamemode]}
+                          className="wynn-mode"
+                        />
+                      </Tooltip.Trigger>
+                      <Tooltip.Portal>
+                        <Tooltip.Content className="TooltipContent">
+                          {modeAttributeMap[gamemode]}
+                        </Tooltip.Content>
+                      </Tooltip.Portal>
+                    </Tooltip.Root>
+                  </Tooltip.Provider>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <p className="secondary-text">
             level {character.level} <br />
             played for {character.playtime} hours
           </p>
-          <div className="wynn-modes">
-            {character.gamemodes.map((gamemode) => (
-              <img src={modesMap[gamemode]} className="wynn-mode" />
-            ))}
-          </div>
         </div>
         <AnimatePresence>
           {isExpanded && <CharacterDetails character={character} />}

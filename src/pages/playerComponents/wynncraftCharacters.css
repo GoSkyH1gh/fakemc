@@ -68,7 +68,7 @@
 }
 
 .wynn-mode {
-  height: 30px;
+  height: 25px;
 }
 
 .wynn-modes {
@@ -77,5 +77,21 @@
 }
 
 .wynn-rank {
-  width: 76px;
+  height: 20px;
+  image-rendering: pixelated;
+}
+
+.wynn-character-icon {
+  height: 100px;
+}
+
+.wynn-character-row {
+  display: flex;
+}
+
+.wynn-classname-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
 }
