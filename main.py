@@ -14,6 +14,7 @@ from donut_api import get_donut_stats, DonutPlayerStats
 from mcci_api import MCCIPlayer, get_mcci_data
 import os
 from metrics_manager import get_stats, HistogramData
+from donut_api import add_donut_stats_to_db
 
 load_dotenv()
 
@@ -87,8 +88,10 @@ def get_wynncraft_guild_list():
 
 # donutsmp endpoint
 @app.get("/v1/players/donutsmp/{username}")
-def get_donut(username) -> DonutPlayerStats:
-    return get_donut_stats(username)
+def get_donut(username, background_tasks: BackgroundTasks) -> DonutPlayerStats:
+    player_data = get_donut_stats(username)
+    background_tasks.add_task(add_donut_stats_to_db, player_data, username)
+    return player_data
 
 
 # mcci endpoint

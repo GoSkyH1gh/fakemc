@@ -5,9 +5,18 @@ from pydantic import BaseModel
 from typing import Optional
 from fastapi import HTTPException
 from metrics_manager import add_value, get_engine
+from dotenv import load_dotenv
+import os
 
 # General notes
 # * The wynncraft api requires dashed uuids so when calling something by UUID dashed_uuid should be used
+
+load_dotenv()
+
+wynn_token = os.getenv("WYNN_TOKEN")
+
+if not wynn_token:
+    raise RuntimeError("Wynncraft Token not set in environment variables.")
 
 
 class PlayerRestrictions(BaseModel):
@@ -102,7 +111,8 @@ class GetWynncraftData:
         """Gets basic data about the player"""
         dashed_uuid = dashify_uuid(uuid)
         raw_wynn_response = requests.get(
-            f"https://api.wynncraft.com/v3/player/{dashed_uuid}?fullResult"
+            f"https://api.wynncraft.com/v3/player/{dashed_uuid}?fullResult",
+            headers={"Authorization": f"Bearer {wynn_token}"},
         )
         if raw_wynn_response.status_code == 404:
             raise HTTPException(
@@ -248,7 +258,8 @@ class GetWynncraftData:
     def get_guild_data(self, guild_prefix: str) -> GuildInfo:
         """Gets the guild response, player_guild is req"""
         raw_guild_response = requests.get(
-            f"https://api.wynncraft.com/v3/guild/prefix/{guild_prefix}?identifier=username"
+            f"https://api.wynncraft.com/v3/guild/prefix/{guild_prefix}?identifier=username",
+            headers={"Authorization": f"Bearer {wynn_token}"},
         )
         guild_response = raw_guild_response.json()
 
@@ -289,14 +300,18 @@ class GetWynncraftData:
 
     def _get_total_quests(self):
         """This is the total number of quests, which changes very rarely"""
-        quests_response = requests.get(f"https://api.wynncraft.com/v3/map/quests")
+        quests_response = requests.get(
+            f"https://api.wynncraft.com/v3/map/quests",
+            headers={"Authorization": f"Bearer {wynn_token}"},
+        )
         quests_response = quests_response.json()
         print(quests_response)
 
     def get_guild_list(self):
         try:
             guilds_reponse = requests.get(
-                f"https://api.wynncraft.com/v3/guild/list/guild"
+                f"https://api.wynncraft.com/v3/guild/list/guild",
+                headers={"Authorization": f"Bearer {wynn_token}"},
             )
             guilds_reponse.raise_for_status()
 

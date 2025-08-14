@@ -4,6 +4,8 @@ import os
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import HTTPException
+from metrics_manager import add_value, get_engine
+from data_manager import DataManager
 
 load_dotenv()
 
@@ -11,6 +13,7 @@ donut_api_key = os.getenv("donut_api_key")
 
 if not donut_api_key:
     raise RuntimeError("Donut API key not set in environment variables.")
+
 
 class DonutPlayerStats(BaseModel):
     money: int
@@ -29,16 +32,19 @@ class DonutPlayerStats(BaseModel):
 def get_donut_stats(username) -> DonutPlayerStats:
     """Returns a DonutPlayerStats object on success, 404 on fail"""
     try:
-        donut_response_raw = requests.get(f"https://api.donutsmp.net/v1/stats/{username}", headers={"Authorization": donut_api_key})
+        donut_response_raw = requests.get(
+            f"https://api.donutsmp.net/v1/stats/{username}",
+            headers={"Authorization": donut_api_key},
+        )
         donut_response_raw.raise_for_status()
         donut_response = donut_response_raw.json()
-        
+
         online_status = get_donut_status(username)
 
     except Exception as e:
         print(f"could not retrieve stats: {e}")
         raise HTTPException(404, {"message": f"player {username} was not found"})
-    
+
     stats_to_convert = {
         "money": "money",
         "shards": "shards",
@@ -48,25 +54,25 @@ def get_donut_stats(username) -> DonutPlayerStats:
         "broken_blocks": "broken_blocks",
         "mobs_killed": "mobs_killed",
         "money_spent_on_shop": "money_spent",
-        "money_made_from_sell": "money_earned"
-        }
-    
+        "money_made_from_sell": "money_earned",
+    }
+
     converted_stats = {}
 
     for stat in stats_to_convert:
         try:
-            raw_stat = donut_response['result'][stat]
+            raw_stat = donut_response["result"][stat]
             converted_stat = int(float(raw_stat))
             # the reason to float and then int is because money_earned_from_sell
             # can be a float and that cant be directly converted to an int
         except Exception as e:
             print(f"conversion failed for {stat}: {e}")
-            converted_stat = 0 # if conversion fails reset to 0
+            converted_stat = 0  # if conversion fails reset to 0
 
         converted_stats[stats_to_convert[stat]] = converted_stat
-    
+
     try:
-        playtime_milliseconds = int(donut_response['result']['playtime'])
+        playtime_milliseconds = int(donut_response["result"]["playtime"])
         playtime_hours = playtime_milliseconds / 3600000
         playtime_hours = round(playtime_hours, 1)
     except Exception as e:
@@ -74,37 +80,82 @@ def get_donut_stats(username) -> DonutPlayerStats:
         playtime_hours = 0
 
     player_stats = DonutPlayerStats(
-        money=converted_stats['money'],
-        shards=converted_stats['shards'],
-        kills=converted_stats['kills'],
-        deaths=converted_stats['deaths'],
+        money=converted_stats["money"],
+        shards=converted_stats["shards"],
+        kills=converted_stats["kills"],
+        deaths=converted_stats["deaths"],
         playtime_hours=playtime_hours,
-        placed_blocks=converted_stats['placed_blocks'],
-        broken_blocks=converted_stats['broken_blocks'],
-        mobs_killed=converted_stats['mobs_killed'],
-        money_spent=converted_stats['money_spent'],
-        money_earned=converted_stats['money_earned'],
-        online=online_status
+        placed_blocks=converted_stats["placed_blocks"],
+        broken_blocks=converted_stats["broken_blocks"],
+        mobs_killed=converted_stats["mobs_killed"],
+        money_spent=converted_stats["money_spent"],
+        money_earned=converted_stats["money_earned"],
+        online=online_status,
     )
     return player_stats
-    
+
+
 def get_donut_status(username) -> bool:
     """Returns true if the player is online, false if offline"""
     # so the donutapi is really dumb it only shows rank if the player is online like who designed this 💀
     try:
-        donut_status_response = requests.get(f"https://api.donutsmp.net/v1/lookup/{username}", headers={"Authorization": donut_api_key})
+        donut_status_response = requests.get(
+            f"https://api.donutsmp.net/v1/lookup/{username}",
+            headers={"Authorization": donut_api_key},
+        )
 
-        if donut_status_response.status_code == 500: # if the player is offline, the server returns a 500
+        if (
+            donut_status_response.status_code == 500
+        ):  # if the player is offline, the server returns a 500
             return False
-        
+
         donut_status_response.raise_for_status()
 
-        if donut_status_response.json()['result'] is not None:
+        if donut_status_response.json()["result"] is not None:
             return True
     except Exception as e:
         print(f"could not retrieve status: {e}")
         return False
-    
+
+
+def add_donut_stats_to_db(data: DonutPlayerStats, username) -> None:
+    if not isinstance(data, DonutPlayerStats):
+        print("Couldn't add donut data to db because it's not DonutPlayerStats")
+        return
+
+    stats_to_add = {
+        12: data.playtime_hours,
+        13: data.kills,
+        14: data.deaths,
+        15: data.money,
+        16: data.money_spent,
+        17: data.money_earned,
+        18: data.shards,
+        19: data.broken_blocks,
+        20: data.placed_blocks,
+    }
+
+    try:
+        data_instance = DataManager("") # doesnt need hypixel api key
+        uuid = data_instance.get_mojang_data(username).get("uuid", None)
+    except HTTPException:
+        print(
+            f"Donut Stats: an HTTP Exception happened while fetching uuid for {username}; not adding to db"
+        )
+        return
+
+    if uuid is None:
+        print(
+            f"Donut Stats: could not get uuid for player {username}; not adding to db"
+        )
+        return
+
+    engine = get_engine()
+    with engine.begin() as conn:
+        for stat in stats_to_add:
+            if stats_to_add.get(stat, None) is not None:
+                add_value(conn, uuid, stat, stats_to_add[stat])
+
 
 if __name__ == "__main__":
     data = get_donut_stats("2b3t")

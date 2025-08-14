@@ -53,7 +53,7 @@ def add_value(conn, uuid, id, value) -> None:
     )
 
 
-def add_stat() -> None:
+def create_stat() -> None:
     engine = get_engine()
     with engine.begin() as conn:
         conn.execute(

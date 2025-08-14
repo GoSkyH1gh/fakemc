@@ -272,14 +272,14 @@ class DataManager:
                         return
                     if mojang_data and mojang_data["status"] == "success":
                         return {
-                            "uuid": mojang_data["uuid"],
+                            "uuid": uuid,
                             "username": mojang_data["username"],
                             "skin_showcase_b64": mojang_data["skin_showcase_b64"]
                         }
                 except Exception as e:
                     logger.error(f"could not fetch member with uuid {uuid}: {e}")
 
-            with ThreadPoolExecutor(max_workers=10) as executor:
+            with ThreadPoolExecutor(max_workers=5) as executor:
                 futures = []
                 for uuid in uuids_to_fetch_from_api:
                     futures.append(executor.submit(fetch_member, uuid))
@@ -298,7 +298,6 @@ class DataManager:
             member_data = resolved_members.get(uuid, None)
             if member_data is not None:
                 final_list.append({
-                    "uuid": member_data.get("uuid"),
                     "name": member_data.get("username"),
                     "skin_showcase_b64": member_data.get("skin_showcase_b64")
                 })
