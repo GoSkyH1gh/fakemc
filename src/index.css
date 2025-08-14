@@ -45,6 +45,7 @@ button:focus-visible {
   min-width: 50px;
   backdrop-filter: blur(100px);
   background-color: #ccc1;
+  border: 1px solid #ccc1;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   position: fixed;
   border-radius: 15px;
@@ -66,6 +67,25 @@ button:focus-visible {
 .sidebar > ul > li {
   display: block;
   align-self: center;
+}
+
+@media screen and (width < 750px) {
+  .sidebar {
+    width: auto;
+    padding: 0 10px;
+    backdrop-filter: blur(100px);
+    background-color: #ccc1;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 1rem + 1vw;
+    border-radius: 15px;
+  }
+  .sidebar > ul {
+    flex-direction: row;
+    padding: 10px;
+    margin: 0;
+  }
 }
 
 /*

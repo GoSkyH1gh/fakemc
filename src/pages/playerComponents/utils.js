@@ -33,4 +33,29 @@ const formatValue = (value, compact = true) => {
   }
 };
 
-export {formatISOTimestamp, formatValue}
+const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
+    setMetricData("loading");
+    const baseUrl =
+      import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com";
+    let metricResponseRaw = await fetch(
+      `${baseUrl}/v1/metrics/${metric_key}/distribution/${player_uuid}`
+    );
+    if (metricResponseRaw.status === 404) {
+      setMetricData("notFound");
+      return;
+    } else if (!metricResponseRaw.ok) {
+      setMetricData("error");
+      return;
+    }
+
+    let metricResponse = await metricResponseRaw.json();
+    setMetricData(metricResponse);
+    console.log("Got metric response: ", metricResponse);
+  };
+
+  const handleStatClick = (metric_key, uuid, setMetricData) => {
+    setMetricData(null);
+    fetchMetric(metric_key, uuid, setMetricData);
+  };
+
+export {formatISOTimestamp, formatValue, handleStatClick}

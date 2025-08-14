@@ -5,6 +5,26 @@
   min-width: 60vw;
 }
 
+@media screen and (width < 1400px) {
+  .main-content {
+    margin: 4vh 15vw 4vh 15vw;
+  }
+}
+
+@media screen and (width < 900px) {
+  .main-content {
+    margin: 4vh 10vw 4vh 10vw;
+  }
+}
+
+@media screen and (width < 750px) {
+  .main-content {
+    margin: 6vh 1vw 4vh 1vw;
+    padding: 1rem;
+  }
+}
+
+
 :root {
   
   --hue: 245;
@@ -123,7 +143,8 @@ button:hover {
 
 .mojang-img {
   display: flex;
-  gap: 15px
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .username {
@@ -273,6 +294,7 @@ button {
 
 .advanced-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 15px;
   position: sticky;
   top: 15px;

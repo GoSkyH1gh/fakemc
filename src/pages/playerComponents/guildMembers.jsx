@@ -17,7 +17,7 @@ function GuildMembers({ guild_members }) {
       <motion.li
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        key={member.uuid}
+        key={member.name}
         className="guild-list-item"
         onClick={() => handleGuildMemberClick(member.name)}
         variants={{

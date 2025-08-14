@@ -8,12 +8,12 @@ import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
 import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
 
 export function PlayerPage() {
-  const { username } = useParams(); 
+  const { username } = useParams();
   useEffect(() => {
     if (username) {
       fetchDataForPlayer(username);
     }
-  }, [username])
+  }, [username]);
 
   const [mojangData, setMojangData] = useState(null);
   const [playerStatus, setPlayerStatus] = useState(null);
@@ -35,9 +35,11 @@ export function PlayerPage() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
 
-  const [loadedTabs, setLoadedTabs] = useState([])
+  const [loadedTabs, setLoadedTabs] = useState([]);
 
-  const addLoadedTab = (tabToAdd) => {setLoadedTabs(prev => [...prev, tabToAdd])}
+  const addLoadedTab = (tabToAdd) => {
+    setLoadedTabs((prev) => [...prev, tabToAdd]);
+  };
 
   const fetchDataForPlayer = async (search_term) => {
     setMojangData(null);
@@ -56,7 +58,7 @@ export function PlayerPage() {
     setDonutStatus("loading");
     setMcciStatus("loading");
 
-    setLoadedTabs([])
+    setLoadedTabs([]);
 
     const baseUrl =
       import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com";
@@ -73,7 +75,7 @@ export function PlayerPage() {
     try {
       let mojangResponseRaw = await fetch(mojangUrl + search_term);
       if (mojangResponseRaw.status == 404) {
-        setStatus("notFound")
+        setStatus("notFound");
         throw new Error("Player not found");
       } else if (!mojangResponseRaw.ok) {
         throw new Error("server error");
@@ -117,8 +119,8 @@ export function PlayerPage() {
         setHypixelStatus("loaded");
       } else {
         setHypixelData("not found (server error)");
-        setHypixelStatus("loaded")
-        throw new Error("error for Hypixel data")
+        setHypixelStatus("loaded");
+        throw new Error("error for Hypixel data");
       }
 
       // wynncraft
@@ -186,7 +188,6 @@ export function PlayerPage() {
         setMcciStatus("loaded");
         addLoadedTab("mcci");
       }
-
     } catch (error) {
       console.error("An error occurred:", error);
       setError(error);
@@ -196,9 +197,7 @@ export function PlayerPage() {
 
   return (
     <>
-      <SearchRow
-        disabled={status === "loading"}
-      />
+      <SearchRow disabled={status === "loading"} />
       <br />
 
       {status === "loading" && <LoadingIndicator />}
@@ -238,6 +237,7 @@ export function PlayerPage() {
             mcciData={mcciData}
             mcciStatus={mcciStatus}
             loadedTabs={loadedTabs}
+            uuid={mojangData.uuid}
           />
         </div>
       )}

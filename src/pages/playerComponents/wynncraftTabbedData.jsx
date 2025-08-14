@@ -1,38 +1,13 @@
 import { motion } from "motion/react";
 import InfoCard from "./infoCard";
 import WynncraftCharacters from "./wynncraftCharacters";
-import { formatISOTimestamp, formatValue } from "./utils";
+import { formatISOTimestamp, formatValue, handleStatClick } from "./utils";
 import WynncraftGuild from "./wynncraftGuild";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
 
 function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
   const [metricData, setMetricData] = useState(null);
-
-  const fetchMetric = async (metric_key, player_uuid) => {
-    setMetricData("loading");
-    const baseUrl =
-      import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com";
-    let metricResponseRaw = await fetch(
-      `${baseUrl}/v1/metrics/${metric_key}/distribution/${player_uuid}`
-    );
-    if (metricResponseRaw.status === 404) {
-      setMetricData("notFound");
-      return;
-    } else if (!metricResponseRaw.ok) {
-      setMetricData("error");
-      return;
-    }
-
-    let metricResponse = await metricResponseRaw.json();
-    setMetricData(metricResponse);
-    console.log("Got metric response: ", metricResponse);
-  };
-
-  const handleStatClick = (metric_key, uuid) => {
-    setMetricData(null);
-    fetchMetric(metric_key, uuid);
-  };
 
   let wynnGuildElements;
   if (wynncraftGuildData != "no guild") {
@@ -47,22 +22,36 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
   }
   return (
     <>
-      {wynncraftData.restrictions.main_access && (
-        <p>Warning: this player has disabled API access to main stats</p>
-      )}
-      {wynncraftData.restrictions.character_data_access && (
-        <p>Warning: this player has disabled API access to their characters</p>
-      )}
-      {wynncraftData.restrictions.build_access && (
-        <p>
-          Warning: this player has disabled API access to their build
-          information
-        </p>
-      )}
-      {wynncraftData.restrictions.build_access && (
-        <p>
-          Warning: this player has disabled API access to their online status
-        </p>
+      {(wynncraftData.restrictions.main_access ||
+        wynncraftData.restrictions.character_data_access ||
+        wynncraftData.restrictions.character_build_access ||
+        wynncraftData.restrictions.online_status) && (
+        <div className="wynn-restrictions">
+          {wynncraftData.restrictions.main_access && (
+            <p>
+              Warning: This player has disabled API access to their{" "}
+              <strong>main stats</strong>
+            </p>
+          )}
+          {wynncraftData.restrictions.character_data_access && (
+            <p>
+              Warning: This player has disabled API access to their{" "}
+              <strong>characters</strong>
+            </p>
+          )}
+          {wynncraftData.restrictions.character_build_access && (
+            <p>
+              Warning: This player has disabled API access to their{" "}
+              <strong>build information</strong>
+            </p>
+          )}
+          {wynncraftData.restrictions.online_status && (
+            <p>
+              Warning: This player has disabled API access to their{" "}
+              <strong>online status</strong>
+            </p>
+          )}
+        </div>
       )}
       <h2 className="wynn-nametag">
         {wynncraftData.guild_prefix && "[" + wynncraftData.guild_prefix + "]"}
@@ -71,7 +60,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
       <ul className="info-card-list">
         <InfoCard
           onClick={() =>
-            handleStatClick("wynncraft_hours_played", wynncraftData.uuid)
+            handleStatClick(
+              "wynncraft_hours_played",
+              wynncraftData.uuid,
+              setMetricData
+            )
           }
           hasStats={true}
           label="Total playtime"
@@ -111,7 +104,9 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
       <h3>Global Stats</h3>
       <ul className="info-card-list">
         <InfoCard
-          onClick={() => handleStatClick("wynncraft_wars", wynncraftData.uuid)}
+          onClick={() =>
+            handleStatClick("wynncraft_wars", wynncraftData.uuid, setMetricData)
+          }
           hasStats={true}
           label="Wars"
           value={formatValue(wynncraftData.player_stats?.wars)}
@@ -120,7 +115,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         </InfoCard>
         <InfoCard
           onClick={() =>
-            handleStatClick("wynncraft_mobs_killed", wynncraftData.uuid)
+            handleStatClick(
+              "wynncraft_mobs_killed",
+              wynncraftData.uuid,
+              setMetricData
+            )
           }
           hasStats={true}
           label="Mobs killed"
@@ -130,7 +129,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         </InfoCard>
         <InfoCard
           onClick={() =>
-            handleStatClick("wynncraft_chests_opened", wynncraftData.uuid)
+            handleStatClick(
+              "wynncraft_chests_opened",
+              wynncraftData.uuid,
+              setMetricData
+            )
           }
           hasStats={true}
           label="Chests opened"
@@ -140,7 +143,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         </InfoCard>
         <InfoCard
           onClick={() =>
-            handleStatClick("wynncraft_dungeons_completed", wynncraftData.uuid)
+            handleStatClick(
+              "wynncraft_dungeons_completed",
+              wynncraftData.uuid,
+              setMetricData
+            )
           }
           hasStats={true}
           label="Dungeons completed"
@@ -150,7 +157,11 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         </InfoCard>
         <InfoCard
           onClick={() =>
-            handleStatClick("wynncraft_raids_completed", wynncraftData.uuid)
+            handleStatClick(
+              "wynncraft_raids_completed",
+              wynncraftData.uuid,
+              setMetricData
+            )
           }
           hasStats={true}
           label="Raids completed"
@@ -173,7 +184,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
       )}
       {wynncraftData?.characters?.length === 0 &&
         wynncraftData.restrictions.character_data_access && (
-          <p>{wynncraftData.username}'s characters are not available</p>
+          <p>{wynncraftData.username}'s characters are unavailable</p>
         )}
 
       {wynnGuildElements}

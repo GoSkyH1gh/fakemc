@@ -17,7 +17,8 @@ function AdvancedInfoTabs({
   donutStatus,
   mcciData,
   mcciStatus,
-  loadedTabs
+  loadedTabs,
+  uuid,
 }) {
   const [selectedTab, setSelectedTab] = useState("");
   if (selectedTab === "" && loadedTabs.length > 0) {
@@ -72,7 +73,7 @@ function AdvancedInfoTabs({
     }
     else if (donutStatus === "loaded") {
       tabContents = (
-        <DonutTabbedData donutData={donutData}/>
+        <DonutTabbedData donutData={donutData} uuid={uuid}/>
       )
     }
   } else if (selectedTab === "mcci") {
