@@ -15,6 +15,7 @@ from mcci_api import MCCIPlayer, get_mcci_data
 import os
 from metrics_manager import get_stats, HistogramData
 from donut_api import add_donut_stats_to_db
+import exceptions
 
 load_dotenv()
 
@@ -39,13 +40,19 @@ def root():
     return response
 
 
-@app.get("/v1/players/mojang/{username}")
+@app.get(
+    "/v1/players/mojang/{username}",
+    responses={404: {"model": exceptions.ErrorResponse, "description": "Not found"}},
+)
 def get_profile(username):
     data_instance = DataManager(hypixel_api_key)
     return data_instance.get_mojang_data(username)
 
 
-@app.get("/v1/players/hypixel/{uuid}")
+@app.get(
+    "/v1/players/hypixel/{uuid}",
+    responses={404: {"model": exceptions.ErrorResponse, "description": "Not found"}},
+)
 def get_hypixel(uuid):
     data_instance = DataManager(hypixel_api_key)
     return data_instance.get_hypixel_data(uuid)
@@ -65,7 +72,10 @@ async def get_status(uuid):
 # wynncraft endpoints
 
 
-@app.get("/v1/players/wynncraft/{uuid}")
+@app.get(
+    "/v1/players/wynncraft/{uuid}",
+    responses={404: {"model": exceptions.ErrorResponse, "description": "Not found"}},
+)
 def get_wynncraft(uuid: str, background_tasks: BackgroundTasks) -> PlayerSummary:
     data_instance = GetWynncraftData()
     player_data = data_instance.get_player_data(uuid)

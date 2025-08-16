@@ -122,7 +122,7 @@ class GetMojangAPIData:
             )
             request.raise_for_status()
             logger.info("request success for getting UUID!")
-            json_request = json.loads(request.text)
+            json_request = request.json()
             logger.debug(json_request)
             self.uuid = json_request["id"]
             self.username = json_request["name"]
@@ -145,7 +145,7 @@ class GetMojangAPIData:
                 f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}"
             )
             request.raise_for_status()
-            json_request = json.loads(request.text)
+            json_request = request.json()
             logger.info("request success for getting skin and cape data!")
 
             # gets a list which contains a dictionary

@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from metrics_manager import add_value, get_engine
 from dotenv import load_dotenv
 import os
+from exceptions import NotFound
 
 # General notes
 # * The wynncraft api requires dashed uuids so when calling something by UUID dashed_uuid should be used
@@ -115,10 +116,7 @@ class GetWynncraftData:
             headers={"Authorization": f"Bearer {wynn_token}"},
         )
         if raw_wynn_response.status_code == 404:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Wynncraft Player with UUID {dashed_uuid} not found",
-            )
+            raise NotFound()
         try:
 
             raw_wynn_response.raise_for_status()

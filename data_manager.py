@@ -7,6 +7,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import exceptions
 
 
 logger = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ class DataManager:
                 source = "cache"
             except KeyError as e:
                 logger.error(f"KeyError while getting data from cache: {e}")
-                raise HTTPException(404, {"message": "player not found"})
+                raise exceptions.NotFound()
                 
             logger.debug(f"data from cache: {data_from_cache}")
 
@@ -94,7 +95,7 @@ class DataManager:
                 logger.info(f"lookup failed for {search_term}, not adding to cache")
                 status = "lookup_failed"
                 source = "mojang_api"
-                raise HTTPException(404, {"message": "player not found"})
+                raise exceptions.NotFound()
         
         response = {
             "status": status,

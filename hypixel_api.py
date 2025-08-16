@@ -2,10 +2,11 @@ import requests
 import datetime
 from dotenv import load_dotenv
 import os
-import json
 import logging
-import time
 from fastapi import HTTPException
+import exceptions
+from pydantic import BaseModel
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,12 @@ rank_map = {
     "MVP_PLUS": "MVP+",
     "YOUTUBER": "YouTube"
 }
+
+class HypixelPlayer(BaseModel):
+    uuid: str
+    first_login: Optional[str]
+    last_login: Optional[str]
+    rank: str
 
 
 class GetHypixelData:
@@ -41,10 +48,15 @@ class GetHypixelData:
                 params = payload,
                 headers = {"API-Key": self.api_key}
                 )
-            
+            # print(player_data)
+            # print(player_data.text)
             player_data.raise_for_status()
 
             json_player_data = player_data.json()
+            
+            #if json_player_data.get("player") is None:
+            #    raise exceptions.NotFound()
+            # TODO: needs proper handling, is currently getting catched as unknown
 
             first_login_iso = None
             player_rank = None
@@ -161,6 +173,7 @@ class GetHypixelData:
 
 if __name__ == "__main__":
     uuid = "3ff2e63ad63045e0b96f57cd0eae708d"
+    uuid = "8e70666aa2d144ec914d5172b7dcb289"
     hypixel_api_key = os.getenv("hypixel_api_key")
 
     user = GetHypixelData(uuid, hypixel_api_key)
