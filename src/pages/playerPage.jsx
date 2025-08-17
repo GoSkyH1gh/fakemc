@@ -197,7 +197,7 @@ export function PlayerPage() {
 
   return (
     <>
-      <SearchRow disabled={status === "loading"} />
+      <SearchRow disabled={status === "loading"} urlToNavigate="/player" />
       <br />
 
       {status === "loading" && <LoadingIndicator />}

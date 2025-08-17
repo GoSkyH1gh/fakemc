@@ -33,7 +33,7 @@ function SearchButton({ onClick, disabled }) {
 )
 }
 
-function SearchRow({ disabled }) {
+function SearchRow({ disabled, urlToNavigate }) {
   let navigate = useNavigate();
   const [inputValue, setInputValue] = useState("")
   const handleInputChange = (e) => {
@@ -42,7 +42,7 @@ function SearchRow({ disabled }) {
 
   const handleSearchClick = () => {
     if (!disabled) {
-      navigate(`/player/${inputValue.trim()}`)
+      navigate(`${urlToNavigate}/${inputValue.trim()}`)
     }
   }
 

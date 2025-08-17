@@ -58,4 +58,6 @@ const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
     fetchMetric(metric_key, uuid, setMetricData);
   };
 
+
+
 export {formatISOTimestamp, formatValue, handleStatClick}
