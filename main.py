@@ -1,4 +1,5 @@
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI, BackgroundTasks, Request
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from data_manager import DataManager
 from wynncraft_api import (
@@ -16,6 +17,8 @@ import os
 from metrics_manager import get_stats, HistogramData
 from donut_api import add_donut_stats_to_db
 import exceptions
+from player_tracker import subscribe, unsubscribe
+import asyncio
 
 load_dotenv()
 
@@ -114,3 +117,24 @@ def get_mcc_island(uuid) -> MCCIPlayer:
 @app.get("/v1/metrics/{metric_key}/distribution/{player_uuid}")
 def get_metric(metric_key: str, player_uuid: str) -> HistogramData:
     return get_stats(metric_key, player_uuid)
+
+
+# player tracker
+@app.get("/v1/tracker/{uuid}/status")
+async def track_player(uuid: str, request: Request):
+    queue = await subscribe(uuid)
+
+    async def event_generator():
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+                try:
+                    message = await asyncio.wait_for(queue.get(), timeout=25)
+                    yield message
+                except asyncio.TimeoutError:
+                    yield "event: heartbeat\ndata: {}\n\n"
+        finally:
+            unsubscribe(uuid, queue)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
