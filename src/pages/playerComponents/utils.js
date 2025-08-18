@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, parseISO } from 'date-fns'
+import { format, formatDistanceToNow, parseISO, formatDistanceToNowStrict } from 'date-fns'
 
 function formatISOTimestamp(timestamp) {
    // Convert string to Date object
@@ -33,6 +33,20 @@ const formatValue = (value, compact = true) => {
   }
 };
 
+const formatSinceLastUpdate = (date) => {
+    if (!date) {
+      return "unknown";
+    }
+    return "last updated " + formatDistanceToNowStrict(date) + " ago";
+  };
+
+const formatLogTime = (date) => {
+  if (!date) {
+    return "unknown";
+  }
+  return format(date, "KK:mm a");
+};
+
 const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
     setMetricData("loading");
     const baseUrl =
@@ -60,4 +74,4 @@ const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
 
 
 
-export {formatISOTimestamp, formatValue, handleStatClick}
+export {formatISOTimestamp, formatValue, handleStatClick, formatSinceLastUpdate, formatLogTime}

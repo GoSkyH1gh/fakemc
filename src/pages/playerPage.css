@@ -422,6 +422,7 @@ button {
   border: 1px solid var(--color-surfact-layer-2);
   border-radius: 10px;
   padding: 15px;
+  margin-top: 0px;
 }
 
 .tracker-history > li {
@@ -436,4 +437,83 @@ button {
 .compact-paragraph {
   line-height: 1;
   margin: 10px 0;
+}
+
+.track-stop-button {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+}
+
+.timeline-item > div {
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 10px;
+  padding: 15px;
+  height: 90%;
+}
+
+.timeline-time {
+  margin-top: 1.2em;
+}
+
+.timeline-part {
+  margin-top: 1.5em;
+  margin-bottom: -1.5em;
+}
+
+.tracker-timeline {
+  font-family: "Google Sans Code", monospace;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 10px;
+  padding: 15px 35px;
+  margin-top: 0px;
+}
+
+.timeline-header {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.last-timeline-item {
+  margin-bottom: -1.5em;
+}
+
+.track-history-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.select-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+}
+
+.select-button-left {
+  border-radius: 15px 0px 0px 15px;
+}
+
+.select-button-right {
+  border-radius: 0px 15px 15px 0px;
+}
+
+.select-container {
+  display: flex;
+  border-radius: 15px;
+  align-items: center;
 }

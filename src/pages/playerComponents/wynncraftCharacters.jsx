@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./wynncraftCharacters.css";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, scale } from "motion/react";
 import InfoCard from "./infoCard";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
@@ -80,10 +80,23 @@ function WynncraftCharacters({ characterList }) {
 
   const mappedCharacters = characterList.map((character) => {
     const isExpanded = character.character_uuid === expandedId;
+
+    const parentVariants = {
+      initial: { backgroundColor: "#ccca" },
+      hover: { backgroundColor: "#ddda" },
+    };
+
+    const classIconVariants = {
+      initial: { scale: 1, y: 0 },
+      hover: { scale: 1.05, y: -10 },
+    };
+
     return (
       <motion.li
         className={`wynncraft-character-item ${isExpanded ? "expanded" : ""}`}
         layout
+        initial="initial"
+        whileHover="hover"
         transition={{
           type: "spring",
           damping: 60,
@@ -96,7 +109,7 @@ function WynncraftCharacters({ characterList }) {
         <div>
           <div className="wynn-character-row">
             <motion.img
-              whileHover={{ scale: 1.05, y: -10 }}
+              variants={classIconVariants}
               src={
                 classImageUrl +
                 character.character_class.toLowerCase() +

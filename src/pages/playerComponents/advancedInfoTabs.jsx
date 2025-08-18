@@ -22,9 +22,9 @@ function AdvancedInfoTabs({
 }) {
   const [selectedTab, setSelectedTab] = useState("");
   if (selectedTab === "" && loadedTabs.length > 0) {
-    setSelectedTab(loadedTabs[0])
+    setSelectedTab(loadedTabs[0]);
   }
-  
+
   let tabContents;
   if (selectedTab === "hypixel") {
     if (hypixelStatus === "playerloaded") {
@@ -36,17 +36,15 @@ function AdvancedInfoTabs({
       );
     }
     if (hypixelStatus === "loaded") {
-      if (hypixelResponse.guild_name) {
+      if (hypixelResponse?.guild_name) {
         tabContents = (
           <>
-            <p>{hypixelResponse.guild_name}'s members: </p>
-            <GuildMembers
-              guild_members={hypixelGuildResponse.guild_members}
-            />
+            <p>{hypixelResponse?.guild_name}'s members: </p>
+            <GuildMembers guild_members={hypixelGuildResponse?.guild_members} />
           </>
         );
       }
-      if (!hypixelGuildResponse.guild_name) {
+      if (!hypixelGuildResponse?.guild_name) {
         tabContents = <p>No more information to show for player</p>;
       }
     }
@@ -69,18 +67,15 @@ function AdvancedInfoTabs({
     }
   } else if (selectedTab === "donut") {
     if (donutStatus === "loading") {
-      tabContents = <p>loading donut data...</p>
-    }
-    else if (donutStatus === "loaded") {
-      tabContents = (
-        <DonutTabbedData donutData={donutData} uuid={uuid}/>
-      )
+      tabContents = <p>loading donut data...</p>;
+    } else if (donutStatus === "loaded") {
+      tabContents = <DonutTabbedData donutData={donutData} uuid={uuid} />;
     }
   } else if (selectedTab === "mcci") {
     if (mcciStatus === "loading") {
-      tabContents = <p>loading MCC Island data...</p>
-    }  else if (mcciStatus === "loaded") {
-      tabContents = <McciTabbedData mcciData={mcciData}/>
+      tabContents = <p>loading MCC Island data...</p>;
+    } else if (mcciStatus === "loaded") {
+      tabContents = <McciTabbedData mcciData={mcciData} />;
     }
   }
   return (
@@ -96,18 +91,42 @@ function AdvancedInfoTabs({
         transition={{ duration: 0.5, ease: "easeInOut", delay: 0.6 }}
         className="advanced-tabs"
       >
-        {loadedTabs.includes('hypixel') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("hypixel")}>
-          Hypixel
-        </motion.button>}
-        {loadedTabs.includes('wynncraft') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("wynncraft")}>
-          Wynncraft
-        </motion.button>}
-        {loadedTabs.includes('donut') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("donut")}>
-          Donut SMP
-        </motion.button>}
-        {loadedTabs.includes('mcci') && <motion.button initial={{scale: 0}} animate={{scale: 1}} onClick={() => setSelectedTab("mcci")}>
-          MCC Island
-        </motion.button>}
+        {loadedTabs.includes("hypixel") && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            onClick={() => setSelectedTab("hypixel")}
+          >
+            Hypixel
+          </motion.button>
+        )}
+        {loadedTabs.includes("wynncraft") && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            onClick={() => setSelectedTab("wynncraft")}
+          >
+            Wynncraft
+          </motion.button>
+        )}
+        {loadedTabs.includes("donut") && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            onClick={() => setSelectedTab("donut")}
+          >
+            Donut SMP
+          </motion.button>
+        )}
+        {loadedTabs.includes("mcci") && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            onClick={() => setSelectedTab("mcci")}
+          >
+            MCC Island
+          </motion.button>
+        )}
       </motion.div>
       <div>{tabContents}</div>
     </motion.div>
