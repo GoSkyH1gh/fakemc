@@ -32,6 +32,9 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
       });
       setStatus(data);
     });
+    eventSource.addEventListener("error", (event) => {
+      setStatus("error");
+    });
     return () => {
       eventSource.close();
     };
@@ -45,6 +48,11 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
 
   let onlineText = "Offline";
   let descriptionText = "";
+
+  if (status === "error") {
+    onlineText = "An error occured";
+    descriptionText = "This usually happens if too many requests are sent at once\nSorry :/"
+  }
 
   if (status?.wynncraft_online === true) {
     onlineText = "Online • Wynncraft";
@@ -97,7 +105,7 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
           </Tooltip.Root>
         </Tooltip.Provider>
       </div>
-      <p className="compact-paragraph">{formatSinceLastUpdate(lastUpdate)}</p>
+      <p className="compact-paragraph track-subheader">{formatSinceLastUpdate(lastUpdate)}</p>
       <div className="tracker-live-data">
         <h3>{onlineText}</h3>
         <p>{descriptionText}</p>

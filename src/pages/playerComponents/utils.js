@@ -37,7 +37,7 @@ const formatSinceLastUpdate = (date) => {
     if (!date) {
       return "unknown";
     }
-    return "last updated " + formatDistanceToNowStrict(date) + " ago";
+    return "updated " + formatDistanceToNowStrict(date) + " ago";
   };
 
 const formatLogTime = (date) => {

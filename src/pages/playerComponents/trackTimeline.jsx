@@ -7,7 +7,7 @@ function TrackTimeline({ history }) {
   if (history.length === 0) {
     return (
       <ul className="tracker-timeline">
-        <li>There's no events yet</li>
+        <li className="timeline-item">There's no events yet</li>
       </ul>
     );
   }
@@ -36,6 +36,8 @@ function TrackTimeline({ history }) {
         <img
           src={lastElement ? TimelineEnd : TimelinePart}
           className="timeline-part"
+          alt=""
+          aria-hidden="true"
         />
         <div>
           <span className="timeline-header">{headerText}</span>
