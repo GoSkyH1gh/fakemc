@@ -55,7 +55,7 @@ export function HomePage() {
           transition={{ duration: 0.5, ease: "easeInOut", delay: 2.2}}>
           <div>
             <h3>See guild members of the player you searched for</h3>
-            <p>You can keep exploring by just clicking on players (this works on the actual search UI)</p>
+            <p>You can keep exploring by just clicking on players</p>
           </div>
           <div className='guild-members-container'>
             <GuildMembers guild_members={sampleHypixelresponse.guild_members}/>
@@ -72,7 +72,8 @@ export function HomePage() {
       </div>
       <footer>
         Not associated with Mojang, Hypixel, Wynncraft, Donut SMP, nor MCC Island.
-        &lt;3 to <a href='https://vzge.me'>VGZE</a>, which renders some player heads
+        &lt;3 to <a href='https://vzge.me'>VGZE</a>, which renders some player heads <br />
+        Check it out on <a href='https://github.com/GoSkyH1gh/fakemc'>GitHub</a>
       </footer>
     </>
   )
@@ -90,7 +91,8 @@ const sampleMojangResponse = {
   "cape_name": "Pan",
   "skin_showcase_b64": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAo0lEQVR4nGNM9ZP7r6GmxPCfjYNBUpSJ4fnrfwyMv34w3Lh1jwEEWJAlQQCiiIMBJs4EIkA6QDpBGAZgmphABMi4KN8QsARIEYgNM5EJJDB70yMGHnF5hptXrjGkpRSD2dGF2yDueXZ8zn8pyxSG/y/2wo0HAUYJZ4Znx+cwMP5/sfc/igwaYLl04iiDqLgU2FheLoi9n7/9Y/jy8iHD65fPGABhOUeI1j52eQAAAABJRU5ErkJggg==",
   "cape_showcase_b64": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAABQElEQVR4nF1RQU7DMBCcmsY4gQJNVMEpF4QEFPWO4AU9c+INfIF38BXe0AMH4AEgRKmAtKhpE9dRU7SbOpI70mbtmd1Zx248foxWAJCMx5hlGQdhNwg4ojDkfZM+SqmaINEiCkPWtNYQuiiYJOLk4RyXh31cRX1eK6VYoxqhPI83wf1BNWJkIH6NwynPq0YTWhGQJkDjqcDX4KfmMutoR5flWpA+5/3rmDmL2lEIwBx1gEkO0D1Mcqhu7I7+S1N0SkC1fRaKRMBr+9DUtB7NhcVigWY3rgWYEktybPv4HA6x02pBUNHN6TEXkUCxJQVnPclx2zvDPE0h7Bl7d98sUCyjiDNx9c9MZzO8TjNc7AWOYEGaNqY64/PbO7zt2tzBINXu9bysqqUx1atIKZ0Gx8YW0ahNsA0JmyI1kauSkrV/ALOUlG/DKYEAAAAASUVORK5CYII=",
-  "cape_back_b64": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAAXUlEQVR4nGOs27j9PwMRgAVd4MfXL3A2BzcPpkJkBXhN/PntG4YkB5KJTMSYBleIC/xAMgCvQmTAhMt96OKkmUiMO5nwqkICTMQEDUgNQRNhHmLC5WMMq4lSRYpCABZmJemPlziHAAAAAElFTkSuQmCC"
+  "cape_back_b64": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAAXUlEQVR4nGOs27j9PwMRgAVd4MfXL3A2BzcPpkJkBXhN/PntG4YkB5KJTMSYBleIC/xAMgCvQmTAhMt96OKkmUiMO5nwqkICTMQEDUgNQRNhHmLC5WMMq4lSRYpCABZmJemPlziHAAAAAElFTkSuQmCC",
+  "skin_url": "http://textures.minecraft.net/texture/fd82a31be355fae3842af8a66a208df602230a0fc748c7453e491e08377eb4c2"
 }
 
 const sampleHypixelresponse = {

@@ -5,7 +5,7 @@ function SkinShowcase({ skin_showcase_b64 }) {
     <motion.img
       initial={{scale: 0}}
       animate={{scale: 1}}
-      transition={{ duration: 0.5, type: "spring" }}
+      transition={{ duration: 0.4, type: "spring" }}
       src={'data:image/png;base64,' + skin_showcase_b64} className='skin-showcase'
       alt="skin of searched player" />
   )

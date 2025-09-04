@@ -33,6 +33,20 @@ const formatValue = (value, compact = true) => {
   }
 };
 
+const formatISOToDistance = (isoDate) => {
+  if (!isoDate) {
+    return "Unknown";
+  }
+  try {
+    const date = parseISO(isoDate);
+    return formatDistanceToNow(date, { addSuffix: true });
+  }
+  catch (error) {
+    console.error("Error parsing ISO date:", error);
+    return "Unknown";
+  }
+}
+
 const formatSinceLastUpdate = (date) => {
     if (!date) {
       return "unknown";
@@ -74,4 +88,4 @@ const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
 
 
 
-export {formatISOTimestamp, formatValue, handleStatClick, formatSinceLastUpdate, formatLogTime}
+export {formatISOTimestamp, formatValue, handleStatClick, formatSinceLastUpdate, formatLogTime, formatISOToDistance}

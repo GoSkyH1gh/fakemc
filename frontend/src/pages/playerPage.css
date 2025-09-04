@@ -1,8 +1,9 @@
 .main-content {
   max-width: 1280px;
-  margin: 4vh 20vw 4vh 20vw;
+  margin: 0 20vw 0 20vw;
   padding: 2rem;
-  min-width: 60vw;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media screen and (width < 1400px) {
@@ -19,8 +20,8 @@
 
 @media screen and (width < 750px) {
   .main-content {
-    margin: 6vh 1vw 4vh 1vw;
     padding: 1rem;
+    margin: 0 0 2vh 0;
   }
 }
 
@@ -532,3 +533,4 @@ button {
   border-radius: 15px;
   align-items: center;
 }
+

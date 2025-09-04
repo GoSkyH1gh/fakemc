@@ -1,7 +1,7 @@
 import InfoCard from "./infoCard.jsx";
 import GuildMembers from "./guildMembers.jsx";
 import { motion } from "motion/react";
-import { formatISOTimestamp } from "./utils.js";
+import { formatISOTimestamp, formatISOToDistance } from "./utils.js";
 
 function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
   return (
@@ -12,7 +12,7 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
         show: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.5, ease: "easeInOut" },
+          transition: { duration: 0.25, ease: "easeInOut" },
         },
       }}
       initial="hidden"
@@ -26,7 +26,7 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
           show: {
             opacity: 1,
             transition: {
-              staggerChildren: 0.2,
+              staggerChildren: 0.1,
               duration: 0.5,
               ease: "easeInOut",
             },
@@ -42,7 +42,7 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
         />
         <InfoCard
           label="Last seen"
-          value={formatISOTimestamp(hypixelResponse.last_login)}
+          value={formatISOToDistance(hypixelResponse.last_login)}
         />
         <InfoCard label="Hypixel rank" value={hypixelResponse.player_rank} />
         <InfoCard

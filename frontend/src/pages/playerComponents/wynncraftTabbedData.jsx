@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import InfoCard from "./infoCard";
 import WynncraftCharacters from "./wynncraftCharacters";
-import { formatISOTimestamp, formatValue, handleStatClick } from "./utils";
+import { formatISOTimestamp, formatISOToDistance, formatValue, handleStatClick } from "./utils";
 import WynncraftGuild from "./wynncraftGuild";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
@@ -95,7 +95,7 @@ function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
         />
         <InfoCard
           label="Last Login"
-          value={formatISOTimestamp(wynncraftData.last_login)}
+          value={formatISOToDistance(wynncraftData.last_login)}
         />
       </ul>
       <ul className="info-card-list">

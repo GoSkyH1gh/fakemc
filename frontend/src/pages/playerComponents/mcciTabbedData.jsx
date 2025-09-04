@@ -1,13 +1,40 @@
 import InfoCard from "./infoCard";
-import { formatValue, formatISOTimestamp } from "./utils";
+import { formatValue, formatISOTimestamp, formatISOToDistance } from "./utils";
+import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 
 function McciTabbedData({ mcciData }) {
+  let navigator = useNavigate();
   if (mcciData === "not found") {
     return <p>MCC Island data not found for player</p>;
   }
   if (mcciData === "error") {
     return <p>An error happened while fetching MCC Island data</p>;
   }
+  const friendElements = mcciData?.friends.map((friend) => (
+    <motion.li
+      className="wynn-guild-member-item"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => navigator(`/player/${friend.username}`)}
+      key={friend.uuid}
+    >
+      <div className="guild-member-flex-container">
+        <img
+          src={`https://vzge.me/face/128/${friend.uuid}.png`}
+          className="guild-member-image"
+          height="80"
+          width="80"
+          loading="lazy"
+        />
+        <div>
+          <p className="em-text">{friend.username}</p>
+          <p className="secondary-text">{friend.rank || "No Rank"}</p>
+        </div>
+      </div>
+    </motion.li>
+  ));
+
   return (
     <>
       <ul className="info-card-list">
@@ -21,7 +48,7 @@ function McciTabbedData({ mcciData }) {
         />
         <InfoCard
           label="Last Login"
-          value={formatISOTimestamp(mcciData.last_join)}
+          value={formatISOToDistance(mcciData.last_join)}
         />
         <InfoCard label="Rank" value={mcciData.rank ?? "No Rank"} />
         <InfoCard
@@ -52,6 +79,12 @@ function McciTabbedData({ mcciData }) {
           value={formatValue(mcciData.stats.royal_reputation)}
         />
       </ul>
+      {mcciData?.friends.length != 0 && (
+        <>
+          <h3>{mcciData?.username}'s friends</h3>
+          <ul className="wynn-guild-member-list">{friendElements}</ul>
+        </>
+      )}
     </>
   );
 }

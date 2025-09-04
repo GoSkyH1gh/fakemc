@@ -49,9 +49,9 @@ function GuildMembers({ guild_members }) {
         show: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.05,
             duration: 0.3,
-            delayChildren: 0,
+            delayChildren: 0.05,
             ease: "easeInOut",
           },
         },

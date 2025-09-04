@@ -11,7 +11,7 @@ function SkinView({ skinUrl, capeUrl, username }) {
         <motion.button
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.2, type: "spring", delay: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.1, type: "spring", delay: 0.2, ease: "easeOut" }}
           data-tooltip="View in 3D"
           className="tooltip"
         >

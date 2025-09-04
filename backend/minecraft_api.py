@@ -70,6 +70,7 @@ class GetMojangAPIData:
         self.skin_showcase_b64 = None
         self.cape_back_b64 = None
         self.cape_showcase_b64 = None
+        self.session = requests.sessions.Session()
 
     def get_data(self) -> Optional[MojangData]:
         """
@@ -117,7 +118,7 @@ class GetMojangAPIData:
         receives uuid based on username
         """
         try:
-            request = requests.get(
+            request = self.session.get(
                 f"https://api.minecraftservices.com/minecraft/profile/lookup/name/{self.username}"
             )
             request.raise_for_status()
@@ -141,7 +142,7 @@ class GetMojangAPIData:
         """
 
         try:
-            request = requests.get(
+            request = self.session.get(
                 f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}"
             )
             request.raise_for_status()
@@ -182,7 +183,7 @@ class GetMojangAPIData:
         This downloads the images from skin url and optionally cape url(if it exists)
         """
         try:
-            response_skin = requests.get(self.skin_url)  # skin image request
+            response_skin = self.session.get(self.skin_url)  # skin image request
             skin_bytes = io.BytesIO(response_skin.content)
 
             full_skin_image = Image.open(skin_bytes)
@@ -214,7 +215,7 @@ class GetMojangAPIData:
         # cape section
         if self.has_cape:  # only gets image if url exists
             try:
-                response_cape = requests.get(self.cape_url)
+                response_cape = self.session.get(self.cape_url)
                 cape_bytes = io.BytesIO(response_cape.content)
 
                 full_cape_image = Image.open(cape_bytes)  # uncropped cape image
@@ -256,7 +257,7 @@ class GetMojangAPIData:
 
     def get_name(self):
         try:
-            request = requests.get(
+            request = self.session.get(
                 f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}"
             )
 
@@ -278,5 +279,7 @@ class GetMojangAPIData:
 
 
 if __name__ == "__main__":
-    user = GetMojangAPIData(None, "d63a3a136e8a43e6918fddc5a1eb6c84")
-    print(user.get_data())
+    instance = GetMojangAPIData("refraction")
+    instance.get_data()
+    # user = GetMojangAPIData(None, "d63a3a136e8a43e6918fddc5a1eb6c84")
+    # print(user.get_data())
