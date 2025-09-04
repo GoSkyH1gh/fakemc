@@ -1,0 +1,534 @@
+.main-content {
+  max-width: 1280px;
+  margin: 4vh 20vw 4vh 20vw;
+  padding: 2rem;
+  min-width: 60vw;
+}
+
+@media screen and (width < 1400px) {
+  .main-content {
+    margin: 4vh 15vw 4vh 15vw;
+  }
+}
+
+@media screen and (width < 900px) {
+  .main-content {
+    margin: 4vh 10vw 4vh 10vw;
+  }
+}
+
+@media screen and (width < 750px) {
+  .main-content {
+    margin: 6vh 1vw 4vh 1vw;
+    padding: 1rem;
+  }
+}
+
+
+:root {
+  
+  --hue: 245;
+
+  /* BACKGROUND (60%) - Very dark, low saturation */
+  --color-background: hsl(var(--hue), 10%, 15%);
+
+  /* SURFACE (30%) - The main content cards */
+  --color-surface: hsl(var(--hue), 12%, 22%);
+
+  /* ELEMENT (10%) - The smaller info cards */
+  --color-card: hsl(var(--hue), 15%, 30%);
+  --color-card-hover: hsl(var(--hue), 15%, 35%); /* A slightly lighter hover state */
+
+  /* TEXT */
+  --text-primary: hsl(var(--hue), 20%, 96%); /* A very light, slightly purplish white */
+  --text-secondary: hsl(var(--hue), 15%, 87%); /* A dimmer, grayer purple for labels */
+
+  /* ACCENT (+): A contrasting color for primary actions */
+  --color-accent: hsl(180, 65%, 55%); /* A bright cyan */
+  --color-accent-hover: hsl(180, 65%, 65%);
+
+  /* Layers for transparency*/
+  --color-surface-layer-1: #ccc1;
+  --color-surfact-layer-2: #eee1;
+}
+
+body {
+  background: linear-gradient(135deg, #5c406d 0%, #5c3f83 100%);
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color: var(--text-primary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0
+}
+
+.searchbar {
+  width: 200px;
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid var(--color-surfact-layer-2);
+  background-color: var(--color-surfact-layer-2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary)
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-card);
+  cursor: pointer;
+  transition: 0.35s;
+
+}
+
+button:hover {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(2px);
+}
+.search-button {
+  padding: 15px;
+}
+
+.search-row {
+  display: flex;
+  gap: 15px;
+}
+
+.skin-showcase {
+  height: 150px;
+  image-rendering: pixelated;
+  border-radius: 5px;
+}
+
+.cape-showcase {
+  image-rendering: pixelated;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.cape-section {
+  display: flex;
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  height: 150px;
+}
+
+.cape-name {
+  margin: 0;
+  padding: 0 10px;
+  font-size: 1.1em;
+  font-family: "Google Sans Code", monospace;
+}
+
+.cape-name-label {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mojang-img {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.username {
+  font-size: 1.4rem;
+  margin: 0;
+  font-family: "Google Sans Code", monospace;
+}
+
+.uuid {
+  display: flex;
+  align-items: center;
+  margin: 0 0 15px 0;
+  color: var(--text-secondary);
+  font-family: "Google Sans Code", monospace;
+}
+
+.mojang-data,
+.hypixel-data,
+.advanced-info-tabs,
+.player-tracker {
+  backdrop-filter: blur(100px);
+  background-color: var(--color-surface-layer-1);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.guild-list-item {
+  display: block;
+  background-color: var(--color-surfact-layer-2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid var(--color-surfact-layer-2);
+}
+
+.guild-list-item:hover {
+  cursor: pointer;
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(2px);
+}
+
+.guild-list,
+.info-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding-left: 0;
+}
+
+.list-uuid {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+
+.list-username {
+  margin-bottom: 0;
+}
+
+.info-card {
+  display: block;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.info-card-label {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin: 0;
+  font-family: "Google Sans Code", monospace;
+}
+
+.info-card-value {
+  font-size: 1.1em;
+  font-family: "Google Sans Code", monospace;
+}
+
+.guild-member-image {
+  image-rendering: pixelated;
+  height: 80px;
+  border-radius: 3px;
+}
+
+.guild-member-flex-container {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  color: var(--text-primary);
+  background-color: var(--color-surfact-layer-2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.loading-skeleton {
+  background-color: var(--color-surface);
+  border-radius: 5px;
+  height: 241px;
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.75;
+  }
+}
+
+.copy-icon {
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.copy-icon-clicked {
+  animation: copy-clicked 1s ease;
+  padding-left: 10px;
+}
+
+@keyframes copy-clicked {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.7);
+  }
+}
+
+.loading-container {
+  backdrop-filter: blur(100px);
+  background-color: var(--color-surface-layer-1);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  height: 120px;
+  width: 120px;
+  border-radius: 15px;
+}
+
+.advanced-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  position: sticky;
+  top: 15px;
+  z-index: 10;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.em-text {
+  font-size: 1.2em;
+  margin: 0;
+  padding-bottom: 5px;
+}
+
+.secondary-text {
+  color: var(--text-secondary);
+  margin: 0;
+  padding: 0;
+}
+
+.no-padding {
+  padding: 0;
+  margin: 0
+}
+
+.align-right {
+  text-align: right;
+}
+
+.distribution-graph {
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 15px;
+  padding: 10px;
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
+  min-width: 400px;
+  height: 250px;
+}
+
+.icon {
+  height: fit-content;
+}
+
+.info-card-row {
+  display: flex;
+}
+
+.icon-button {
+  all: unset;
+  border: 1px solid #aaa0;
+  border-radius: 5px;
+  height: 20px;
+}
+
+.icon-button:hover {
+  all: unset;
+  border: 1px solid #aaa0;
+  border-radius: 5px;
+  height: 20px;
+}
+
+.icon-button:focus {
+  border-color: var(--color-accent);
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.track-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.track-player {
+  min-width: 400px;
+  width: 35%;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.track-flex > button {
+  height: 50px;
+}
+
+.motion-button {
+  animation: none;
+  transition: none;
+}
+
+.tracker-live-data {
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.tracker-live-data > h3,
+.tracker-live-data > p{
+  margin: 0;
+  font-family: "Google Sans Code", monospace;
+  
+}
+
+.tracker-history {
+  font-family: "Google Sans Code", monospace;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 0px;
+}
+
+.tracker-history > li {
+  display: block;
+}
+
+.track-header {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  margin-bottom: -10px;
+  margin-left: 2px;
+}
+
+.compact-paragraph {
+  line-height: 1;
+  margin: 10px 0;
+}
+
+.track-subheader {
+  margin-top: 0;
+  margin-bottom: 20px;
+  margin-left: 2px;
+}
+
+.track-stop-button {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+}
+
+.timeline-item > div {
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 10px;
+  padding: 15px;
+  height: 90%;
+}
+
+.timeline-time {
+  margin-top: 1.2em;
+}
+
+.timeline-part {
+  margin-top: 1.5em;
+  margin-bottom: -1.5em;
+}
+
+.tracker-timeline {
+  font-family: "Google Sans Code", monospace;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 10px;
+  padding: 15px 35px;
+  margin-top: 0px;
+}
+
+.timeline-header {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.last-timeline-item {
+  margin-bottom: -1.5em;
+}
+
+.track-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0 10px 2px;
+}
+
+.track-history-header > h3 {
+  margin: 0;
+}
+
+.select-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+}
+
+.select-button-left {
+  border-radius: 15px 0px 0px 15px;
+}
+
+.select-button-right {
+  border-radius: 0px 15px 15px 0px;
+}
+
+.select-container {
+  display: flex;
+  border-radius: 15px;
+  align-items: center;
+}

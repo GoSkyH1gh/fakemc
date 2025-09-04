@@ -1,0 +1,89 @@
+.rotating-square {
+    width: 100px;
+    height: 100px;
+    background-color: blueviolet;
+    margin: 15px
+}
+
+
+.card-showcase {
+  border-radius: 5px;
+  background-color: var(--color-surface);
+  padding: 15px;
+  margin-top: 10px;
+  width: 35vw;
+  display: flex;
+  gap: 15px
+}
+
+.mojang-data-showcase {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px
+}
+
+.main-explore-button {
+  padding: 15px;
+  border-radius: 15px;
+  background-color: var(--color-accent);
+  color: #000000;
+  margin: 30px 0;
+
+}
+
+.main-explore-button:hover {
+  background-color: var(--color-accent-hover);
+  transition: 0.5s;
+  color: #000000;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+}
+
+.info-card-showcase {
+  display: flex;
+  justify-content: space-around;
+}
+
+.info-card-container {
+  backdrop-filter: blur(100px);
+  background-color: var(--color-surface-layer-1);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.guild-members-container {
+  backdrop-filter: blur(100px);
+  background-color: var(--color-surface-layer-1);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.showcases-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.guild-members-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer {
+  font-size: small;
+  margin-top: 20px;
+}

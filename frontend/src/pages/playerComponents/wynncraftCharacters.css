@@ -1,0 +1,111 @@
+:root {
+  --wynn-green: #55FF55;
+}
+
+.wynncraft-character-list {
+  display: grid;
+  gap: 30px;
+  padding: 0px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  
+}
+
+.wynncraft-character-item {
+  display: block;
+  margin: 0px;
+  padding: 10px;
+  background-color: var(--color-surfact-layer-2);
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--color-surfact-layer-2);
+}
+
+.wynncraft-character-item:hover {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(2px);
+}
+
+.wynncraft-character-item.expanded {
+  grid-column: 1 / -1;
+}
+
+.wynn-nametag {
+  /*color: var(--wynn-green);*/
+  font-family: "Google Sans Code", monospace;
+}
+
+.wynn-username {
+  margin-left: 6px;
+}
+
+.profession-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0;
+  gap: 15px
+}
+
+.wynn-guild-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 0;  
+}
+
+.wynn-guild-member-item:hover {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(2px);
+}
+
+.wynn-guild-member-item {
+  display: block;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: var(--color-surfact-layer-2);
+  padding: 10px;
+  border: 1px solid var(--color-surfact-layer-2);
+}
+
+.wynn-mode {
+  height: 25px;
+}
+
+.wynn-modes {
+  display: flex;
+  gap: 6px
+}
+
+.wynn-rank {
+  height: 20px;
+  image-rendering: pixelated;
+}
+
+.wynn-character-icon {
+  height: 100px;
+}
+
+.wynn-character-row {
+  display: flex;
+}
+
+.wynn-classname-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
+}
+
+.wynn-restrictions {
+  background-color: var(--color-surfact-layer-2);
+  padding: 10px;
+  border: 1px solid var(--color-surfact-layer-2);
+  border-radius: 15px;
+  margin: 20px 0;
+}
+
+.wynn-restrictions > p {
+  line-height: 1.5;
+  padding: 0;
+  margin: 0;
+}

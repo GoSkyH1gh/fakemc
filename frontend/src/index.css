@@ -1,0 +1,177 @@
+/*
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+*/
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.app-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 3.5vw;
+  min-width: 50px;
+  backdrop-filter: blur(100px);
+  background-color: #ccc1;
+  border: 1px solid #ccc1;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  border-radius: 15px;
+  margin: 20px;
+}
+
+.sidebar > img {
+  transition: transform 0.2s ease, color 0.2 ease;
+  color: #ccc
+}
+
+.sidebar > ul  {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 30px ;
+}
+
+.sidebar > ul > li {
+  display: block;
+  align-self: center;
+}
+
+@media screen and (width < 750px) {
+  .sidebar {
+    width: auto;
+    padding: 0 10px;
+    backdrop-filter: blur(100px);
+    background-color: #ccc1;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 1rem + 1vw;
+    border-radius: 15px;
+  }
+  .sidebar > ul {
+    flex-direction: row;
+    padding: 10px;
+    margin: 0;
+  }
+}
+
+/*
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+*/
+
+.icon {
+  font-variation-settings: 
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  transition: transform 0.2s ease, color 0.2s ease;
+  color: #aaa;
+  cursor: pointer;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+
+.TooltipContent {
+  border-radius: 5px;
+  padding: 6px 10px;
+  backdrop-filter: blur(15px);
+  background-color: #ccc2;
+  border: 1px solid #ccc2;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  animation-duration: 400ms;
+	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes slideUpAndFade {
+	from {
+		opacity: 0;
+		transform: translateY(3px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.TooltipContent[data-state="delayed-open"] {
+	animation-name: slideUpAndFade;
+}
