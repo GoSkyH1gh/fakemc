@@ -4,49 +4,79 @@ import searchIcon from "/src/assets/search-icon.svg";
 import groupIcon from "/src/assets/group-icon.svg";
 import footprintIcon from "/src/assets/footprint_icon.svg";
 import { easeInOut, motion, scale } from "motion/react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 function Sidebar() {
   return (
     <aside className="sidebar">
       <ul>
-        <motion.li
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ ease: "easeInOut", duration: 0.2 }}
-          tabIndex={-1}
-        >
-          <Link to="/" data-tooltip="Home" className="tooltip">
-            <img src={homeIcon} alt="Home" className="icon" />
-          </Link>
-        </motion.li>
-        <motion.li
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ ease: "easeInOut", duration: 0.2 }}
-          tabIndex={-1}
-        >
-          <Link
-            to="/player"
-            data-tooltip="Search for a player"
-            className="tooltip"
-          >
-            <img src={searchIcon} alt="Search for a player" className="icon" />
-          </Link>
-        </motion.li>
-        <motion.li
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ ease: "easeInOut", duration: 0.2 }}
-          tabIndex={-1}
-        >
-          <Link
-            to="/track/player"
-            data-tooltip="Track a player"
-            className="tooltip"
-          >
-            <img src={footprintIcon} alt="Track a player" className="icon" />
-          </Link>
-        </motion.li>
+        <Tooltip.Provider>
+          <Tooltip.Root delayDuration={100}>
+            <Tooltip.Trigger asChild>
+              <motion.li
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ ease: "easeInOut", duration: 0.2 }}
+                tabIndex={-1}
+              >
+                <Link to="/">
+                  <img src={homeIcon} alt="Home" className="icon" />
+                </Link>
+              </motion.li>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className="TooltipContent">Home</Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+          <Tooltip.Root delayDuration={100}>
+            <Tooltip.Trigger asChild>
+              <motion.li
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ ease: "easeInOut", duration: 0.2 }}
+                tabIndex={-1}
+              >
+                <Link to="/player">
+                  <img
+                    src={searchIcon}
+                    alt="Search for a player"
+                    className="icon"
+                  />
+                </Link>
+              </motion.li>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className="TooltipContent">
+                Search for a player
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+          <Tooltip.Root delayDuration={100}>
+            <Tooltip.Trigger asChild>
+              <motion.li
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ ease: "easeInOut", duration: 0.2 }}
+                tabIndex={-1}
+              >
+                <Link
+                  to="/track/player"
+                >
+                  <img
+                    src={footprintIcon}
+                    alt="Track a player"
+                    className="icon"
+                  />
+                </Link>
+              </motion.li>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className="TooltipContent">
+                Track a player
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       </ul>
     </aside>
   );

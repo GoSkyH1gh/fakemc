@@ -7,31 +7,33 @@ function WynncraftGuild({ wynncraftGuildData }) {
   let navigator = useNavigate();
   const guildMemberElements = wynncraftGuildData.members.map((member) => {
     return (
-      <motion.li
-        className="wynn-guild-member-item"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => navigator(`/player/${member.username}`)}
-        key={member.uuid}
-      >
-        <div className="guild-member-flex-container">
-          <img
-            src={`https://vzge.me/face/128/${member.uuid}.png`}
-            className="guild-member-image"
-            height="80"
-            width="80"
-            loading="lazy"
-          />
-          <div>
-            <p className="em-text">{member.username}</p>
-            <p className="secondary-text">
-              {member.rank}
-              <br />
-              joined {formatISOTimestamp(member.joined)}
-            </p>
+      <li>
+        <motion.button
+          className="wynn-guild-member-item"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigator(`/player/${member.username}`)}
+          key={member.uuid}
+        >
+          <div className="guild-member-flex-container">
+            <img
+              src={`https://vzge.me/face/128/${member.uuid}.png`}
+              className="guild-member-image"
+              height="80"
+              width="80"
+              loading="lazy"
+            />
+            <div>
+              <p className="em-text list-username">{member.username}</p>
+              <p className="secondary-text left-align">
+                {member.rank}
+                <br />
+                joined {formatISOTimestamp(member.joined)}
+              </p>
+            </div>
           </div>
-        </div>
-      </motion.li>
+        </motion.button>
+      </li>
     );
   });
   return (

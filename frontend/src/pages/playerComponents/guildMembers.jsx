@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function GuildMembers({ guild_members }) {
   let navigate = useNavigate();
-  
+
   if (!guild_members) {
     return <p>No guild members to show</p>;
   }
@@ -14,29 +14,31 @@ function GuildMembers({ guild_members }) {
   const guildMembersArray = guild_members.map((member) => {
     return (
       // this is a guild member element
-      <motion.li
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        key={member.name}
-        className="guild-list-item"
-        onClick={() => handleGuildMemberClick(member.name)}
-        variants={{
-          hidden: { opacity: 0 },
-          show: { opacity: 1 },
-        }}
-      >
-        <div className="guild-member-flex-container">
-          <img
-            src={"data:image/png;base64," + member.skin_showcase_b64}
-            className="guild-member-image"
-            alt={"head of " + member.name + "'s skin"}
-          />
-          <div>
-            <p className="list-username">{member.name}</p>
-            <p className="list-uuid">Click for more info</p>
+      <li>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          key={member.name}
+          className="guild-list-item"
+          onClick={() => handleGuildMemberClick(member.name)}
+          variants={{
+            hidden: { opacity: 0 },
+            show: { opacity: 1 },
+          }}
+        >
+          <div className="guild-member-flex-container">
+            <img
+              src={"data:image/png;base64," + member.skin_showcase_b64}
+              className="guild-member-image"
+              alt={"head of " + member.name + "'s skin"}
+            />
+            <div>
+              <p className="list-username">{member.name}</p>
+              <p className="list-uuid">Click for more info</p>
+            </div>
           </div>
-        </div>
-      </motion.li>
+        </motion.button>
+      </li>
     );
   });
   console.log(guildMembersArray);

@@ -51,7 +51,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  padding: 0;  
+  padding: 0;
+  list-style: none;
 }
 
 .wynn-guild-member-item:hover {
@@ -66,6 +67,7 @@
   background-color: var(--color-surfact-layer-2);
   padding: 10px;
   border: 1px solid var(--color-surfact-layer-2);
+  transition: none;
 }
 
 .wynn-mode {

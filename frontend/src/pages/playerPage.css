@@ -54,7 +54,9 @@
 }
 
 body {
+  background: linear-gradient(135deg, #394488 0%, #41284e 100% );
   background: linear-gradient(135deg, #5c406d 0%, #5c3f83 100%);
+  
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: var(--text-primary);
 }
@@ -90,7 +92,6 @@ button {
   font-family: inherit;
   background-color: var(--color-card);
   cursor: pointer;
-  transition: 0.35s;
 
 }
 
@@ -175,6 +176,10 @@ button:hover {
   margin-bottom: 20px;
 }
 
+.guild-list-item-container {
+  display: block;
+}
+
 .guild-list-item {
   display: block;
   background-color: var(--color-surfact-layer-2);
@@ -183,6 +188,7 @@ button:hover {
   border-radius: 5px;
   padding: 10px;
   border: 1px solid var(--color-surfact-layer-2);
+  transition: none;
 }
 
 .guild-list-item:hover {
@@ -197,6 +203,7 @@ button:hover {
   flex-wrap: wrap;
   gap: 25px;
   padding-left: 0;
+  list-style: none;
 }
 
 .list-uuid {
@@ -206,6 +213,7 @@ button:hover {
 
 .list-username {
   margin-bottom: 0;
+  text-align: left;
 }
 
 .info-card {
@@ -246,6 +254,7 @@ button {
   background-color: var(--color-surfact-layer-2);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: 0.35s;
 }
 
 .loading-skeleton {
@@ -534,3 +543,17 @@ button {
   align-items: center;
 }
 
+.selected-tab {
+  background-color: #fbe3;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}

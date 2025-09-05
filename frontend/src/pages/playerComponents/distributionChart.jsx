@@ -57,11 +57,13 @@ function DistributionChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p style={{ textAlign: "center" }}>
-        Better than {percentile.toFixed(1)}% of {formatValue(sampleSize)}{" "}
-        recorded players
+      <div className="flex">
+        <p style={{ textAlign: "center" }}>
+          Better than {percentile.toFixed(1)}% of {formatValue(sampleSize)}{" "}
+          recorded players
+        </p>
         <DistributionHelpDialog />
-      </p>
+      </div>
     </>
   );
 }

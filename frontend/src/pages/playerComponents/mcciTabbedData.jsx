@@ -12,27 +12,29 @@ function McciTabbedData({ mcciData }) {
     return <p>An error happened while fetching MCC Island data</p>;
   }
   const friendElements = mcciData?.friends.map((friend) => (
-    <motion.li
-      className="wynn-guild-member-item"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={() => navigator(`/player/${friend.username}`)}
-      key={friend.uuid}
-    >
-      <div className="guild-member-flex-container">
-        <img
-          src={`https://vzge.me/face/128/${friend.uuid}.png`}
-          className="guild-member-image"
-          height="80"
-          width="80"
-          loading="lazy"
-        />
-        <div>
-          <p className="em-text">{friend.username}</p>
-          <p className="secondary-text">{friend.rank || "No Rank"}</p>
+    <li>
+      <motion.button
+        className="wynn-guild-member-item"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => navigator(`/player/${friend.username}`)}
+        key={friend.uuid}
+      >
+        <div className="guild-member-flex-container">
+          <img
+            src={`https://vzge.me/face/128/${friend.uuid}.png`}
+            className="guild-member-image"
+            height="80"
+            width="80"
+            loading="lazy"
+          />
+          <div>
+            <p className="em-text list-username">{friend.username}</p>
+            <p className="secondary-text left-align">{friend.rank || "No Rank"}</p>
+          </div>
         </div>
-      </div>
-    </motion.li>
+      </motion.button>
+    </li>
   ));
 
   return (

@@ -96,6 +96,7 @@ function AdvancedInfoTabs({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             onClick={() => setSelectedTab("hypixel")}
+            className={"hypixel" === selectedTab ? "selected-tab" : ""}
           >
             Hypixel
           </motion.button>
@@ -105,6 +106,7 @@ function AdvancedInfoTabs({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             onClick={() => setSelectedTab("wynncraft")}
+            className={"wynncraft" === selectedTab ? "selected-tab" : ""}
           >
             Wynncraft
           </motion.button>
@@ -114,6 +116,7 @@ function AdvancedInfoTabs({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             onClick={() => setSelectedTab("donut")}
+            className={"donut" === selectedTab ? "selected-tab" : ""}
           >
             Donut SMP
           </motion.button>
@@ -123,6 +126,7 @@ function AdvancedInfoTabs({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             onClick={() => setSelectedTab("mcci")}
+            className={"mcci" === selectedTab ? "selected-tab" : ""}
           >
             MCC Island
           </motion.button>
