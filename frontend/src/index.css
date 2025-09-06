@@ -28,6 +28,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 
@@ -88,6 +89,9 @@ button:focus-visible {
   .app-container {
     flex-direction: column;
     align-items: center;
+  }
+  body {
+    overflow: scroll;
   }
 }
 

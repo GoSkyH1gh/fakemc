@@ -3,7 +3,6 @@
   margin: 0 20vw 0 20vw;
   padding: 2rem;
   width: 100%;
-  box-sizing: border-box;
 }
 
 @media screen and (width < 1400px) {
@@ -167,6 +166,7 @@ button:hover {
 .hypixel-data,
 .advanced-info-tabs,
 .player-tracker {
+  width: 100%;
   backdrop-filter: blur(100px);
   background-color: var(--color-surface-layer-1);
   border: 1px solid var(--color-surfact-layer-2);
@@ -209,6 +209,7 @@ button:hover {
 .list-uuid {
   color: var(--text-secondary);
   font-size: 0.7rem;
+  text-align: left;
 }
 
 .list-username {
@@ -544,7 +545,7 @@ button {
 }
 
 .selected-tab {
-  background-color: #fbe3;
+  background-color: #F4F07780;
 }
 
 .left-align {
