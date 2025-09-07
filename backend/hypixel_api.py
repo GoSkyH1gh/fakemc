@@ -7,175 +7,316 @@ from fastapi import HTTPException
 import exceptions
 from pydantic import BaseModel
 from typing import Optional
+import math
 
 logger = logging.getLogger(__name__)
 
 load_dotenv()
+
+
 rank_map = {
     "VIP": "VIP",
     "VIP_PLUS": "VIP+",
     "MVP": "MVP",
     "MVP_PLUS": "MVP+",
-    "YOUTUBER": "YouTube"
+    "YOUTUBER": "YouTube",
 }
+
+# bedwars
+
+XP_PER_STANDARD_BEDWARS_LEVEL = 5000
+XP_PER_BEDWARS_PRESTIGE = 487000
+XP_EASY_LEVELS_BEDWARS = [500, 1000, 2000, 3500]
+
+bedwars_modes = ["overall", "eight_one", "eight_two", "four_three", "four_four"]
+# combined like "eight_one" + "_" + "beds_lost_bedwars"
+bedwars_stats_map = {
+    "games_played_bedwars": "games_played",
+    "winstreak": "winstreak",
+    "wins_bedwars": "wins",
+    "losses_bedwars": "losses",
+    "kills_bedwars": "kills",
+    "deaths_bedwars": "deaths",
+    "final_kills_bedwars": "final_kills",
+    "final_deaths_bedwars": "final_deaths",
+    "beds_broken_bedwars": "beds_broken",
+    "beds_lost_bedwars": "beds_lost",
+    "_items_purchased_bedwars": "items_purchased",
+    # resources
+    "resources_collected_bedwars": "resources_collected",
+    "iron_resources_collected_bedwars": "iron_collected",
+    "gold_resources_collected_bedwars": "gold_collected",
+    "diamond_resources_collected_bedwars": "diamonds_collected",
+    "emerald_resources_collected_bedwars": "emeralds_collected",
+}
+
+
+class BedwarsMode(BaseModel):
+    games_played: int
+    winstreak: int
+    wins: int
+    losses: int
+    winn_loss_ratio: float
+    kills: int
+    deaths: int
+    kill_death_ratio: float
+    final_kills: int
+    final_deaths: int
+    final_kill_death_ratio: float
+    beds_broken: int
+    beds_lost: int
+    bed_broken_lost_ratio: float
+    items_purchased: int
+    # Resources
+    resources_collected: int
+    iron_collected: int
+    gold_collected: int
+    diamonds_collected: int
+    emeralds_collected: int
+
+
+class BedwarsProfile(BaseModel):
+    experience: int
+    level: int
+    tokens: int
+    overall_stats: BedwarsMode
+    solo_stats: BedwarsMode
+    duo_stats: BedwarsMode
+    trio_stats: BedwarsMode
+    quad_stats: BedwarsMode
+
 
 class HypixelPlayer(BaseModel):
     uuid: str
     first_login: Optional[str]
     last_login: Optional[str]
-    rank: str
+    rank: Optional[str]
+    achievement_points: int
+    network_experience: int
+    network_level: int
+    karma: int
+    bedwars: BedwarsProfile
 
 
-class GetHypixelData:
-    def __init__(self, uuid, hypixel_api_key, guild_members_to_fetch = 100):
-        self.uuid = uuid
-        self.api_key = hypixel_api_key
-        self.guild_members_to_fetch = guild_members_to_fetch
+def get_core_hypixel_data(
+    uuid, hypixel_api_key=os.getenv("hypixel_api_key")
+) -> HypixelPlayer:
+    payload = {"uuid": uuid}
 
-    def get_basic_data(self):
-        """
-        requires uuid and api key
-        returns first login date (in ISO) and player rank and last_login_date_iso (in ISO) and request_status 
-        returns None, None, None, None if player is not found
-        """
-        payload = {
-            "uuid": self.uuid
-        }
+    try:
+        player_data_raw = requests.get(
+            url="https://api.hypixel.net/v2/player",
+            params=payload,
+            headers={"API-Key": hypixel_api_key},
+            timeout=10,
+        )
 
-        try:
-            player_data = requests.get(
-                url = "https://api.hypixel.net/v2/player",
-                params = payload,
-                headers = {"API-Key": self.api_key}
-                )
-            # print(player_data)
-            # print(player_data.text)
-            player_data.raise_for_status()
+        player_data_raw.raise_for_status()
 
-            json_player_data = player_data.json()
-            
-            #if json_player_data.get("player") is None:
-            #    raise exceptions.NotFound()
-            # TODO: needs proper handling, is currently getting catched as unknown
+        player_data: dict = player_data_raw.json()
 
-            first_login_iso = None
-            player_rank = None
-            last_login_timestamp = None
-            last_login_iso = "Unknown"
-
-        except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 403:
-                logger.error(f"Invalid API key: {e}")
-                request_status = "invalid_api_key"
-            else:
-                logger.error(f"HTTP error occurred: {e}")
-                request_status = "http_error"
-            return None, None, None, request_status
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request exception occurred: {e}")
-            request_status = "request_error"
-            return None, None, None, request_status
-        except Exception as e:
-            logger.warning(f"something went wrong while getting Hypixel player data: {e}")
-            request_status = "unkown_error"
-            return None, None, None, request_status
-
-        #try:
-        #    with open("hypixel_player_data.json", "w", encoding="utf-8") as file:
-        #        json.dump(json_player_data, file, indent = 4)
-        #
-        #except Exception as e:
-        #    logger.error(f"Something went wrong while processing Hypixel data: {e}")
-        #    return None, None,
-        
-        try:
-            first_login = json_player_data["player"]["firstLogin"] / 1000 # transforms to standard (non milliseconds) UNIX time
-            first_login_iso = datetime.datetime.fromtimestamp(first_login).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-            
-        except Exception as e:
-            logger.warning(f"something went wrong with first login date: {e}")
-            request_status = "date_error"
-            return None, None, None, request_status
-        
-        try:
-            last_login_timestamp = json_player_data["player"]["lastLogin"] // 1000
-            last_login_iso = datetime.datetime.fromtimestamp(last_login_timestamp).strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        except Exception as e:
-            logger.warning(f"Last login could not be converted to ISO: {e}")
-
-        try:
-            player_rank = json_player_data["player"]["rank"]
-        except:
-            try:
-                player_rank = json_player_data["player"]["newPackageRank"]
-            except KeyError:
-                logger.info("player has no rank")
-                request_status = "success"
-                return first_login_iso, "No rank", last_login_iso, request_status
-        
-        try:
-            player_rank_formatted = rank_map[player_rank]
-            logger.info(f"player rank: {player_rank_formatted}")
-            request_status = "success"
-        except KeyError:
-            player_rank_formatted = player_rank
-            logging.warning(f"rank not identified: {player_rank_formatted}")
-            request_status = "success"
-        return first_login_iso, player_rank_formatted, last_login_iso, request_status
-        
-
-    def get_guild_info(self):
-        """
-        requires uuid and api key
-        returns a list with a specified number of guild members, a guild_name and guild id
-        return None, None, None if it fails
-        """
-        try:
-            payload = {"player": self.uuid}
-
-            guild_response = requests.get(
-                url = "https://api.hypixel.net/v2/guild",
-                params = payload,
-                headers = {"API-Key": self.api_key}
-            )
-
-            guild_response.raise_for_status()
-
-            logger.debug(guild_response)
-            if guild_response.json()["guild"] is None:
-                logger.info("no guild")
-                return None, None, None
-
-            guild_response_json = guild_response.json()
-
-            members = guild_response_json["guild"]["members"]
-            guild_name = guild_response_json["guild"]["name"]
-            guild_id = guild_response_json["guild"]["_id"]
-            guild_members = []
-            for index, member in enumerate(members):
-                if index < self.guild_members_to_fetch: # gets the first x members of the guild
-                    guild_members.append(member["uuid"])
-
-            return guild_members, guild_name, guild_id
-        except requests.exceptions.HTTPError as e:
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 403:
+            logger.error(f"Invalid API key: {e}")
+            raise exceptions.ServiceAPIKeyError()
+        else:
             logger.error(f"HTTP error occurred: {e}")
+            raise exceptions.UpstreamError()
+    except requests.exceptions.Timeout as e:
+        logger.error(f"Request timed out: {e}")
+        raise exceptions.UpstreamTimeoutError()
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request exception occurred: {e}")
+        raise exceptions.UpstreamError()
+    except Exception as e:
+        logger.warning(f"something went wrong while getting Hypixel player data: {e}")
+        raise exceptions.ServiceError()
+
+    if player_data.get("player") is None:
+        raise exceptions.NotFound()
+
+    player: dict = player_data.get("player", {})
+
+    first_login = convert_unix_milliseconds_to_UTC(player.get("firstLogin"))
+    last_login = convert_unix_milliseconds_to_UTC(player.get("lastLogin"))
+
+    player_rank = player.get("rank")
+    if player_rank is None:
+        player_rank = player.get("newPackageRank")
+
+    player_rank = rank_map.get(player_rank, player_rank)
+
+    achievement_points = player.get("achievementPoints", 0)
+    karma = player.get("karma", 0)
+
+    network_experience = player.get("networkExp", 0)
+    base_level = (
+        math.sqrt((network_experience / 1250) + 12.25) - 3.5
+    )  # logic: https://hypixel.net/threads/guide-network-level-equations.3412241/
+    network_level = int(base_level) + 1  # base_level starts from 0
+
+    player_profile = HypixelPlayer(
+        uuid=uuid,
+        first_login=first_login,
+        last_login=last_login,
+        rank=player_rank,
+        achievement_points=achievement_points,
+        network_experience=network_experience,
+        network_level=network_level,
+        karma=karma,
+        bedwars=get_bedwars_profile(player_data),
+    )
+    return player_profile
+
+
+def get_bedwars_profile(player_data: dict) -> BedwarsProfile:
+    bedwars_data: dict = (
+        player_data.get("player", {}).get("stats", {}).get("Bedwars", {})
+    )
+
+    mode_stats = {}
+
+    for mode in bedwars_modes:
+        mode_stats[mode] = get_bedwars_mode_data(mode, bedwars_data)
+
+    bedwars_profile = BedwarsProfile(
+        experience=bedwars_data.get("Experience", 0),
+        level=calculate_bedwars_level(bedwars_data.get("Experience", 0)),
+        tokens=bedwars_data.get("coins", 0),  # coins were renamed to tokens
+        overall_stats=mode_stats["overall"],
+        solo_stats=mode_stats["eight_one"],
+        duo_stats=mode_stats["eight_two"],
+        trio_stats=mode_stats["four_three"],
+        quad_stats=mode_stats["four_four"],
+    )
+
+    return bedwars_profile
+
+
+def get_bedwars_mode_data(mode, bedwars_data) -> BedwarsMode:
+    """Creates a BedwarsMode pydantic model for a mode"""
+    mode_data = {}
+    for raw_key, model_key in bedwars_stats_map.items():
+        if mode == "overall":
+            full_raw_key = raw_key
+        else:
+            full_raw_key = f"{mode}_{raw_key}"
+
+        mode_data[model_key] = bedwars_data.get(full_raw_key, 0)
+
+    # ratios
+    mode_data["winn_loss_ratio"] = (
+        round(mode_data["wins"] / mode_data["losses"], 2)
+        if mode_data["losses"] > 0
+        else 0.0
+    )
+    mode_data["kill_death_ratio"] = (
+        round(mode_data["kills"] / mode_data["deaths"], 2)
+        if mode_data["deaths"] > 0
+        else 0.0
+    )
+    mode_data["final_kill_death_ratio"] = (
+        round(mode_data["final_kills"] / mode_data["final_deaths"], 2)
+        if mode_data["final_deaths"] > 0
+        else 0.0
+    )
+    mode_data["bed_broken_lost_ratio"] = (
+        round(mode_data["beds_broken"] / mode_data["beds_lost"], 2)
+        if mode_data["beds_lost"] > 0
+        else 0.0
+    )
+
+    return BedwarsMode(**mode_data)
+
+
+def calculate_bedwars_level(experience) -> int:
+    if experience <= 0:
+        return 0
+
+    # info: https://hypixel.net/threads/bedwars-level-experience-guide-2023-updated-version.5431988/
+    prestiges = experience // XP_PER_BEDWARS_PRESTIGE
+
+    level = prestiges * 100
+
+    remaining_xp = (
+        experience % XP_PER_BEDWARS_PRESTIGE
+    )  # this will always be < 100 levels
+
+    for level_xp_required in XP_EASY_LEVELS_BEDWARS:
+        if remaining_xp > level_xp_required:
+            remaining_xp -= level_xp_required
+            level += 1
+
+    level += remaining_xp // 5000  # adding the rest of the levels
+    return int(level)
+
+
+def get_guild_info(self):
+    """
+    requires uuid and api key
+    returns a list with a specified number of guild members, a guild_name and guild id
+    return None, None, None if it fails
+    """
+    try:
+        payload = {"player": self.uuid}
+
+        guild_response = requests.get(
+            url="https://api.hypixel.net/v2/guild",
+            params=payload,
+            headers={"API-Key": self.api_key},
+        )
+
+        guild_response.raise_for_status()
+
+        logger.debug(guild_response)
+        if guild_response.json()["guild"] is None:
+            logger.info("no guild")
             return None, None, None
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request exception occurred: {e}")
-            return None, None, None
-        except KeyError as e:
-            logger.warning(f"couldn't find {e}")
-            return None, None, None
-        except Exception as e:
-            logger.warning(f"something went wrong while getting hypixel guild info: {e}")
-            return None, None, None
+
+        guild_response_json = guild_response.json()
+
+        members = guild_response_json["guild"]["members"]
+        guild_name = guild_response_json["guild"]["name"]
+        guild_id = guild_response_json["guild"]["_id"]
+        guild_members = []
+        for index, member in enumerate(members):
+            if (
+                index < self.guild_members_to_fetch
+            ):  # gets the first x members of the guild
+                guild_members.append(member["uuid"])
+
+        return guild_members, guild_name, guild_id
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"HTTP error occurred: {e}")
+        return None, None, None
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request exception occurred: {e}")
+        return None, None, None
+    except KeyError as e:
+        logger.warning(f"couldn't find {e}")
+        return None, None, None
+    except Exception as e:
+        logger.warning(f"something went wrong while getting hypixel guild info: {e}")
+        return None, None, None
+
+
+def convert_unix_milliseconds_to_UTC(timestamp: int) -> Optional[str]:
+    if timestamp is None:
+        return None
+
+    regular_timestamp = timestamp / 1000
+
+    return datetime.datetime.fromtimestamp(regular_timestamp).strftime(
+        "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
 
 
 if __name__ == "__main__":
     uuid = "3ff2e63ad63045e0b96f57cd0eae708d"
-    uuid = "8e70666aa2d144ec914d5172b7dcb289"
+    # uuid = "8e70666aa2d144ec914d5172b7dcb289"
+    uuid = "2c8b76a5fded4a8980b2f3ded61456e7"
+    # uuid = "e533388b2ebc4bb1a6705ba522d4e5d6"
     hypixel_api_key = os.getenv("hypixel_api_key")
-
-    user = GetHypixelData(uuid, hypixel_api_key)
-    data = user.get_basic_data()
+    # print(calculate_bedwars_level(315820))
+    data = get_core_hypixel_data(uuid)
     print(data)

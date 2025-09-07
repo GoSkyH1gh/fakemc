@@ -1,19 +1,52 @@
 from fastapi import HTTPException
 from pydantic import BaseModel
 
+
 class ErrorResponse(BaseModel):
     detail: str
 
+
 class NotFound(HTTPException):
+    """Indicates that requested resource was not found"""
+
     def __init__(self):
         super().__init__(
-            detail=f"Requested resource not found",
+            detail="Requested resource not found",
             status_code=404,
         )
 
+
 class UpstreamError(HTTPException):
+    """Indicates an error from an Upstream provider"""
+
     def __init__(self):
         super().__init__(
-            detail=f"Recieved an error from Upstream",
+            detail="Recieved an error from Upstream",
             status_code=502,
         )
+
+
+class UpstreamTimeoutError(HTTPException):
+    """Indicates that an Upstream provider didn't provide the requested resource in time"""
+
+    def __init__(self):
+        super().__init__(
+            status_code=504,
+            detail="Upstream provider did not provide the requested resource in time",
+        )
+
+
+class ServiceAPIKeyError(HTTPException):
+    """Indicates an invalid API key, backend's fault"""
+
+    def __init__(self):
+        super().__init__(
+            detail="Couldn't resolve request due to invalid API key on server",
+            status_code=500,
+        )
+
+class ServiceError(HTTPException):
+    """Generic Exception 500"""
+
+    def __init__(self):
+        super().__init__(status_code=500, detail="Server coudn't resolve the request")
