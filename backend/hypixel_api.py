@@ -6,7 +6,7 @@ import logging
 from fastapi import HTTPException
 import exceptions
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 import math
 
 logger = logging.getLogger(__name__)
@@ -96,6 +96,24 @@ class HypixelPlayer(BaseModel):
     network_level: int
     karma: int
     bedwars: BedwarsProfile
+
+
+class HypixelGuildMember(BaseModel):
+    uuid: str
+    rank: str
+    joined: str
+    quest_participation: int
+
+
+class HypixelGuild(BaseModel):
+    name: str
+    members: List[HypixelGuildMember]
+    id: str
+    created: str
+    experience: int
+    tag: str
+    description: Optional[str]
+    publicly_listed: bool
 
 
 def get_core_hypixel_data(
@@ -251,53 +269,71 @@ def calculate_bedwars_level(experience) -> int:
     return int(level)
 
 
-def get_guild_info(self):
+def get_guild_info(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> HypixelGuild:
     """
     requires uuid and api key
     returns a list with a specified number of guild members, a guild_name and guild id
     return None, None, None if it fails
     """
     try:
-        payload = {"player": self.uuid}
+        payload = {"player": uuid}
 
-        guild_response = requests.get(
+        guild_data_raw = requests.get(
             url="https://api.hypixel.net/v2/guild",
             params=payload,
-            headers={"API-Key": self.api_key},
+            headers={"API-Key": hypixel_api_key},
+            timeout=10,
         )
 
-        guild_response.raise_for_status()
+        guild_data_raw.raise_for_status()
 
-        logger.debug(guild_response)
-        if guild_response.json()["guild"] is None:
-            logger.info("no guild")
-            return None, None, None
-
-        guild_response_json = guild_response.json()
-
-        members = guild_response_json["guild"]["members"]
-        guild_name = guild_response_json["guild"]["name"]
-        guild_id = guild_response_json["guild"]["_id"]
-        guild_members = []
-        for index, member in enumerate(members):
-            if (
-                index < self.guild_members_to_fetch
-            ):  # gets the first x members of the guild
-                guild_members.append(member["uuid"])
-
-        return guild_members, guild_name, guild_id
     except requests.exceptions.HTTPError as e:
-        logger.error(f"HTTP error occurred: {e}")
-        return None, None, None
+        if e.response.status_code == 403:
+            logger.error(f"Invalid API key: {e}")
+            raise exceptions.ServiceAPIKeyError()
+        else:
+            logger.error(f"HTTP error occurred: {e}")
+            raise exceptions.UpstreamError()
+    except requests.exceptions.Timeout as e:
+        logger.error(f"Request timed out: {e}")
+        raise exceptions.UpstreamTimeoutError()
     except requests.exceptions.RequestException as e:
         logger.error(f"Request exception occurred: {e}")
-        return None, None, None
-    except KeyError as e:
-        logger.warning(f"couldn't find {e}")
-        return None, None, None
+        raise exceptions.UpstreamError()
     except Exception as e:
-        logger.warning(f"something went wrong while getting hypixel guild info: {e}")
-        return None, None, None
+        logger.warning(f"something went wrong while getting Hypixel guild data: {e}")
+        raise exceptions.ServiceError()
+
+    guild_data: dict = guild_data_raw.json().get("guild")
+
+    if guild_data is None:
+        raise exceptions.NotFound()
+
+    members = guild_data.get("members", [])
+
+    guild_members = []
+    for member in members:
+        guild_members.append(
+            HypixelGuildMember(
+                uuid=member.get("uuid"),
+                rank=member.get("rank"),
+                joined=convert_unix_milliseconds_to_UTC(member.get("joined")),
+                quest_participation=member.get("questParticipation"),
+            )
+        )
+
+    guild_profile = HypixelGuild(
+        name=guild_data.get("name"),
+        members=guild_members,
+        id=guild_data.get("_id"),
+        created=convert_unix_milliseconds_to_UTC(guild_data.get("created")),
+        experience=guild_data.get("exp", 0),
+        tag=guild_data.get("tag"),
+        description=guild_data.get("description"),
+        publicly_listed=guild_data.get("publiclyListed", False),
+    )
+
+    return guild_profile
 
 
 def convert_unix_milliseconds_to_UTC(timestamp: int) -> Optional[str]:
@@ -314,9 +350,10 @@ def convert_unix_milliseconds_to_UTC(timestamp: int) -> Optional[str]:
 if __name__ == "__main__":
     uuid = "3ff2e63ad63045e0b96f57cd0eae708d"
     # uuid = "8e70666aa2d144ec914d5172b7dcb289"
-    uuid = "2c8b76a5fded4a8980b2f3ded61456e7"
+    # uuid = "2c8b76a5fded4a8980b2f3ded61456e7" # aarcanist
     # uuid = "e533388b2ebc4bb1a6705ba522d4e5d6"
     hypixel_api_key = os.getenv("hypixel_api_key")
     # print(calculate_bedwars_level(315820))
-    data = get_core_hypixel_data(uuid)
+    # data = get_core_hypixel_data(uuid)
+    data = get_guild_info(uuid)
     print(data)
