@@ -66,3 +66,10 @@ def dashify_uuid(uuid: str) -> str:
     except:
         print(f"coudn't dashify uuid: {uuid}")
         return ""
+    
+def check_valid_uuid(uuid: str) -> bool:
+    """Checks if a uuid is valid"""
+    if not len(uuid) == 32:
+        return False
+    else:
+        return True

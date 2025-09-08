@@ -87,6 +87,7 @@ class BedwarsProfile(BaseModel):
 
 
 class HypixelPlayer(BaseModel):
+    source: str
     uuid: str
     first_login: Optional[str]
     last_login: Optional[str]
@@ -174,6 +175,7 @@ def get_core_hypixel_data(
     network_level = int(base_level) + 1  # base_level starts from 0
 
     player_profile = HypixelPlayer(
+        source="hypixel_api",
         uuid=uuid,
         first_login=first_login,
         last_login=last_login,
@@ -270,11 +272,6 @@ def calculate_bedwars_level(experience) -> int:
 
 
 def get_guild_info(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> HypixelGuild:
-    """
-    requires uuid and api key
-    returns a list with a specified number of guild members, a guild_name and guild id
-    return None, None, None if it fails
-    """
     try:
         payload = {"player": uuid}
 

@@ -45,8 +45,17 @@ class ServiceAPIKeyError(HTTPException):
             status_code=500,
         )
 
+
 class ServiceError(HTTPException):
     """Generic Exception 500"""
 
     def __init__(self):
         super().__init__(status_code=500, detail="Server coudn't resolve the request")
+
+
+class InvalidUserUUID(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=400,
+            detail="UUID couldn't be proccessed. Make sure you are using the undashed format.",
+        )

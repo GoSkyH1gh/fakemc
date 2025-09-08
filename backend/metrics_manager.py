@@ -1,7 +1,7 @@
 import os
 import re
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, Engine
 from pydantic import BaseModel
 from typing import Optional, List
 from fastapi import HTTPException
@@ -25,7 +25,7 @@ class HistogramData(BaseModel):
     percentile: float
 
 
-def get_engine():
+def get_engine() -> Engine:
     # Use psycopg2 for sync PostgreSQL
     db_url = os.getenv("DATABASE_URL").split("?")[0]
     db_url = re.sub(r"^postgresql\+asyncpg:", "postgresql+psycopg2:", db_url)
