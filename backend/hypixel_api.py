@@ -103,18 +103,23 @@ class HypixelGuildMember(BaseModel):
     uuid: str
     rank: str
     joined: str
-    quest_participation: int
 
 
 class HypixelGuild(BaseModel):
+    source: str
     name: str
-    members: List[HypixelGuildMember]
     id: str
     created: str
     experience: int
     tag: str
     description: Optional[str]
     publicly_listed: bool
+    members: List[HypixelGuildMember]
+
+
+class HypixelFullData(BaseModel):
+    player: HypixelPlayer
+    guild: Optional[HypixelGuild]
 
 
 def get_core_hypixel_data(
@@ -271,7 +276,7 @@ def calculate_bedwars_level(experience) -> int:
     return int(level)
 
 
-def get_guild_info(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> HypixelGuild:
+def get_guild_data(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> HypixelGuild:
     try:
         payload = {"player": uuid}
 
@@ -315,11 +320,11 @@ def get_guild_info(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> Hypixe
                 uuid=member.get("uuid"),
                 rank=member.get("rank"),
                 joined=convert_unix_milliseconds_to_UTC(member.get("joined")),
-                quest_participation=member.get("questParticipation"),
             )
         )
 
     guild_profile = HypixelGuild(
+        source="hypixel_api",
         name=guild_data.get("name"),
         members=guild_members,
         id=guild_data.get("_id"),
@@ -352,5 +357,5 @@ if __name__ == "__main__":
     hypixel_api_key = os.getenv("hypixel_api_key")
     # print(calculate_bedwars_level(315820))
     # data = get_core_hypixel_data(uuid)
-    data = get_guild_info(uuid)
+    data = get_guild_data(uuid)
     print(data)

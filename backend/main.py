@@ -1,6 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks, Request, Depends
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+
 # from data_manager import DataManager
 from wynncraft_api import (
     GetWynncraftData,
@@ -11,16 +12,23 @@ from wynncraft_api import (
 from online_status import get_online_status
 from dotenv import load_dotenv
 from wynn_data_manager import WynnDataManager
+
 # from donut_api import get_donut_stats, DonutPlayerStats
 from mcci_api import MCCIPlayer, get_mcci_data
 import os
 from metrics_manager import get_stats, HistogramData, get_engine
+
 # from donut_api import add_donut_stats_to_db
 import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy import Engine
-from hypixel_manager import get_hypixel_data, HypixelPlayer, add_to_hypixel_cache
+from hypixel_manager import (
+    get_hypixel_data,
+    HypixelFullData,
+    add_to_hypixel_cache,
+    add_to_hypixel_guild_cache,
+)
 
 load_dotenv()
 
@@ -48,6 +56,7 @@ def root():
     response = {"message": "hi, this is the fakemc api"}
     return response
 
+
 """
 @app.get(
     "/v1/players/mojang/{username}",
@@ -58,15 +67,37 @@ def get_profile(username):
     return data_instance.get_mojang_data(username)
 """
 
+
 @app.get(
     "/v1/players/hypixel/{uuid}",
-    responses={404: {"model": exceptions.ErrorResponse, "description": "Not found"}},
+    responses={
+        400: {"model": exceptions.ErrorResponse, "description": "Bad Request"},
+        404: {"model": exceptions.ErrorResponse, "description": "Not Found"},
+        500: {"model": exceptions.ErrorResponse, "description": "Internal Server Error"},
+        502: {"model": exceptions.ErrorResponse, "description": "Upstream Error"},
+        504: {"model": exceptions.ErrorResponse, "description": "Upstream Timeout Error"},
+    },
 )
-def get_hypixel(uuid, background_tasks: BackgroundTasks, db_engine: Engine = Depends(db_connection)) -> HypixelPlayer:
+def get_hypixel(
+    uuid, background_tasks: BackgroundTasks, db_engine: Engine = Depends(db_connection)
+) -> HypixelFullData:
     data = get_hypixel_data(uuid, db_engine)
-    if data.source == "hypixel_api":
-        background_tasks.add_task(add_to_hypixel_cache, uuid, data, db_engine)
+    if data.player.source == "hypixel_api":
+        if data.guild is not None:
+            background_tasks.add_task(
+                add_to_hypixel_cache, uuid, data.player, data.guild.id, db_engine
+            )
+        else:
+            background_tasks.add_task(
+                add_to_hypixel_cache, uuid, data.player, None, db_engine
+            )
+    if data.guild is not None:
+        if data.guild.source == "hypixel_api" and data.guild.id:
+            background_tasks.add_task(
+                add_to_hypixel_guild_cache, data.guild.id, data.guild, db_engine
+            )
     return data
+
 
 """
 @app.get("/v1/hypixel/guilds/{uuid}")
@@ -74,6 +105,7 @@ def get_guild(uuid):
     data_instance = DataManager(hypixel_api_key)
     return data_instance.get_hypixel_guild_members(uuid)
 """
+
 
 @app.get("/v1/players/status/{uuid}")
 async def get_status(uuid):
@@ -106,6 +138,7 @@ def get_wynncraft_guild_list():
     guild_list = wynn_data_manager.get_guild_list()
     return guild_list
 
+
 """
 # donutsmp endpoint
 @app.get("/v1/players/donutsmp/{username}")
@@ -114,6 +147,7 @@ def get_donut(username, background_tasks: BackgroundTasks) -> DonutPlayerStats:
     background_tasks.add_task(add_donut_stats_to_db, player_data, username)
     return player_data
 """
+
 
 # mcci endpoint
 @app.get("/v1/players/mccisland/{uuid}")
