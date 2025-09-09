@@ -16,13 +16,14 @@ from wynn_data_manager import WynnDataManager
 # from donut_api import get_donut_stats, DonutPlayerStats
 from mcci_api import MCCIPlayer, get_mcci_data
 import os
-from metrics_manager import get_stats, HistogramData, get_engine
+from metrics_manager import get_stats, HistogramData
+from db import get_db
 
 # from donut_api import add_donut_stats_to_db
 import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
-from sqlalchemy import Engine
+from sqlalchemy.orm import Session
 from hypixel_manager import (
     get_hypixel_data,
     HypixelFullData,
@@ -47,10 +48,6 @@ app.add_middleware(
 )
 
 
-async def db_connection():
-    return get_engine()
-
-
 @app.get("/")
 def root():
     response = {"message": "hi, this is the fakemc api"}
@@ -73,28 +70,34 @@ def get_profile(username):
     responses={
         400: {"model": exceptions.ErrorResponse, "description": "Bad Request"},
         404: {"model": exceptions.ErrorResponse, "description": "Not Found"},
-        500: {"model": exceptions.ErrorResponse, "description": "Internal Server Error"},
+        500: {
+            "model": exceptions.ErrorResponse,
+            "description": "Internal Server Error",
+        },
         502: {"model": exceptions.ErrorResponse, "description": "Upstream Error"},
-        504: {"model": exceptions.ErrorResponse, "description": "Upstream Timeout Error"},
+        504: {
+            "model": exceptions.ErrorResponse,
+            "description": "Upstream Timeout Error",
+        },
     },
 )
 def get_hypixel(
-    uuid, background_tasks: BackgroundTasks, db_engine: Engine = Depends(db_connection)
+    uuid, background_tasks: BackgroundTasks, session: Session = Depends(get_db)
 ) -> HypixelFullData:
-    data = get_hypixel_data(uuid, db_engine)
+    data = get_hypixel_data(uuid, session)
     if data.player.source == "hypixel_api":
         if data.guild is not None:
             background_tasks.add_task(
-                add_to_hypixel_cache, uuid, data.player, data.guild.id, db_engine
+                add_to_hypixel_cache, uuid, data.player, data.guild.id, session
             )
         else:
             background_tasks.add_task(
-                add_to_hypixel_cache, uuid, data.player, None, db_engine
+                add_to_hypixel_cache, uuid, data.player, None, session
             )
     if data.guild is not None:
         if data.guild.source == "hypixel_api" and data.guild.id:
             background_tasks.add_task(
-                add_to_hypixel_guild_cache, data.guild.id, data.guild, db_engine
+                add_to_hypixel_guild_cache, data.guild.id, data.guild, session
             )
     return data
 

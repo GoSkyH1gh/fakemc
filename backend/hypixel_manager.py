@@ -8,6 +8,7 @@ from hypixel_api import (
 from utils import check_valid_uuid
 import exceptions
 from sqlalchemy import Engine, Connection, text
+from sqlalchemy.orm import Session
 import time
 from metrics_manager import get_engine
 from typing import Tuple, Optional, Union
@@ -17,52 +18,49 @@ from fastapi import HTTPException
 HYPIXEL_TTL = 180
 
 
-def get_hypixel_data(uuid, db_engine: Engine) -> HypixelFullData:
+def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
     if not check_valid_uuid(uuid):
         raise exceptions.InvalidUserUUID()
 
-    with db_engine.begin() as conn:
-        player_data = None
-        guild_data = None
-        guild_id = None
+    player_data = None
+    guild_data = None
+    guild_id = None
 
-        hypixel_cache_valid = check_hypixel_cache(uuid, conn)
-        if hypixel_cache_valid:
-            try:
-                player_data, guild_id = get_hypixel_cache(uuid, conn)
-            except RuntimeError:
-                print("Failed getting data from hypixel cache, getting live result")
+    hypixel_cache_valid = check_hypixel_cache(uuid, session)
+    if hypixel_cache_valid:
+        try:
+            player_data, guild_id = get_hypixel_cache(uuid, session)
+        except RuntimeError:
+            print("Failed getting data from hypixel cache, getting live result")
 
-        if player_data is None:
-            player_data = get_core_hypixel_data(uuid)
+    if player_data is None:
+        player_data = get_core_hypixel_data(uuid)
 
-        if guild_id is not None:
-            guild_data = get_hypixel_guild_cache(guild_id, conn)
+    if guild_id is not None:
+        guild_data = get_hypixel_guild_cache(guild_id, session)
 
-        if (
-            hypixel_cache_valid and guild_id == None
-        ):  # handles if a cached player has no guild
-            guild_data == None
-        elif guild_data is None or guild_data == False:
-            try:
-                guild_data = get_guild_data(uuid)
-            except exceptions.NotFound:
-                guild_data = None
+    if (
+        hypixel_cache_valid and guild_id == None
+    ):  # handles if a cached player has no guild
+        guild_data == None
+    elif guild_data is None or guild_data == False:
+        try:
+            guild_data = get_guild_data(uuid)
+        except exceptions.NotFound:
+            guild_data = None
 
-        hypixel_data = HypixelFullData(player=player_data, guild=guild_data)
-        return hypixel_data
+    hypixel_data = HypixelFullData(player=player_data, guild=guild_data)
+    return hypixel_data
 
 
-def check_hypixel_cache(uuid, conn: Connection) -> bool:
-    print("checking hypixel cache")
+def check_hypixel_cache(uuid, session: Session) -> bool:
     current_time = time.time()
-    cache_time = conn.execute(
+    cache_time = session.execute(
         text(
             "SELECT extract(epoch from timestamp) as timestamp FROM hypixel_cache WHERE uuid = :uuid;"
         ),
         {"uuid": uuid},
     ).fetchone()
-
     if cache_time is None:
         return False
 
@@ -73,8 +71,8 @@ def check_hypixel_cache(uuid, conn: Connection) -> bool:
         return False
 
 
-def get_hypixel_cache(uuid, conn: Connection) -> Tuple[HypixelPlayer, Optional[str]]:
-    cache_data = conn.execute(
+def get_hypixel_cache(uuid, session: Session) -> Tuple[HypixelPlayer, Optional[str]]:
+    cache_data = session.execute(
         text("SELECT data, guild_id FROM hypixel_cache WHERE uuid = :uuid;"),
         {"uuid": uuid},
     ).fetchone()
@@ -87,8 +85,8 @@ def get_hypixel_cache(uuid, conn: Connection) -> Tuple[HypixelPlayer, Optional[s
         raise RuntimeError()
 
 
-def get_hypixel_guild_cache(id, conn: Connection) -> Union[HypixelGuild, False]:
-    cache_data = conn.execute(
+def get_hypixel_guild_cache(id, session: Session) -> Union[HypixelGuild, False]:
+    cache_data = session.execute(
         text(
             "SELECT data, extract(epoch from timestamp) as timestamp FROM hypixel_guild_cache WHERE id = :id"
         ),
@@ -111,44 +109,44 @@ def get_hypixel_guild_cache(id, conn: Connection) -> Union[HypixelGuild, False]:
 
 
 def add_to_hypixel_cache(
-    uuid: str, data: HypixelPlayer, guild_id: str, db_engine: Engine
+    uuid: str, data: HypixelPlayer, guild_id: str, session: Session
 ) -> None:
-    with db_engine.begin() as conn:
-        conn.execute(
-            text(
-                """
-                INSERT INTO hypixel_cache (uuid, data, timestamp, guild_id) 
-                VALUES (:uuid, :data, NOW(), :guild_id)
-                ON CONFLICT (uuid)
-                DO UPDATE SET 
-                    data = EXCLUDED.data,
-                    timestamp = NOW(),
-                    guild_id = EXCLUDED.guild_id
-                """
-            ),
-            {
-                "uuid": uuid,
-                "data": data.model_dump_json(exclude={"source"}),
-                "guild_id": guild_id,
-            },
-        )
+    session.execute(
+        text(
+            """
+            INSERT INTO hypixel_cache (uuid, data, timestamp, guild_id) 
+            VALUES (:uuid, :data, NOW(), :guild_id)
+            ON CONFLICT (uuid)
+            DO UPDATE SET 
+                data = EXCLUDED.data,
+                timestamp = NOW(),
+                guild_id = EXCLUDED.guild_id
+            """
+        ),
+        {
+            "uuid": uuid,
+            "data": data.model_dump_json(exclude={"source"}),
+            "guild_id": guild_id,
+        },
+    )
+    session.commit()
 
 
-def add_to_hypixel_guild_cache(id: str, data: HypixelGuild, db_engine: Engine) -> None:
-    with db_engine.begin() as conn:
-        conn.execute(
-            text(
-                """
-                INSERT INTO hypixel_guild_cache (id, data, timestamp) 
-                VALUES (:id, :data, NOW())
-                ON CONFLICT (id)
-                DO UPDATE SET 
-                    data = EXCLUDED.data,
-                    timestamp = NOW()
-                """
-            ),
-            {"id": id, "data": data.model_dump_json(exclude={"source"})},
-        )
+def add_to_hypixel_guild_cache(id: str, data: HypixelGuild, session: Session) -> None:
+    session.execute(
+        text(
+            """
+            INSERT INTO hypixel_guild_cache (id, data, timestamp) 
+            VALUES (:id, :data, NOW())
+            ON CONFLICT (id)
+            DO UPDATE SET 
+                data = EXCLUDED.data,
+                timestamp = NOW()
+            """
+        ),
+        {"id": id, "data": data.model_dump_json(exclude={"source"})},
+    )
+    session.commit()
 
 
 if __name__ == "__main__":

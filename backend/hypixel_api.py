@@ -111,7 +111,7 @@ class HypixelGuild(BaseModel):
     id: str
     created: str
     experience: int
-    tag: str
+    tag: Optional[str]
     description: Optional[str]
     publicly_listed: bool
     members: List[HypixelGuildMember]
