@@ -1,4 +1,4 @@
-from fastapi import FastAPI, BackgroundTasks, Request, Depends
+from fastapi import FastAPI, BackgroundTasks, Request, Depends, Query
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,21 +12,21 @@ from wynncraft_api import (
 from online_status import get_online_status
 from dotenv import load_dotenv
 from wynn_data_manager import WynnDataManager
-
-# from donut_api import get_donut_stats, DonutPlayerStats
+from minecraft_api import MojangData
+from donut_api import get_donut_stats, DonutPlayerStats, add_donut_stats_to_db
 from mcci_api import MCCIPlayer, get_mcci_data
 import os
 from metrics_manager import get_stats, HistogramData
 from db import get_db
 
-# from donut_api import add_donut_stats_to_db
 import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy.orm import Session
-from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members
+from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members, HypixelGuildMemberParams
 from minecraft_manager import get_minecraft_data
-from typing import List
+from typing import List, Annotated
+
 
 load_dotenv()
 
@@ -67,7 +67,7 @@ def root():
         },
     },
 )
-def get_profile(username, session: Session = Depends(get_db)):
+def get_profile(username, session: Session = Depends(get_db)) -> MojangData:
     return get_minecraft_data(username, session)
 
 
@@ -93,8 +93,8 @@ def get_hypixel(uuid, session: Session = Depends(get_db)) -> HypixelFullData:
 
 
 @app.get("/v1/hypixel/guilds/{id}")
-def get_guild(id, session: Session = Depends(get_db)) -> List[HypixelGuildMemberFull] :
-    return get_full_guild_members(id, session, 100, 0)
+def get_guild(id, query_params: Annotated[HypixelGuildMemberParams, Query()], session: Session = Depends(get_db)) -> List[HypixelGuildMemberFull] :
+    return get_full_guild_members(id, session, query_params.limit, query_params.offset)
 
 
 @app.get("/v1/players/status/{uuid}")
@@ -129,14 +129,14 @@ def get_wynncraft_guild_list():
     return guild_list
 
 
-"""
+
 # donutsmp endpoint
 @app.get("/v1/players/donutsmp/{username}")
-def get_donut(username, background_tasks: BackgroundTasks) -> DonutPlayerStats:
+def get_donut(username, background_tasks: BackgroundTasks, session: Session = Depends(get_db)) -> DonutPlayerStats:
     player_data = get_donut_stats(username)
-    background_tasks.add_task(add_donut_stats_to_db, player_data, username)
+    background_tasks.add_task(add_donut_stats_to_db, player_data, username, session)
     return player_data
-"""
+
 
 
 # mcci endpoint

@@ -5,7 +5,8 @@ from pydantic import BaseModel
 from typing import Optional
 from fastapi import HTTPException
 from metrics_manager import add_value, get_engine
-from data_manager import DataManager
+from minecraft_manager import get_minecraft_data
+
 
 load_dotenv()
 
@@ -118,7 +119,7 @@ def get_donut_status(username) -> bool:
         return False
 
 
-def add_donut_stats_to_db(data: DonutPlayerStats, username) -> None:
+def add_donut_stats_to_db(data: DonutPlayerStats, username, session) -> None:
     if not isinstance(data, DonutPlayerStats):
         print("Couldn't add donut data to db because it's not DonutPlayerStats")
         return
@@ -136,8 +137,8 @@ def add_donut_stats_to_db(data: DonutPlayerStats, username) -> None:
     }
 
     try:
-        data_instance = DataManager("") # doesnt need hypixel api key
-        uuid = data_instance.get_mojang_data(username).get("uuid", None)
+        mojang_data = get_minecraft_data(username, session)
+        uuid = mojang_data.uuid
     except HTTPException:
         print(
             f"Donut Stats: an HTTP Exception happened while fetching uuid for {username}; not adding to db"

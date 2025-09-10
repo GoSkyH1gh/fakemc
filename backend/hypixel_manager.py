@@ -16,7 +16,8 @@ from metrics_manager import get_engine
 from typing import Tuple, Optional, List
 from minecraft_manager import bulk_get_usernames_cache, get_minecraft_data
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+from db import SessionLocal
+from pydantic import BaseModel, Field
 
 # in seconds
 HYPIXEL_TTL = 180
@@ -169,6 +170,10 @@ def add_to_hypixel_guild_cache(id: str, data: HypixelGuild, session: Session) ->
     )
     session.commit()
 
+# params for fastapi
+class HypixelGuildMemberParams(BaseModel):
+    limit: int = Field(20, gt=0, le=50)
+    offset: int = Field(0, ge=0)
 
 def get_full_guild_members(
     id: str, session: Session, amount_to_load: int, offset: int = 0
@@ -196,11 +201,15 @@ def get_full_guild_members(
 
     final_members = []
 
-    with ThreadPoolExecutor(max_workers=1) as executor: # more than 1 thread will lock the session for now
+    with ThreadPoolExecutor(
+        max_workers=4
+    ) as executor:
         futures = []
         for member in guild_data.members[offset : offset + amount_to_load]:
             futures.append(
-                executor.submit(get_member, member, unsolved_uuids, resolved_uuids, session)
+                executor.submit(
+                    get_member, member, unsolved_uuids, resolved_uuids
+                )
             )
 
         for future in as_completed(futures):
@@ -215,17 +224,19 @@ def get_member(
     member: HypixelGuildMember,
     unsolved_uuids: list,
     resolved_uuids: list,
-    session: Session,
 ):
     if member.uuid in unsolved_uuids:
-        data = get_minecraft_data(member.uuid, session)  # this fetches live data
-        return HypixelGuildMemberFull(
-            username=data.username,
-            uuid=data.uuid,
-            skin_showcase_b64=data.skin_showcase_b64,
-            rank=member.rank,
-            joined=member.joined,
-        )
+        with SessionLocal() as thread_session:
+            data = get_minecraft_data(
+                member.uuid, thread_session
+            )  # this fetches live data
+            return HypixelGuildMemberFull(
+                username=data.username,
+                uuid=data.uuid,
+                skin_showcase_b64=data.skin_showcase_b64,
+                rank=member.rank,
+                joined=member.joined,
+            )
     else:
         for resolved_member in resolved_uuids:
             if resolved_member.get("uuid") == member.uuid:
