@@ -59,3 +59,7 @@ class InvalidUserUUID(HTTPException):
             status_code=400,
             detail="UUID couldn't be proccessed. Make sure you are using the undashed format.",
         )
+
+class InvalidCache(BaseException):
+    def __init__(self, *args):
+        super().__init__(*args)

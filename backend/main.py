@@ -24,12 +24,8 @@ import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy.orm import Session
-from hypixel_manager import (
-    get_hypixel_data,
-    HypixelFullData,
-    add_to_hypixel_cache,
-    add_to_hypixel_guild_cache,
-)
+from hypixel_manager import get_hypixel_data, HypixelFullData
+from minecraft_manager import get_minecraft_data
 
 load_dotenv()
 
@@ -54,15 +50,24 @@ def root():
     return response
 
 
-"""
 @app.get(
     "/v1/players/mojang/{username}",
-    responses={404: {"model": exceptions.ErrorResponse, "description": "Not found"}},
+    responses={
+        400: {"model": exceptions.ErrorResponse, "description": "Bad Request"},
+        404: {"model": exceptions.ErrorResponse, "description": "Not Found"},
+        500: {
+            "model": exceptions.ErrorResponse,
+            "description": "Internal Server Error",
+        },
+        502: {"model": exceptions.ErrorResponse, "description": "Upstream Error"},
+        504: {
+            "model": exceptions.ErrorResponse,
+            "description": "Upstream Timeout Error",
+        },
+    },
 )
-def get_profile(username):
-    data_instance = DataManager(hypixel_api_key)
-    return data_instance.get_mojang_data(username)
-"""
+def get_profile(username, session: Session = Depends(get_db)):
+    return get_minecraft_data(username, session)
 
 
 @app.get(
@@ -81,9 +86,7 @@ def get_profile(username):
         },
     },
 )
-def get_hypixel(
-    uuid, session: Session = Depends(get_db)
-) -> HypixelFullData:
+def get_hypixel(uuid, session: Session = Depends(get_db)) -> HypixelFullData:
     data = get_hypixel_data(uuid, session)
     return data
 
