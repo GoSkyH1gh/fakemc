@@ -104,6 +104,12 @@ class HypixelGuildMember(BaseModel):
     rank: str
     joined: str
 
+class HypixelGuildMemberFull(BaseModel):
+    username: str
+    uuid: str
+    rank: str
+    joined: str
+    skin_showcase_b64: str
 
 class HypixelGuild(BaseModel):
     source: str
@@ -276,14 +282,19 @@ def calculate_bedwars_level(experience) -> int:
     return int(level)
 
 
-def get_guild_data(uuid, hypixel_api_key=os.getenv("hypixel_api_key")) -> HypixelGuild:
+def get_guild_data(uuid: str = None, id: str = None) -> HypixelGuild:
     try:
-        payload = {"player": uuid}
+        if uuid is None and id is None:
+            raise exceptions.InvalidUserUUID()
+        if uuid is not None:
+            payload = {"player": uuid}
+        if id is not None:
+            payload = {"id": id}
 
         guild_data_raw = requests.get(
             url="https://api.hypixel.net/v2/guild",
             params=payload,
-            headers={"API-Key": hypixel_api_key},
+            headers={"API-Key": os.getenv("hypixel_api_key")},
             timeout=10,
         )
 

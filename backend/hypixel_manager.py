@@ -2,22 +2,24 @@ from hypixel_api import (
     HypixelPlayer,
     HypixelGuild,
     HypixelFullData,
+    HypixelGuildMember,
+    HypixelGuildMemberFull,
     get_core_hypixel_data,
     get_guild_data,
 )
 from utils import check_valid_uuid
 import exceptions
-from sqlalchemy import Engine, Connection, text
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 import time
 from metrics_manager import get_engine
-from typing import Tuple, Optional, Union
-from fastapi import HTTPException
+from typing import Tuple, Optional, List
+from minecraft_manager import bulk_get_usernames_cache, get_minecraft_data
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 
 # in seconds
 HYPIXEL_TTL = 180
-
-# TODO move caching here from background tasks
 
 
 def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
@@ -39,12 +41,15 @@ def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
         player_data = get_core_hypixel_data(uuid)
 
     if guild_id is not None:
-        guild_data = get_hypixel_guild_cache(guild_id, session)
+        try:
+            guild_data = get_hypixel_guild_cache(guild_id, session)
+        except exceptions.InvalidCache:
+            guild_data = None
 
     if (
         hypixel_cache_valid and guild_id == None
     ):  # handles if a cached player has no guild
-        guild_data == None
+        guild_data = None
     elif guild_data is None or guild_data == False:
         try:
             guild_data = get_guild_data(uuid)
@@ -55,12 +60,16 @@ def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
     # caching
     if hypixel_data.player.source == "hypixel_api":
         if hypixel_data.guild is not None:
-            add_to_hypixel_cache(uuid, hypixel_data.player, hypixel_data.guild.id, session)
+            add_to_hypixel_cache(
+                uuid, hypixel_data.player, hypixel_data.guild.id, session
+            )
         else:
             add_to_hypixel_cache(uuid, hypixel_data.player, None, session)
     if hypixel_data.guild is not None:
         if hypixel_data.guild.source == "hypixel_api" and hypixel_data.guild.id:
-            add_to_hypixel_guild_cache(hypixel_data.guild.id, hypixel_data.guild, session)
+            add_to_hypixel_guild_cache(
+                hypixel_data.guild.id, hypixel_data.guild, session
+            )
 
     return hypixel_data
 
@@ -97,7 +106,7 @@ def get_hypixel_cache(uuid, session: Session) -> Tuple[HypixelPlayer, Optional[s
         raise RuntimeError()
 
 
-def get_hypixel_guild_cache(id, session: Session) -> Union[HypixelGuild, False]:
+def get_hypixel_guild_cache(id, session: Session) -> HypixelGuild:
     cache_data = session.execute(
         text(
             "SELECT data, extract(epoch from timestamp) as timestamp FROM hypixel_guild_cache WHERE id = :id"
@@ -107,7 +116,7 @@ def get_hypixel_guild_cache(id, session: Session) -> Union[HypixelGuild, False]:
 
     if cache_data.data is None:
         print(f"no cache data found for guild {id}")
-        return False
+        raise exceptions.InvalidCache()
 
     epoch_cache_time = int(cache_data.timestamp)
     current_time = time.time()
@@ -117,7 +126,7 @@ def get_hypixel_guild_cache(id, session: Session) -> Union[HypixelGuild, False]:
         except Exception as e:
             print(f"Coudn't validate HypixelGuild from cache: {e}")
 
-    return False
+    raise exceptions.InvalidCache()
 
 
 def add_to_hypixel_cache(
@@ -159,6 +168,70 @@ def add_to_hypixel_guild_cache(id: str, data: HypixelGuild, session: Session) ->
         {"id": id, "data": data.model_dump_json(exclude={"source"})},
     )
     session.commit()
+
+
+def get_full_guild_members(
+    id: str, session: Session, amount_to_load: int, offset: int = 0
+) -> List[HypixelGuildMemberFull]:
+    guild_data = None
+    try:
+        guild_data = get_hypixel_guild_cache(
+            id, session
+        )  # TODO investigate why this isnt getting activated consistently
+        print("source: cache")
+    except exceptions.InvalidCache:
+        print("source: hypixel api")
+        guild_data = get_guild_data(id=id)
+    if guild_data is None:
+        raise exceptions.ServiceError()
+
+    resolved_uuids, unsolved_uuids = bulk_get_usernames_cache(
+        [member.uuid for member in guild_data.members], session
+    )
+    print(f"found {len(resolved_uuids)} in cache, {len(unsolved_uuids)} left")
+
+    print(
+        f"fetching {len(guild_data.members[offset:offset + amount_to_load])} members out of {len(guild_data.members)}"
+    )
+
+    final_members = []
+
+    with ThreadPoolExecutor(max_workers=1) as executor: # more than 1 thread will lock the session for now
+        futures = []
+        for member in guild_data.members[offset : offset + amount_to_load]:
+            futures.append(
+                executor.submit(get_member, member, unsolved_uuids, resolved_uuids, session)
+            )
+
+        for future in as_completed(futures):
+            data = future.result()
+            if isinstance(data, HypixelGuildMemberFull):
+                final_members.append(data)
+
+    return final_members
+
+
+def get_member(
+    member: HypixelGuildMember,
+    unsolved_uuids: list,
+    resolved_uuids: list,
+    session: Session,
+):
+    if member.uuid in unsolved_uuids:
+        data = get_minecraft_data(member.uuid, session)  # this fetches live data
+        return HypixelGuildMemberFull(
+            username=data.username,
+            uuid=data.uuid,
+            skin_showcase_b64=data.skin_showcase_b64,
+            rank=member.rank,
+            joined=member.joined,
+        )
+    else:
+        for resolved_member in resolved_uuids:
+            if resolved_member.get("uuid") == member.uuid:
+                return HypixelGuildMemberFull(
+                    rank=member.rank, joined=member.joined, **resolved_member
+                )
 
 
 if __name__ == "__main__":

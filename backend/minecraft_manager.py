@@ -1,7 +1,7 @@
 from minecraft_api import GetMojangAPIData, MojangData
 from sqlalchemy.orm import Session
-from sqlalchemy import text
-from typing import Optional, Union
+from sqlalchemy import text, bindparam
+from typing import Tuple, List, Dict
 import exceptions
 import time
 
@@ -81,3 +81,27 @@ def add_to_minecraft_cache(uuid: str, data: MojangData, session: Session):
             {"uuid": uuid, "data": data.model_dump_json(exclude={"source"})},
         )
         session.commit()
+
+
+def bulk_get_usernames_cache(
+    uuids: list[str], session: Session
+) -> Tuple[List[Dict[str, str]], List[str]]:
+    cache_data = session.execute(
+        text(
+            "SELECT uuid, data->>'username' as username, data->>'skin_showcase_b64' as skin_showcase_b64 FROM minecraft_cache WHERE uuid IN :uuids;"
+        ).bindparams(bindparam("uuids", expanding=True)),
+        {"uuids": uuids},
+    ).fetchall()
+    resolved_results = []
+    unsolved_uuids = uuids.copy()
+    for row in cache_data:
+        uuid = str(row.uuid).replace("-", "")
+        resolved_results.append(
+            {
+                "uuid": uuid,
+                "username": row.username,
+                "skin_showcase_b64": row.skin_showcase_b64,
+            }
+        )
+        unsolved_uuids.remove(uuid)
+    return resolved_results, unsolved_uuids

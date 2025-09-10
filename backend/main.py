@@ -24,8 +24,9 @@ import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy.orm import Session
-from hypixel_manager import get_hypixel_data, HypixelFullData
+from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members
 from minecraft_manager import get_minecraft_data
+from typing import List
 
 load_dotenv()
 
@@ -91,12 +92,9 @@ def get_hypixel(uuid, session: Session = Depends(get_db)) -> HypixelFullData:
     return data
 
 
-"""
-@app.get("/v1/hypixel/guilds/{uuid}")
-def get_guild(uuid):
-    data_instance = DataManager(hypixel_api_key)
-    return data_instance.get_hypixel_guild_members(uuid)
-"""
+@app.get("/v1/hypixel/guilds/{id}")
+def get_guild(id, session: Session = Depends(get_db)) -> List[HypixelGuildMemberFull] :
+    return get_full_guild_members(id, session, 100, 0)
 
 
 @app.get("/v1/players/status/{uuid}")
