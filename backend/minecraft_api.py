@@ -1,4 +1,4 @@
-from utils import pillow_to_b64
+from utils import pillow_to_b64, check_valid_uuid
 import requests
 import json
 import base64
@@ -7,9 +7,11 @@ from PIL import Image
 import logging
 from pydantic import BaseModel
 from typing import Optional
+import exceptions
 
 
 class MojangData(BaseModel):
+    source: str
     username: str
     uuid: str
     has_cape: bool
@@ -72,31 +74,24 @@ class GetMojangAPIData:
         self.cape_showcase_b64 = None
         self.session = requests.sessions.Session()
 
-    def get_data(self) -> Optional[MojangData]:
+    def get_data(self) -> MojangData:
         """
         master function, gets uuid if not provided and then calls get_skin_data
         returns a MojangData object on success
-        returns None on fail
         """
-        lookup_failed = False
-        if not self.uuid:
-            logger.info(f"no uuid found, calling API for {self.username}")
-            if self.get_uuid():
-                self.get_skin_data()  # only tries get_skin_data if request suceeds
-            else:
-                lookup_failed = True
-        else:
-            self.get_skin_data()
+        if self.uuid is not None:
+            if not check_valid_uuid(self.uuid):
+                raise exceptions.InvalidUserUUID()
 
-        if (
-            self.skin_url is not None
-        ):  # only tries to get skin and cape data if they exist
-            self.get_skin_images()
+        if self.uuid is None:
+            self.get_uuid()
 
-        if lookup_failed:
-            return None
+        self.get_skin_data()
+        self.get_skin_images()
+
         try:
             player_profile = MojangData(
+                source="mojang_api",
                 username=self.username,
                 uuid=self.uuid,
                 has_cape=self.has_cape,
@@ -109,29 +104,41 @@ class GetMojangAPIData:
             )
         except Exception as e:
             logger.error(f"Could not build object MojangData: {e}")
-            return None
+            raise exceptions.ServiceError()
 
         return player_profile
 
-    def get_uuid(self) -> bool:
+    def get_uuid(self) -> str:
         """
         receives uuid based on username
         """
         try:
-            request = self.session.get(
-                f"https://api.minecraftservices.com/minecraft/profile/lookup/name/{self.username}"
+            uuid_response_raw = self.session.get(
+                f"https://api.minecraftservices.com/minecraft/profile/lookup/name/{self.username}",
+                timeout=10,
             )
-            request.raise_for_status()
-            logger.info("request success for getting UUID!")
-            json_request = request.json()
-            logger.debug(json_request)
-            self.uuid = json_request["id"]
-            self.username = json_request["name"]
-            return True
+            uuid_response_raw.raise_for_status()
 
+            uuid_response: dict = uuid_response_raw.json()
+
+        except requests.exceptions.HTTPError as e:
+            if uuid_response_raw.status_code == 404:
+                raise exceptions.NotFound()
+            logger.error(f"HTTP error occurred: {e}")
+            raise exceptions.UpstreamError()
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Request timed out: {e}")
+            raise exceptions.UpstreamTimeoutError()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request exception occurred: {e}")
+            raise exceptions.UpstreamError()
         except Exception as e:
-            logger.error(f"something went wrong in get_uuid: {e}")
-            return False
+            logger.warning(f"something went wrong while getting Minecraft UUID: {e}")
+            raise exceptions.ServiceError()
+
+        self.uuid = uuid_response["id"]
+        self.username = uuid_response["name"]
+        return self.uuid
 
     def get_skin_data(self) -> None:
         """
@@ -142,41 +149,54 @@ class GetMojangAPIData:
         """
 
         try:
-            request = self.session.get(
-                f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}"
+            player_profile_raw = self.session.get(
+                f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}",
+                timeout=10,
             )
-            request.raise_for_status()
-            json_request = request.json()
-            logger.info("request success for getting skin and cape data!")
-
-            # gets a list which contains a dictionary
-            self.username = json_request["name"]
-            properties = json_request["properties"]
-            base64_text = properties[0]["value"]
-            decoded_base64_text = base64.b64decode(
-                base64_text
-            )  # this is a bytes object
-            decoded_base64_string = decoded_base64_text.decode(
-                "utf-8"
-            )  # this is a string in UTF-8
-
-            # now that we have the decoded string, we can finally get the urls
-            properties_json = json.loads(decoded_base64_string)
-            logger.info(f"skin link: {properties_json['textures']['SKIN']['url']}")
-
-            self.skin_url = properties_json["textures"]["SKIN"]["url"]
-
-            try:
-                logger.info(f"cape link: {properties_json['textures']['CAPE']['url']}")
-                self.cape_url = properties_json["textures"]["CAPE"]["url"]
-                self.has_cape = True
-
-            except:
-                self.has_cape = False
-                logger.info(f"User {self.username} has no equipped cape")
-
+            player_profile_raw.raise_for_status()
+            
+        except requests.exceptions.HTTPError as e:
+            if player_profile_raw.status_code == 404:
+                raise exceptions.NotFound()
+            logger.error(f"HTTP error occurred: {e}")
+            raise exceptions.UpstreamError()
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Request timed out: {e}")
+            raise exceptions.UpstreamTimeoutError()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request exception occurred: {e}")
+            raise exceptions.UpstreamError()
         except Exception as e:
-            logger.error(f"something went wrong in get_skin_data: {e}")
+            logger.warning(
+                f"something went wrong while getting Minecraft skin data: {e}"
+            )
+            raise exceptions.ServiceError()
+        if not player_profile_raw.text:
+                raise exceptions.NotFound()
+        
+        player_profile: dict = player_profile_raw.json()
+        logger.info("request success for getting skin and cape data!")
+
+        # gets a list which contains a dictionary
+        self.username = player_profile.get("name")
+        base64_text = player_profile["properties"][0]["value"]
+        decoded_base64_text = base64.b64decode(base64_text)  # this is a bytes object
+        decoded_base64_string = decoded_base64_text.decode(
+            "utf-8"
+        )  # this is a string in UTF-8
+
+        # now that we have the decoded string, we can finally get the urls
+        properties_json: dict = json.loads(decoded_base64_string)
+
+        self.skin_url = properties_json.get("textures", {}).get("SKIN", {}).get("url")
+        logger.info(f"skin link: {self.skin_url}")
+
+        self.cape_url = properties_json.get("textures", {}).get("CAPE", {}).get("url")
+        if self.cape_url is not None:
+            self.has_cape = True
+            logger.info(f"cape link: {self.cape_url}")
+        else:
+            self.has_cape = False
 
     def get_skin_images(self):
         """
@@ -246,7 +266,7 @@ class GetMojangAPIData:
                 logger.info(f"Identified {self.cape_name} cape!")
             except:
                 logger.warning("Cape not regonized")
-                self.cape_name = "Unkown cape"
+                self.cape_name = "Unknown cape"
 
             return self.skin_showcase_b64, self.cape_showcase_b64, self.cape_back_b64
 
@@ -255,31 +275,9 @@ class GetMojangAPIData:
 
             return self.skin_showcase_b64, None, None
 
-    def get_name(self):
-        try:
-            request = self.session.get(
-                f"https://sessionserver.mojang.com/session/minecraft/profile/{self.uuid}"
-            )
-
-            request.raise_for_status()
-
-            self.username = request.json()["name"]
-            logger.debug(self.username)
-            return self.username
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"HTTP error occured: {e}")
-            return None
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request exception occured: {e}")
-            return None
-        except Exception as e:
-            logger.error(f"something went wrong while getting name from uuid: {e}")
-            return None
-
 
 if __name__ == "__main__":
-    instance = GetMojangAPIData("refraction")
-    instance.get_data()
-    # user = GetMojangAPIData(None, "d63a3a136e8a43e6918fddc5a1eb6c84")
-    # print(user.get_data())
+    #instance = GetMojangAPIData("goskyhigh")
+    # print(instance.get_data())
+    user = GetMojangAPIData(None, "d63a3a136e8a43e6918fddc5a1eb6c84")
+    print(user.get_data())

@@ -82,23 +82,9 @@ def get_profile(username):
     },
 )
 def get_hypixel(
-    uuid, background_tasks: BackgroundTasks, session: Session = Depends(get_db)
+    uuid, session: Session = Depends(get_db)
 ) -> HypixelFullData:
     data = get_hypixel_data(uuid, session)
-    if data.player.source == "hypixel_api":
-        if data.guild is not None:
-            background_tasks.add_task(
-                add_to_hypixel_cache, uuid, data.player, data.guild.id, session
-            )
-        else:
-            background_tasks.add_task(
-                add_to_hypixel_cache, uuid, data.player, None, session
-            )
-    if data.guild is not None:
-        if data.guild.source == "hypixel_api" and data.guild.id:
-            background_tasks.add_task(
-                add_to_hypixel_guild_cache, data.guild.id, data.guild, session
-            )
     return data
 
 

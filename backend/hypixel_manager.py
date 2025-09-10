@@ -17,6 +17,8 @@ from fastapi import HTTPException
 # in seconds
 HYPIXEL_TTL = 180
 
+# TODO move caching here from background tasks
+
 
 def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
     if not check_valid_uuid(uuid):
@@ -50,6 +52,16 @@ def get_hypixel_data(uuid, session: Session) -> HypixelFullData:
             guild_data = None
 
     hypixel_data = HypixelFullData(player=player_data, guild=guild_data)
+    # caching
+    if hypixel_data.player.source == "hypixel_api":
+        if hypixel_data.guild is not None:
+            add_to_hypixel_cache(uuid, hypixel_data.player, hypixel_data.guild.id, session)
+        else:
+            add_to_hypixel_cache(uuid, hypixel_data.player, None, session)
+    if hypixel_data.guild is not None:
+        if hypixel_data.guild.source == "hypixel_api" and hypixel_data.guild.id:
+            add_to_hypixel_guild_cache(hypixel_data.guild.id, hypixel_data.guild, session)
+
     return hypixel_data
 
 
@@ -151,5 +163,5 @@ def add_to_hypixel_guild_cache(id: str, data: HypixelGuild, session: Session) ->
 
 if __name__ == "__main__":
     db_engine = get_engine()
-    data = get_hypixel_data("3ff2e63ad63045e0b96f57cd0eae708d", db_engine)
-    print(data)
+    hypixel_data = get_hypixel_data("3ff2e63ad63045e0b96f57cd0eae708d", db_engine)
+    print(hypixel_data)
