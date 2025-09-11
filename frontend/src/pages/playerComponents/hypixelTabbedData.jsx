@@ -4,9 +4,16 @@ import * as Dialog from "@radix-ui/react-dialog";
 import "./dialog.css";
 import { toProperCase } from "./utils";
 import { useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
+import { animate, motion, scale } from "motion/react";
+import { useState } from "react";
+import BedwarsHeroIcon from "/src/assets/bedwars.png";
 
-function HypixelTabbedData({ hypixelData, hypixelGuildData }) {
+function HypixelTabbedData({
+  hypixelData,
+  hypixelGuildData,
+  fetchHypixelGuildMembers,
+  setHypixelGuildData,
+}) {
   return (
     <>
       <h3>Global Stats</h3>
@@ -27,6 +34,8 @@ function HypixelTabbedData({ hypixelData, hypixelGuildData }) {
         <HypixelGuild
           hypixelData={hypixelData}
           hypixelGuildData={hypixelGuildData}
+          fetchHypixelGuildMembers={fetchHypixelGuildMembers}
+          setHypixelGuildData={setHypixelGuildData}
         />
       )}
     </>
@@ -62,17 +71,40 @@ function HypixelBedwarsPopup({ bedwarsData }) {
         bedwarsData.overall_stats.games_played) *
       100
     ).toFixed(1) + "%";
+
+  const iconVariants = {
+    initial: { scale: 1,  },
+    hover: { scale: 1.15 },
+  };
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className="bedwars-showcase">
-          <span className="em-text">Bedwars</span>
+        <motion.button
+          className="bedwars-showcase"
+          whileHover={"hover"}
+          initial={"initial"}
+          transition={{
+            type: "spring",
+            damping: 60,
+            stiffness: 500,
+            duration: 0.5,
+          }}
+        >
+          <div className="bedwars-top-row">
+            <motion.img
+              src={BedwarsHeroIcon}
+              loading="lazy"
+              alt="Bedwars"
+              variants={iconVariants}
+            />
+            <span className="em-text">Bedwars</span>
+          </div>
           <br />
           {formatValue(bedwarsData.overall_stats.games_played)} games played •{" "}
           {winrate} winrate
           <br />
-          <span className="secondary-text">Click to see more</span>
-        </button>
+          <span className="secondary-text">→ See more</span>
+        </motion.button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
@@ -130,23 +162,52 @@ function HypixelBedwarsPopup({ bedwarsData }) {
   );
 }
 
-function HypixelGuild({ hypixelData, hypixelGuildData }) {
+function HypixelGuild({
+  hypixelData,
+  hypixelGuildData,
+  fetchHypixelGuildMembers,
+  setHypixelGuildData,
+}) {
   let navigate = useNavigate();
+  const [guildDisabled, setGuildDisabled] = useState(false);
 
   if (!hypixelGuildData) {
     return <p>No guild members to show</p>;
   }
+
+  const loadedAllMembers =
+    hypixelData.guild.members.length <= hypixelGuildData.length;
+
   const handleGuildMemberClick = (username) => {
     console.log("searching for " + username);
     navigate(`/player/${username}`);
   };
 
-  // IMPLEMENT LOAD MORE
+  const handleLoadMore = async () => {
+    if (!guildDisabled) {
+      setGuildDisabled(true);
+      try {
+        await fetchHypixelGuildMembers(
+          hypixelData,
+          setHypixelGuildData,
+          hypixelGuildData.length
+        );
+      } catch (error) {
+        console.error("Failed to load more members:", error);
+      } finally {
+        setGuildDisabled(false);
+      }
+    }
+  };
+
   const hypixelMemberElements = hypixelGuildData.map((member) => (
     <li key={member.uuid}>
       <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        transition={{ duration: 0.1, ease: "easeInOut" }}
         key={member.name}
         className="guild-list-item"
         onClick={() => handleGuildMemberClick(member.username)}
@@ -174,6 +235,20 @@ function HypixelGuild({ hypixelData, hypixelGuildData }) {
     <>
       <h3>{hypixelData?.guild?.name}</h3>
       <ul className="guild-list">{hypixelMemberElements}</ul>
+      {!loadedAllMembers && (
+        <div className="load-more-container">
+          <motion.button
+            className="load-more-button"
+            initial={{ scale: 1, backgroundColor: "#F4F077" }}
+            whileHover={{ scale: 1.3, backgroundColor: "#f8d563" }}
+            disabled={guildDisabled}
+            onClick={handleLoadMore}
+          >
+            {!guildDisabled && "Load more"}
+            {guildDisabled && "Loading..."}
+          </motion.button>
+        </div>
+      )}
     </>
   );
 }

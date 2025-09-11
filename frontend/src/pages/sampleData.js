@@ -7,7 +7,7 @@ const sampleMojangResponse = {
   cape_name: "Pan",
   skin_showcase_b64:
     "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAo0lEQVR4nGNM9ZP7r6GmxPCfjYNBUpSJ4fnrfwyMv34w3Lh1jwEEWJAlQQCiiIMBJs4EIkA6QDpBGAZgmphABMi4KN8QsARIEYgNM5EJJDB70yMGHnF5hptXrjGkpRSD2dGF2yDueXZ8zn8pyxSG/y/2wo0HAUYJZ4Znx+cwMP5/sfc/igwaYLl04iiDqLgU2FheLoi9n7/9Y/jy8iHD65fPGABhOUeI1j52eQAAAABJRU5ErkJggg==",
-  cape_showcase_b64:
+  cape_front_b64:
     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAABQElEQVR4nF1RQU7DMBCcmsY4gQJNVMEpF4QEFPWO4AU9c+INfIF38BXe0AMH4AEgRKmAtKhpE9dRU7SbOpI70mbtmd1Zx248foxWAJCMx5hlGQdhNwg4ojDkfZM+SqmaINEiCkPWtNYQuiiYJOLk4RyXh31cRX1eK6VYoxqhPI83wf1BNWJkIH6NwynPq0YTWhGQJkDjqcDX4KfmMutoR5flWpA+5/3rmDmL2lEIwBx1gEkO0D1Mcqhu7I7+S1N0SkC1fRaKRMBr+9DUtB7NhcVigWY3rgWYEktybPv4HA6x02pBUNHN6TEXkUCxJQVnPclx2zvDPE0h7Bl7d98sUCyjiDNx9c9MZzO8TjNc7AWOYEGaNqY64/PbO7zt2tzBINXu9bysqqUx1atIKZ0Gx8YW0ahNsA0JmyI1kauSkrV/ALOUlG/DKYEAAAAASUVORK5CYII=",
   cape_back_b64:
     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAAXUlEQVR4nGOs27j9PwMRgAVd4MfXL3A2BzcPpkJkBXhN/PntG4YkB5KJTMSYBleIC/xAMgCvQmTAhMt96OKkmUiMO5nwqkICTMQEDUgNQRNhHmLC5WMMq4lSRYpCABZmJemPlziHAAAAAElFTkSuQmCC",
@@ -16,111 +16,252 @@ const sampleMojangResponse = {
 };
 
 const sampleHypixelResponse = {
-  status: "success",
-  source: "hypixel_api",
-  first_login: "2013-07-07T21:03:11.000000Z",
-  last_login: "2021-12-27T17:59:33.000000Z",
-  player_rank: "YouTube",
-  guild_id: "58e5947d0cf28a503e76f7fd",
-  guild_members: [
-    {
-      uuid: "c9cf0c2e904c451986b12630828315c1",
-      name: "InTheLittleWood",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAcklEQVR4nGP8syvkPwMewMQsJ8QAwu/vvIYLIrOZQMTfR+8YRJzU4YIwNkghC0gSZAJX4RYUo7/1+zDI1hxlYAHz1GcyuMUwMCxjbQVzo35XM/xW+s3wtkSOgfH/6cX4HYli7PrrYIwMIFZAAVegJoYRALh5J6y8DZQWAAAAAElFTkSuQmCC",
+  player: {
+    source: "hypixel_api",
+    uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
+    first_login: "2013-07-07T21:03:11.000000Z",
+    last_login: "2021-12-27T17:59:33.461000Z",
+    rank: "YouTube",
+    achievement_points: 350,
+    network_experience: 54872,
+    network_level: 4,
+    karma: 585,
+    bedwars: {
+      experience: 2642,
+      level: 2,
+      tokens: 1442,
+      overall_stats: {
+        games_played: 9,
+        winstreak: 1,
+        wins: 4,
+        losses: 5,
+        winn_loss_ratio: 0.8,
+        kills: 10,
+        deaths: 16,
+        kill_death_ratio: 0.62,
+        final_kills: 4,
+        final_deaths: 4,
+        final_kill_death_ratio: 1,
+        beds_broken: 2,
+        beds_lost: 3,
+        bed_broken_lost_ratio: 0.67,
+        items_purchased: 493,
+        resources_collected: 3784,
+        iron_collected: 2985,
+        gold_collected: 376,
+        diamonds_collected: 49,
+        emeralds_collected: 17,
+      },
+      solo_stats: {
+        games_played: 0,
+        winstreak: 0,
+        wins: 0,
+        losses: 0,
+        winn_loss_ratio: 0,
+        kills: 0,
+        deaths: 0,
+        kill_death_ratio: 0,
+        final_kills: 0,
+        final_deaths: 0,
+        final_kill_death_ratio: 0,
+        beds_broken: 0,
+        beds_lost: 0,
+        bed_broken_lost_ratio: 0,
+        items_purchased: 0,
+        resources_collected: 0,
+        iron_collected: 0,
+        gold_collected: 0,
+        diamonds_collected: 0,
+        emeralds_collected: 0,
+      },
+      duo_stats: {
+        games_played: 0,
+        winstreak: 0,
+        wins: 0,
+        losses: 0,
+        winn_loss_ratio: 0,
+        kills: 0,
+        deaths: 0,
+        kill_death_ratio: 0,
+        final_kills: 0,
+        final_deaths: 0,
+        final_kill_death_ratio: 0,
+        beds_broken: 0,
+        beds_lost: 0,
+        bed_broken_lost_ratio: 0,
+        items_purchased: 0,
+        resources_collected: 0,
+        iron_collected: 0,
+        gold_collected: 0,
+        diamonds_collected: 0,
+        emeralds_collected: 0,
+      },
+      trio_stats: {
+        games_played: 0,
+        winstreak: 0,
+        wins: 0,
+        losses: 0,
+        winn_loss_ratio: 0,
+        kills: 0,
+        deaths: 0,
+        kill_death_ratio: 0,
+        final_kills: 0,
+        final_deaths: 0,
+        final_kill_death_ratio: 0,
+        beds_broken: 0,
+        beds_lost: 0,
+        bed_broken_lost_ratio: 0,
+        items_purchased: 0,
+        resources_collected: 0,
+        iron_collected: 0,
+        gold_collected: 0,
+        diamonds_collected: 0,
+        emeralds_collected: 0,
+      },
+      quad_stats: {
+        games_played: 9,
+        winstreak: 0,
+        wins: 4,
+        losses: 5,
+        winn_loss_ratio: 0.8,
+        kills: 10,
+        deaths: 16,
+        kill_death_ratio: 0.62,
+        final_kills: 4,
+        final_deaths: 4,
+        final_kill_death_ratio: 1,
+        beds_broken: 2,
+        beds_lost: 3,
+        bed_broken_lost_ratio: 0.67,
+        items_purchased: 493,
+        resources_collected: 3784,
+        iron_collected: 2985,
+        gold_collected: 376,
+        diamonds_collected: 49,
+        emeralds_collected: 17,
+      },
     },
-    {
-      uuid: "60ab22bc6d2b4f73af6873c12990a5a0",
-      name: "MiniMuka",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAKklEQVR4nGP8/4DhPwMewIRPEq8CNXUcCmASt24iKYAJwmhkwEg7R8IAAKN+CLLUQEuuAAAAAElFTkSuQmCC",
-    },
-    {
-      uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
-      name: "Grian",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAo0lEQVR4nGNM9ZP7r6GmxPCfjYNBUpSJ4fnrfwyMv34w3Lh1jwEEWJAlQQCiiIMBJs4EIkA6QDpBGAZgmphABMi4KN8QsARIEYgNM5EJJDB70yMGHnF5hptXrjGkpRSD2dGF2yDueXZ8zn8pyxSG/y/2wo0HAUYJZ4Znx+cwMP5/sfc/igwaYLl04iiDqLgU2FheLoi9n7/9Y/jy8iHD65fPGABhOUeI1j52eQAAAABJRU5ErkJggg==",
-    },
-    {
-      uuid: "b24a0b59bceb42e2946043e241d5ca7d",
-      name: "NettyPlays",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAcElEQVR4nGMsKO/872RvyIAN7Dt4noFx07Zd/0EcLQ1uFMlrN76CaSYQMbcih6E4IBEuCWKDxMDAX0/tPwj0RXr/v3PvKBjD+CA5sAn9UT4MB6/ehpuAzGcBETDO7ekbwDSyYsZJMzeCHYkLgK3ABwDA0jitryvC6gAAAABJRU5ErkJggg==",
-    },
-    {
-      uuid: "f3eac996124a46c7ba34f64b9540e394",
-      name: "Sparkle5",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAYUlEQVR4nGOMN2f4z8PBwPDuCwMYgNhCPAwMv/5AxFhgDBj48gOC2VggfMaXF5//R0gzMBQkSSJzMRWgK2SCCUgYIHSC2BPmPcdvAgxAnYJqAgi8uAA1IdKY4T/MOGzuAACnuyZ39EfAzQAAAABJRU5ErkJggg==",
-    },
-    {
-      uuid: "f71567a001ea4993bad55be5e3942893",
-      name: "cadaea",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAj0lEQVR4nGO8yyD6nwEPYPmqjk+agYHhhr/4fxBgYGD4/y1HE4xhfJAcyzdpRgZubm6wYkYFJgjNyMjAxcXFAJJjeSfyn+HdUhUUU3+s1wPTR86/ZGDh0GBnYNRgZhA0vomi6P1ZdQaO7+wMTF/4GRiYFFkYPr7TBku8/sbPcPmbGFgMJMe4YLMMHm/+ZwAARn8xO1TFjGMAAAAASUVORK5CYII=",
-    },
-    {
-      uuid: "e8f304436708490c888add349093b358",
-      name: "Tomohawk_1989",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAATklEQVR4nGP8dnrmfwY8gAmfJJICkCHIBv2CYqiCvxrRDP4JpXBp/4Qqhr8aCahW7L76Ga4AxObh4QGzGUly5L8vL8EYGbCgqOYRxzACABHYGwzV5xx2AAAAAElFTkSuQmCC",
-    },
-    {
-      uuid: "d81a4f1608e74bbe8eedb788d5a57104",
-      name: "sarahsera",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA6klEQVR4nGP4fPju/693//4HAWUhrf/64p5gNkgMJMeweeXL/5xsPGAOSBAmAVIIohl3tZ//f/fPGwa/yw0M3Aq/GdgN3zL8PC/McEpwJsNPJSkGxn7b+P98PAkMILDzaR+DFBcfgzwrC4OV1F+G+6//MbA8/P2HYfOpLLCCKrNpYLrtVBbDw99GDPKsrAwsx+7cZ/jDrcrA8ucTg76qLIOk6FuGtoviDOuffWYQ//aGgcVKRZGhsy2MQef6GQZdzasMrPK8DExCtgz3PRwZiqLnMjA9+/YJbOwVTRMw/fvhZzB7YsJCBpAcAN+JdRttW/8NAAAAAElFTkSuQmCC",
-    },
-  ],
-  guild_name: "Lords Of Bant",
+  },
+  guild: {
+    source: "hypixel_api",
+    name: "Lords Of Bant",
+    id: "58e5947d0cf28a503e76f7fd",
+    created: "2017-04-06T04:06:05.490000Z",
+    experience: 5131271,
+    tag: "BANT",
+    description: null,
+    publicly_listed: false,
+    members: [
+      {
+        uuid: "c9cf0c2e904c451986b12630828315c1",
+        rank: "GUILDMASTER",
+        joined: "2017-04-06T04:06:05.490000Z",
+      },
+      {
+        uuid: "60ab22bc6d2b4f73af6873c12990a5a0",
+        rank: "OFFICER",
+        joined: "2017-04-06T04:07:24.373000Z",
+      },
+      {
+        uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
+        rank: "OFFICER",
+        joined: "2017-04-06T04:08:34.044000Z",
+      },
+      {
+        uuid: "b24a0b59bceb42e2946043e241d5ca7d",
+        rank: "OFFICER",
+        joined: "2017-04-06T04:07:08.633000Z",
+      },
+      {
+        uuid: "f3eac996124a46c7ba34f64b9540e394",
+        rank: "OFFICER",
+        joined: "2017-04-06T04:10:17.573000Z",
+      },
+      {
+        uuid: "f71567a001ea4993bad55be5e3942893",
+        rank: "MEMBER",
+        joined: "2017-04-19T22:24:18.481000Z",
+      },
+      {
+        uuid: "e8f304436708490c888add349093b358",
+        rank: "MEMBER",
+        joined: "2017-05-02T00:05:40.453000Z",
+      },
+      {
+        uuid: "d81a4f1608e74bbe8eedb788d5a57104",
+        rank: "Member",
+        joined: "2024-05-31T21:33:47.052000Z",
+      },
+    ],
+  },
 };
 
-const sampleHypixelGuildResponse = {
-  guild_members: [
-    {
-      name: "InTheLittleWood",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAdUlEQVR4nGP8syvkPwMSYJYTgrP/PnrHwAQTeH/nNRiDBN/suwlXzAJjLGAWYij8+46hn1mIgUFdiIHhKQOYz7jmWgmKFRjg66qW/yDgv/T/fxAbhEHsX79+gdmM/08vxmsCEzLn2/rrYIwMwI6EAa5ATQwjAGpoPs+1YzsUAAAAAElFTkSuQmCC",
-    },
-    {
-      name: "MiniMuka",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAKklEQVR4nGP8/4DhPwMewIRPEq8CNXUcCmASt24iKYAJwmhkwEg7R8IAAKN+CLLUQEuuAAAAAElFTkSuQmCC",
-    },
-    {
-      name: "Grian",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAo0lEQVR4nGNM9ZP7r6GmxPCfjYNBUpSJ4fnrfwyMv34w3Lh1jwEEWJAlQQCiiIMBJs4EIkA6QDpBGAZgmphABMi4KN8QsARIEYgNM5EJJDB70yMGHnF5hptXrjGkpRSD2dGF2yDueXZ8zn8pyxSG/y/2wo0HAUYJZ4Znx+cwMP5/sfc/igwaYLl04iiDqLgU2FheLoi9n7/9Y/jy8iHD65fPGABhOUeI1j52eQAAAABJRU5ErkJggg==",
-    },
-    {
-      name: "NettyPlays",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAcElEQVR4nGMsKO/872RvyIAN7Dt4noFx07Zd/0EcLQ1uFMlrN76CaSYQMbcih6E4IBEuCWKDxMDAX0/tPwj0RXr/v3PvKBjD+CA5sAn9UT4MB6/ehpuAzGcBETDO7ekbwDSyYsZJMzeCHYkLgK3ABwDA0jitryvC6gAAAABJRU5ErkJggg==",
-    },
-    {
-      name: "Sparkle5",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAYUlEQVR4nGOMN2f4z8PBwPDuCwMYgNhCPAwMv/5AxFhgDBj48gOC2VggfMaXF5//R0gzMBQkSSJzMRWgK2SCCUgYIHSC2BPmPcdvAgxAnYJqAgi8uAA1IdKY4T/MOGzuAACnuyZ39EfAzQAAAABJRU5ErkJggg==",
-    },
-    {
-      name: "cadaea",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAj0lEQVR4nGO8yyD6nwEPYPmqjk+agYHhhr/4fxBgYGD4/y1HE4xhfJAcyzdpRgZubm6wYkYFJgjNyMjAxcXFAJJjeSfyn+HdUhUUU3+s1wPTR86/ZGDh0GBnYNRgZhA0vomi6P1ZdQaO7+wMTF/4GRiYFFkYPr7TBku8/sbPcPmbGFgMJMe4YLMMHm/+ZwAARn8xO1TFjGMAAAAASUVORK5CYII=",
-    },
-    {
-      name: "Tomohawk_1989",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAATklEQVR4nGP8dnrmfwY8gAmfJJICkCHIBv2CYqiCvxrRDP4JpXBp/4Qqhr8aCahW7L76Ga4AxObh4QGzGUly5L8vL8EYGbCgqOYRxzACABHYGwzV5xx2AAAAAElFTkSuQmCC",
-    },
-    {
-      name: "sarahsera",
-      skin_showcase_b64:
-        "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA6klEQVR4nGP4fPju/693//4HAWUhrf/64p5gNkgMJMeweeXL/5xsPGAOSBAmAVIIohl3tZ//f/fPGwa/yw0M3Aq/GdgN3zL8PC/McEpwJsNPJSkGxn7b+P98PAkMILDzaR+DFBcfgzwrC4OV1F+G+6//MbA8/P2HYfOpLLCCKrNpYLrtVBbDw99GDPKsrAwsx+7cZ/jDrcrA8ucTg76qLIOk6FuGtoviDOuffWYQ//aGgcVKRZGhsy2MQef6GQZdzasMrPK8DExCtgz3PRwZiqLnMjA9+/YJbOwVTRMw/fvhZzB7YsJCBpAcAN+JdRttW/8NAAAAAElFTkSuQmCC",
-    },
-  ],
-  guild_name: "Lords Of Bant",
-  guild_id: "58e5947d0cf28a503e76f7fd",
-};
+const sampleHypixelGuildResponse = [
+  {
+    username: "MiniMuka",
+    uuid: "60ab22bc6d2b4f73af6873c12990a5a0",
+    rank: "OFFICER",
+    joined: "2017-04-06T04:07:24.373000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAKklEQVR4nGP8/4DhPwMewIRPEq8CNXUcCmASt24iKYAJwmhkwEg7R8IAAKN+CLLUQEuuAAAAAElFTkSuQmCC",
+  },
+  {
+    username: "InTheLittleWood",
+    uuid: "c9cf0c2e904c451986b12630828315c1",
+    rank: "GUILDMASTER",
+    joined: "2017-04-06T04:06:05.490000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAdUlEQVR4nGP8syvkPwMSYJYTgrP/PnrHwAQTeH/nNRiDBN/suwlXzAJjLGAWYij8+46hn1mIgUFdiIHhKQOYz7jmWgmKFRjg66qW/yDgv/T/fxAbhEHsX79+gdmM/08vxmsCEzLn2/rrYIwMwI6EAa5ATQwjAGpoPs+1YzsUAAAAAElFTkSuQmCC",
+  },
+  {
+    username: "NettyPlays",
+    uuid: "b24a0b59bceb42e2946043e241d5ca7d",
+    rank: "OFFICER",
+    joined: "2017-04-06T04:07:08.633000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAcElEQVR4nGMsKO/872RvyIAN7Dt4noFx07Zd/0EcLQ1uFMlrN76CaSYQMbcih6E4IBEuCWKDxMDAX0/tPwj0RXr/v3PvKBjD+CA5sAn9UT4MB6/ehpuAzGcBETDO7ekbwDSyYsZJMzeCHYkLgK3ABwDA0jitryvC6gAAAABJRU5ErkJggg==",
+  },
+  {
+    username: "Sparkle5",
+    uuid: "f3eac996124a46c7ba34f64b9540e394",
+    rank: "OFFICER",
+    joined: "2017-04-06T04:10:17.573000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAYUlEQVR4nGOMN2f4z8PBwPDuCwMYgNhCPAwMv/5AxFhgDBj48gOC2VggfMaXF5//R0gzMBQkSSJzMRWgK2SCCUgYIHSC2BPmPcdvAgxAnYJqAgi8uAA1IdKY4T/MOGzuAACnuyZ39EfAzQAAAABJRU5ErkJggg==",
+  },
+  {
+    username: "cadaea",
+    uuid: "f71567a001ea4993bad55be5e3942893",
+    rank: "MEMBER",
+    joined: "2017-04-19T22:24:18.481000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAj0lEQVR4nGO8yyD6nwEPYPmqjk+agYHhhr/4fxBgYGD4/y1HE4xhfJAcyzdpRgZubm6wYkYFJgjNyMjAxcXFAJJjeSfyn+HdUhUUU3+s1wPTR86/ZGDh0GBnYNRgZhA0vomi6P1ZdQaO7+wMTF/4GRiYFFkYPr7TBku8/sbPcPmbGFgMJMe4YLMMHm/+ZwAARn8xO1TFjGMAAAAASUVORK5CYII=",
+  },
+  {
+    username: "Grian",
+    uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
+    rank: "OFFICER",
+    joined: "2017-04-06T04:08:34.044000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAo0lEQVR4nGNM9ZP7r6GmxPCfjYNBUpSJ4fnrfwyMv34w3Lh1jwEEWJAlQQCiiIMBJs4EIkA6QDpBGAZgmphABMi4KN8QsARIEYgNM5EJJDB70yMGHnF5hptXrjGkpRSD2dGF2yDueXZ8zn8pyxSG/y/2wo0HAUYJZ4Znx+cwMP5/sfc/igwaYLl04iiDqLgU2FheLoi9n7/9Y/jy8iHD65fPGABhOUeI1j52eQAAAABJRU5ErkJggg==",
+  },
+  {
+    username: "Tomohawk_1989",
+    uuid: "e8f304436708490c888add349093b358",
+    rank: "MEMBER",
+    joined: "2017-05-02T00:05:40.453000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAATklEQVR4nGP8dnrmfwY8gAmfJJICkCHIBv2CYqiCvxrRDP4JpXBp/4Qqhr8aCahW7L76Ga4AxObh4QGzGUly5L8vL8EYGbCgqOYRxzACABHYGwzV5xx2AAAAAElFTkSuQmCC",
+  },
+  {
+    username: "sarahsera",
+    uuid: "d81a4f1608e74bbe8eedb788d5a57104",
+    rank: "Member",
+    joined: "2024-05-31T21:33:47.052000Z",
+    skin_showcase_b64:
+      "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA6klEQVR4nGP4fPju/693//4HAWUhrf/64p5gNkgMJMeweeXL/5xsPGAOSBAmAVIIohl3tZ//f/fPGwa/yw0M3Aq/GdgN3zL8PC/McEpwJsNPJSkGxn7b+P98PAkMILDzaR+DFBcfgzwrC4OV1F+G+6//MbA8/P2HYfOpLLCCKrNpYLrtVBbDw99GDPKsrAwsx+7cZ/jDrcrA8ucTg76qLIOk6FuGtoviDOuffWYQ//aGgcVKRZGhsy2MQef6GQZdzasMrPK8DExCtgz3PRwZiqLnMjA9+/YJbOwVTRMw/fvhZzB7YsJCBpAcAN+JdRttW/8NAAAAAElFTkSuQmCC",
+  },
+];
 
 const sampleWynncraftResponse = {
   username: "Grian",

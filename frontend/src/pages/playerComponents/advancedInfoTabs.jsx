@@ -10,6 +10,8 @@ import HypixelTabbedData from "./hypixelTabbedData";
 function AdvancedInfoTabs({
   hypixelResponse,
   hypixelGuildResponse,
+  fetchHypixelGuildMembers,
+  setHypixelGuildData,
   hypixelStatus,
   wynncraftData,
   wynncraftStatus,
@@ -42,6 +44,8 @@ function AdvancedInfoTabs({
           <HypixelTabbedData
             hypixelData={hypixelResponse}
             hypixelGuildData={hypixelGuildResponse}
+            setHypixelGuildData={setHypixelGuildData}
+            fetchHypixelGuildMembers={fetchHypixelGuildMembers}
           />
         );
       }

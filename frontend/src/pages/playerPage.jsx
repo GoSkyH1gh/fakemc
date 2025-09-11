@@ -21,6 +21,7 @@ export function PlayerPage() {
   const [hypixelData, setHypixelData] = useState(null);
   const [hypixelStatus, setHypixelStatus] = useState(null);
   const [hypixelGuildData, setHypixelGuildData] = useState(null);
+  const [hypixelGuildDisabled, setHypixelGuildDisabled] = useState(false);
 
   const [wynncraftData, setWynncraftData] = useState(null);
   const [wynncraftStatus, setWynncraftStatus] = useState(null);
@@ -65,7 +66,7 @@ export function PlayerPage() {
 
     const mojangUrl = `${baseUrl}/v1/players/mojang/`;
     const hypixelUrl = `${baseUrl}/v1/players/hypixel/`;
-    const hypixelGuildUrl = `${baseUrl}/v1/hypixel/guilds/`;
+
     const statusUrl = `${baseUrl}/v1/players/status/`;
     const wynncraftUrl = `${baseUrl}/v1/players/wynncraft/`;
     const wynncraftGuildUrl = `${baseUrl}/v1/wynncraft/guilds/`;
@@ -102,18 +103,8 @@ export function PlayerPage() {
         setHypixelData(hypixelResponse);
         setHypixelStatus("playerloaded");
         addLoadedTab("hypixel");
-        if (hypixelResponse?.guild) {
-          let hypixelGuildResponseRaw = await fetch(
-            hypixelGuildUrl + hypixelResponse.guild.id
-          );
-          const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
-          setHypixelStatus("loaded");
-          setHypixelGuildData(hypixelGuildResponse);
-          console.log(hypixelGuildResponse);
-        } else {
-          setHypixelStatus("loaded");
-          setHypixelGuildData("no guild");
-        }
+        fetchHypixelGuildMembers(hypixelResponse, setHypixelGuildData, 0);
+        setHypixelStatus("loaded");
       } else if (hypixelResponseRaw.status === 404) {
         setHypixelData("not found");
         setHypixelStatus("loaded");
@@ -195,6 +186,33 @@ export function PlayerPage() {
     }
   };
 
+  async function fetchHypixelGuildMembers(
+    hypixelResponse,
+    setHypixelGuildData,
+    offset
+  ) {
+    const hypixelGuildUrl = `${
+      import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com"
+    }/v1/hypixel/guilds/`;
+    if (hypixelResponse?.guild) {
+      let hypixelGuildResponseRaw = await fetch(
+        `${hypixelGuildUrl}${hypixelResponse.guild.id}?limit=20&offset=${offset}`
+      );
+      const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
+
+      setHypixelGuildData((previousData) => {
+        if (!previousData) {
+          return hypixelGuildResponse;
+        } else {
+          return previousData.concat(hypixelGuildResponse);
+        }
+      });
+      console.log(hypixelGuildResponse);
+    } else {
+      setHypixelGuildData("no guild");
+    }
+  }
+
   return (
     <>
       <SearchRow disabled={status === "loading"} urlToNavigate="/player" />
@@ -228,6 +246,8 @@ export function PlayerPage() {
           <AdvancedInfoTabs
             hypixelResponse={hypixelData}
             hypixelGuildResponse={hypixelGuildData}
+            fetchHypixelGuildMembers={fetchHypixelGuildMembers}
+            setHypixelGuildData={setHypixelGuildData}
             hypixelStatus={hypixelStatus}
             wynncraftData={wynncraftData}
             wynncraftStatus={wynncraftStatus}

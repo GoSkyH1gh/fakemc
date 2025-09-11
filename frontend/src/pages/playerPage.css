@@ -545,7 +545,12 @@ button {
 }
 
 .selected-tab {
-  background-color: #F4F07780;
+  background-color: #F4F077;
+  color: #101e10
+}
+
+.selected-tab:hover {
+  background-color: #f8d563;
 }
 
 .left-align {
@@ -581,6 +586,7 @@ button {
 
 .bedwars-table thead > tr > th {
   font-weight: 650;
+  text-align: center;
 }
 
 @media screen and (width < 750px) {
@@ -609,6 +615,31 @@ button {
 }
 
 .bedwars-showcase {
-  padding: 30px 20px;
+  padding: 20px;
   border: 1px solid var(--color-surfact-layer-2);
+}
+
+.load-more-button {
+  transition: none;
+  color: #101e10
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center ;
+}
+
+.bedwars-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-weight: 600;
+}
+
+.bedwars-top-row > img {
+  height: 128px;
+  width: 128px;
+  image-rendering: pixelated;
+  border-radius: 8px;
 }

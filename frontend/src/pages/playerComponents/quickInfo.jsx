@@ -55,7 +55,3 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
 }
 
 export default QuickInfo;
-
-//{hypixelResponse.guild_name && (
-//      <><p>{hypixelResponse.guild_name}'s members: </p><GuildMembers guild_members={hypixelResponse.guild_members} onGuildMemberClick={onGuildMemberClick} /></>
-//      )}
