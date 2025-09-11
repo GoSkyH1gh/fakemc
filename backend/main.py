@@ -2,7 +2,6 @@ from fastapi import FastAPI, BackgroundTasks, Request, Depends, Query
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-# from data_manager import DataManager
 from wynncraft_api import (
     GetWynncraftData,
     PlayerSummary,
