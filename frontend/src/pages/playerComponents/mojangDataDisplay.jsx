@@ -22,7 +22,7 @@ function MojangDataDisplay({ mojang_response: mojangResponse }) {
       <div className="mojang-img">
         <SkinShowcase skin_showcase_b64={mojangResponse.skin_showcase_b64} />
         <CapeShowcase
-          cape_showcase_b64={mojangResponse.cape_showcase_b64}
+          cape_showcase_b64={mojangResponse.cape_front_b64}
           cape_back_b64={mojangResponse.cape_back_b64}
           has_cape={mojangResponse.has_cape}
           cape_name={mojangResponse.cape_name}

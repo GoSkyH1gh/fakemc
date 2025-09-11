@@ -86,6 +86,10 @@ const fetchMetric = async (metric_key, player_uuid, setMetricData) => {
     fetchMetric(metric_key, uuid, setMetricData);
   };
 
+function toProperCase(str) {
+  return str.toLowerCase().split(' ').map(word => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }).join(' ');
+}
 
-
-export {formatISOTimestamp, formatValue, handleStatClick, formatSinceLastUpdate, formatLogTime, formatISOToDistance}
+export {formatISOTimestamp, formatValue, handleStatClick, formatSinceLastUpdate, formatLogTime, formatISOToDistance, toProperCase}

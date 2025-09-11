@@ -38,16 +38,16 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
         <InfoCard label="Status" value={playerStatus.status} />
         <InfoCard
           label="First seen on"
-          value={formatISOTimestamp(hypixelResponse.first_login)}
+          value={formatISOTimestamp(hypixelResponse.player?.first_login)}
         />
         <InfoCard
           label="Last seen"
-          value={formatISOToDistance(hypixelResponse.last_login)}
+          value={formatISOToDistance(hypixelResponse.player?.last_login)}
         />
-        <InfoCard label="Hypixel rank" value={hypixelResponse.player_rank} />
+        <InfoCard label="Hypixel rank" value={hypixelResponse.player?.rank || "No Rank"} />
         <InfoCard
           label="Hypixel guild"
-          value={hypixelResponse.guild_name || "No guild"}
+          value={hypixelResponse?.guild?.name || "No guild"}
         />
       </motion.ul>
     </motion.div>

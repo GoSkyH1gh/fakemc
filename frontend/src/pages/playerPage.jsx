@@ -102,9 +102,9 @@ export function PlayerPage() {
         setHypixelData(hypixelResponse);
         setHypixelStatus("playerloaded");
         addLoadedTab("hypixel");
-        if (hypixelResponse.guild_name) {
+        if (hypixelResponse?.guild) {
           let hypixelGuildResponseRaw = await fetch(
-            hypixelGuildUrl + mojangResponse.uuid
+            hypixelGuildUrl + hypixelResponse.guild.id
           );
           const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
           setHypixelStatus("loaded");

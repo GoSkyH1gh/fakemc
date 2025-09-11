@@ -5,6 +5,7 @@ import WynncraftTabbedData from "./wynncraftTabbedData";
 import LoadingIndicator from "./loadingIndicator";
 import DonutTabbedData from "./donutTabbedData";
 import McciTabbedData from "./mcciTabbedData";
+import HypixelTabbedData from "./hypixelTabbedData";
 
 function AdvancedInfoTabs({
   hypixelResponse,
@@ -36,16 +37,13 @@ function AdvancedInfoTabs({
       );
     }
     if (hypixelStatus === "loaded") {
-      if (hypixelResponse?.guild_name) {
+      if (hypixelResponse) {
         tabContents = (
-          <>
-            <p>{hypixelResponse?.guild_name}'s members: </p>
-            <GuildMembers guild_members={hypixelGuildResponse?.guild_members} />
-          </>
+          <HypixelTabbedData
+            hypixelData={hypixelResponse}
+            hypixelGuildData={hypixelGuildResponse}
+          />
         );
-      }
-      if (!hypixelGuildResponse?.guild_name) {
-        tabContents = <p>No more information to show for player</p>;
       }
     }
   } else if (selectedTab === "wynncraft") {
