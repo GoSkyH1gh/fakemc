@@ -2,7 +2,6 @@ import asyncio
 import aiohttp
 import logging
 from dotenv import load_dotenv
-import os
 from utils import dashify_uuid
 
 load_dotenv()

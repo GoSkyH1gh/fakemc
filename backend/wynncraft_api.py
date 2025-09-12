@@ -1,6 +1,5 @@
 import requests
 from utils import dashify_uuid
-from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from fastapi import HTTPException
@@ -177,7 +176,7 @@ class GetWynncraftData:
                         profession_args[profession] = characters[character][
                             "professions"
                         ][profession]["level"]
-                    except:
+                    except Exception:
                         profession_args[profession] = 0
 
                 character_professions = ProfessionInfo(**profession_args)
@@ -308,7 +307,7 @@ class GetWynncraftData:
     def get_guild_list(self):
         try:
             guilds_reponse = requests.get(
-                f"https://api.wynncraft.com/v3/guild/list/guild",
+                "https://api.wynncraft.com/v3/guild/list/guild",
                 headers={"Authorization": f"Bearer {wynn_token}"},
             )
             guilds_reponse.raise_for_status()

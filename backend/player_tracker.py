@@ -1,6 +1,5 @@
 import asyncio
 from typing import Dict, Set, Optional
-import json
 from pydantic import BaseModel
 import aiohttp
 import os

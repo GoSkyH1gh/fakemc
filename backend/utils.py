@@ -1,9 +1,9 @@
-import io
+from io import BytesIO
 import base64
 from PIL import Image
 
 def pillow_to_b64(pil_image, img_format = "PNG"):
-    buffered = io.BytesIO() # create a virtual buffer
+    buffered = BytesIO() # create a virtual buffer
     pil_image.save(buffered, format = img_format) # save the image to that virtual buffer
 
     img_bytes_array = buffered.getvalue() # get the data from that buffer
@@ -11,9 +11,7 @@ def pillow_to_b64(pil_image, img_format = "PNG"):
     base64_encoded_string = base64_encoded_bytes.decode("utf-8")
     return base64_encoded_string
 
-import base64
-from io import BytesIO
-from PIL import Image
+
 
 def load_base64_to_pillow(base64_string):
     """

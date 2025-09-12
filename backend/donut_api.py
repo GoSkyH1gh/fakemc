@@ -2,7 +2,6 @@ import requests
 from dotenv import load_dotenv
 import os
 from pydantic import BaseModel
-from typing import Optional
 from fastapi import HTTPException
 from metrics_manager import add_value, get_engine
 from minecraft_manager import get_minecraft_data

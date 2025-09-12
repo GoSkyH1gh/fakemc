@@ -103,7 +103,7 @@ def get_hypixel_cache(uuid, session: Session) -> Tuple[HypixelPlayer, Optional[s
         hypixel_player = HypixelPlayer(source="cache", **cache_data.data)
         guild_id: str = cache_data.guild_id
         return hypixel_player, guild_id
-    except Exception as e:
+    except Exception:
         raise RuntimeError()
 
 

@@ -3,7 +3,6 @@ import datetime
 from dotenv import load_dotenv
 import os
 import logging
-from fastapi import HTTPException
 import exceptions
 from pydantic import BaseModel
 from typing import Optional, List

@@ -264,7 +264,7 @@ class GetMojangAPIData:
                 logger.info(f"trying to access {raw_cape_data}")
                 self.cape_name = CAPE_MAP[raw_cape_data]
                 logger.info(f"Identified {self.cape_name} cape!")
-            except:
+            except KeyError:
                 logger.warning("Cape not regonized")
                 self.cape_name = "Unknown cape"
 
