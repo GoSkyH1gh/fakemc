@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import SearchRow from "./searchRow";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import LoadingIndicator from "./loadingIndicator";
 
 function TrackSearch({ handleStartTrack, mojangData, setMojangData }) {

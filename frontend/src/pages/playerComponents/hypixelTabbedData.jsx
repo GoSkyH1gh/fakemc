@@ -4,7 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import "./dialog.css";
 import { toProperCase } from "./utils";
 import { useNavigate } from "react-router-dom";
-import { animate, motion, scale } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import BedwarsHeroIcon from "/src/assets/bedwars.png";
 

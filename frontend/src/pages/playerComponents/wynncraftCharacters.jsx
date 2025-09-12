@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./wynncraftCharacters.css";
-import { motion, AnimatePresence, scale } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import InfoCard from "./infoCard";
 import * as Tooltip from "@radix-ui/react-tooltip";
 

@@ -2,8 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import "./homePage.css";
 import MojangDataDisplay from "./playerComponents/mojangDataDisplay";
-import InfoCard from "./playerComponents/infoCard";
-import GuildMembers from "./playerComponents/guildMembers";
 import PurpleOrangeGradient from "/src/assets/purple_to_orange_gradient.svg";
 import YellowGradient from "/src/assets/yellow_gradient.svg";
 import { MdSearch } from "react-icons/md";

@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import InfoCard from "./infoCard";
 import WynncraftCharacters from "./wynncraftCharacters";
 import { formatISOTimestamp, formatISOToDistance, formatValue, handleStatClick } from "./utils";

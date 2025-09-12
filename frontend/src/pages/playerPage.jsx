@@ -21,7 +21,6 @@ export function PlayerPage() {
   const [hypixelData, setHypixelData] = useState(null);
   const [hypixelStatus, setHypixelStatus] = useState(null);
   const [hypixelGuildData, setHypixelGuildData] = useState(null);
-  const [hypixelGuildDisabled, setHypixelGuildDisabled] = useState(false);
 
   const [wynncraftData, setWynncraftData] = useState(null);
   const [wynncraftStatus, setWynncraftStatus] = useState(null);

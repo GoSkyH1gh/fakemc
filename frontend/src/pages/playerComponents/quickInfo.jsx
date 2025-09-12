@@ -1,5 +1,4 @@
 import InfoCard from "./infoCard.jsx";
-import GuildMembers from "./guildMembers.jsx";
 import { motion } from "motion/react";
 import { formatISOTimestamp, formatISOToDistance } from "./utils.js";
 

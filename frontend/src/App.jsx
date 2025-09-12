@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { PlayerPage } from './pages/playerPage.jsx'
 import { HomePage } from './pages/homePage.jsx'
 import { Route, Routes } from 'react-router-dom'

@@ -1,4 +1,4 @@
-import { motion, scale } from "motion/react";
+import { motion } from "motion/react";
 import InfoCard from "./infoCard";
 import { formatISOTimestamp, formatValue } from "./utils";
 import { useNavigate } from "react-router-dom";

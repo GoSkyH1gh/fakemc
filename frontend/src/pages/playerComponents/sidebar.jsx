@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
 import homeIcon from "/src/assets/home-icon.svg";
 import searchIcon from "/src/assets/search-icon.svg";
-import groupIcon from "/src/assets/group-icon.svg";
 import footprintIcon from "/src/assets/footprint_icon.svg";
-import { easeInOut, motion, scale } from "motion/react";
+import { motion } from "motion/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 function Sidebar() {
@@ -59,9 +58,7 @@ function Sidebar() {
                 transition={{ ease: "easeInOut", duration: 0.2 }}
                 tabIndex={-1}
               >
-                <Link
-                  to="/track/player"
-                >
+                <Link to="/track/player">
                   <img
                     src={footprintIcon}
                     alt="Track a player"

@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import GuildMembers from "./guildMembers";
 import WynncraftTabbedData from "./wynncraftTabbedData";
 import LoadingIndicator from "./loadingIndicator";
 import DonutTabbedData from "./donutTabbedData";

@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import GuildSearchRow from './playerComponents/guildSearchRow';
 import { useState, useEffect } from 'react';
 import WynncraftGuild from './playerComponents/wynncraftGuild';
