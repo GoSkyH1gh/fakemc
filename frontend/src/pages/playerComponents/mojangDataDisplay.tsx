@@ -1,10 +1,11 @@
-import SkinShowcase from "./skinShowcase.jsx";
-import CapeShowcase from "./capeShowcase.jsx";
-import CopyIcon from "./copyIcon.jsx";
+import SkinShowcase from "./skinShowcase.js";
+import CapeShowcase from "./capeShowcase.js";
+import CopyIcon from "./copyIcon.js";
 import { motion } from "motion/react";
-import SkinView from "./skinViewer.jsx";
+import SkinView from "./skinViewer.js";
+import { MojangData } from "../../client/types.gen.js";
 
-function MojangDataDisplay({ mojang_response: mojangResponse }) {
+function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData}) {
   return (
     <motion.div
       className="mojang-data"

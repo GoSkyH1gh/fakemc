@@ -1,8 +1,23 @@
 import { motion } from "motion/react";
 import ArrowOutward from "/src/assets/arrow-outward.svg";
 import * as Popover from "@radix-ui/react-popover";
+import { ReactNode } from "react";
 
-function InfoCard({ label, value, onClick, hasStats = false, children }) {
+type InfoCardProps = {
+  label: string;
+  value: string | number | ReactNode;
+  onClick?: () => void;
+  hasStats?: boolean;
+  children?: ReactNode;
+};
+
+function InfoCard({
+  label,
+  value,
+  onClick,
+  hasStats = false,
+  children,
+}: InfoCardProps) {
   if (hasStats) {
     return (
       <motion.li
@@ -31,6 +46,7 @@ function InfoCard({ label, value, onClick, hasStats = false, children }) {
                   animate={{ scale: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, type: "spring" }}
                   layout
+                  className="popover-container"
                 >
                   {children}
                 </motion.div>

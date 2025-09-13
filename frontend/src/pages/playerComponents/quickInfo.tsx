@@ -1,8 +1,18 @@
-import InfoCard from "./infoCard.jsx";
+import InfoCard from "./infoCard.js";
 import { motion } from "motion/react";
 import { formatISOTimestamp, formatISOToDistance } from "./utils.js";
+import { HypixelFullData } from "../../client/types.gen.js";
 
-function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
+type StatusData = {
+  status: string;
+};
+
+type QuickInfoProps = {
+  hypixelResponse: HypixelFullData;
+  playerStatus: StatusData;
+};
+
+function QuickInfo({ hypixelResponse, playerStatus }: QuickInfoProps) {
   return (
     <motion.div
       className="hypixel-data"
@@ -43,7 +53,10 @@ function QuickInfo({ hypixel_response: hypixelResponse, playerStatus }) {
           label="Last seen"
           value={formatISOToDistance(hypixelResponse.player?.last_login)}
         />
-        <InfoCard label="Hypixel rank" value={hypixelResponse.player?.rank || "No Rank"} />
+        <InfoCard
+          label="Hypixel rank"
+          value={hypixelResponse.player?.rank || "No Rank"}
+        />
         <InfoCard
           label="Hypixel guild"
           value={hypixelResponse?.guild?.name || "No guild"}

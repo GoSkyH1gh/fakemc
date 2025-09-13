@@ -1,6 +1,5 @@
 const sampleMojangResponse = {
-  status: "success",
-  source: "cache",
+  source: "mojang_api",
   uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
   username: "Grian",
   has_cape: true,
@@ -13,6 +12,7 @@ const sampleMojangResponse = {
     "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAQCAYAAAAvf+5AAAAAXUlEQVR4nGOs27j9PwMRgAVd4MfXL3A2BzcPpkJkBXhN/PntG4YkB5KJTMSYBleIC/xAMgCvQmTAhMt96OKkmUiMO5nwqkICTMQEDUgNQRNhHmLC5WMMq4lSRYpCABZmJemPlziHAAAAAElFTkSuQmCC",
   skin_url:
     "http://textures.minecraft.net/texture/fd82a31be355fae3842af8a66a208df602230a0fc748c7453e491e08377eb4c2",
+  cape_url: null,
 };
 
 const sampleHypixelResponse = {

@@ -2,8 +2,13 @@ import InfoCard from "./infoCard";
 import { formatValue, formatISOTimestamp, formatISOToDistance } from "./utils";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import { McciPlayer } from "../../client";
 
-function McciTabbedData({ mcciData }) {
+function McciTabbedData({
+  mcciData,
+}: {
+  mcciData: McciPlayer | "not found" | "error";
+}) {
   let navigator = useNavigate();
   if (mcciData === "not found") {
     return <p>MCC Island data not found for player</p>;
@@ -30,7 +35,9 @@ function McciTabbedData({ mcciData }) {
           />
           <div>
             <p className="em-text list-username">{friend.username}</p>
-            <p className="secondary-text left-align">{friend.rank || "No Rank"}</p>
+            <p className="secondary-text left-align">
+              {friend.rank || "No Rank"}
+            </p>
           </div>
         </div>
       </motion.button>
@@ -59,28 +66,37 @@ function McciTabbedData({ mcciData }) {
         />
       </ul>
       <h3>Stats</h3>
-      <ul className="info-card-list">
-        <InfoCard label="Level" value={mcciData.stats.level} />
-        <InfoCard
-          label="Trophies"
-          value={
-            formatValue(mcciData.stats.trophies) +
-            "/" +
-            formatValue(mcciData.stats.max_trophies)
-          }
-        />
-      </ul>
-      <ul className="info-card-list">
-        <InfoCard label="Coins" value={formatValue(mcciData.stats.coins)} />
-        <InfoCard
-          label="ANGLR Tokens"
-          value={formatValue(mcciData.stats.anglr_token)}
-        />
-        <InfoCard
-          label="Royal Reputation"
-          value={formatValue(mcciData.stats.royal_reputation)}
-        />
-      </ul>
+      {mcciData?.stats && (
+        <>
+          <ul className="info-card-list">
+            <InfoCard
+              label="Level"
+              value={formatValue(mcciData.stats.level, false)}
+            />
+            <InfoCard
+              label="Trophies"
+              value={
+                formatValue(mcciData.stats.trophies) +
+                "/" +
+                formatValue(mcciData.stats.max_trophies)
+              }
+            />
+          </ul>
+          <ul className="info-card-list">
+            <InfoCard label="Coins" value={formatValue(mcciData.stats.coins)} />
+            <InfoCard
+              label="ANGLR Tokens"
+              value={formatValue(mcciData.stats.anglr_token)}
+            />
+            <InfoCard
+              label="Royal Reputation"
+              value={formatValue(mcciData.stats.royal_reputation)}
+            />
+          </ul>
+        </>
+      )}
+      {!mcciData?.stats && <p>No stats available for this player.</p>}
+
       {mcciData?.friends.length != 0 && (
         <>
           <h3>{mcciData?.username}'s friends</h3>

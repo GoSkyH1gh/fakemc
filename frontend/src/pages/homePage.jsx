@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import "./homePage.css";
-import MojangDataDisplay from "./playerComponents/mojangDataDisplay";
+import MojangDataDisplay from "./playerComponents/mojangDataDisplay.tsx";
 import PurpleOrangeGradient from "/src/assets/purple_to_orange_gradient.svg";
 import YellowGradient from "/src/assets/yellow_gradient.svg";
 import { MdSearch } from "react-icons/md";
 import { useState, useRef } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import QuickInfo from "./playerComponents/quickInfo";
-import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs";
+import QuickInfo from "./playerComponents/quickInfo.jsx";
+import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
 import {
   sampleHypixelResponse,
   sampleHypixelGuildResponse,
@@ -16,7 +16,7 @@ import {
   sampleMojangResponse,
   sampleWynncraftGuildResponse,
   sampleWynncraftResponse,
-} from "./sampleData";
+} from "./sampleData.js";
 
 export function HomePage() {
   const [searchbarValue, setSerchbarValue] = useState("");
@@ -65,19 +65,22 @@ export function HomePage() {
           <motion.div className="hero-card" whileHover={{ y: -10 }}>
             <h3 className="hero-card-heading">All Stats, One Place</h3>
             <p className="hero-card-paragraph">
-              Stop juggling tabs. Data from Mojang, Hypixel, Wynncraft & more, in one place.
+              Stop juggling tabs. Data from Mojang, Hypixel, Wynncraft & more,
+              in one place.
             </p>
           </motion.div>
           <motion.div className="hero-card" whileHover={{ y: -10 }}>
             <h3 className="hero-card-heading">Built for Speed</h3>
             <p className="hero-card-paragraph">
-              An optimized backend with intelligent caching means you get player data instantly.
+              An optimized backend with intelligent caching means you get player
+              data instantly.
             </p>
           </motion.div>
           <motion.div className="hero-card" whileHover={{ y: -10 }}>
             <h3 className="hero-card-heading">Live Tracking</h3>
             <p className="hero-card-paragraph">
-              Get a live look at player activity. See the server they're on and which game they're playing, as it happens.
+              Get a live look at player activity. See the server they're on and
+              which game they're playing, as it happens.
             </p>
           </motion.div>
         </div>
@@ -104,11 +107,11 @@ export function HomePage() {
             <div className="mojang-data-text">
               <h3 className="vertical-text">Get the core info you need</h3>
             </div>
-            <MojangDataDisplay mojang_response={sampleMojangResponse} />
+            <MojangDataDisplay mojangResponse={sampleMojangResponse} />
           </div>
           <div className="info-card-showcase">
             <QuickInfo
-              hypixel_response={sampleHypixelResponse}
+              hypixelResponse={sampleHypixelResponse}
               playerStatus={{ status: "Offline" }}
             />
             <div className="hypixel-data-text">

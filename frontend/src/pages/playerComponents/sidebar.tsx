@@ -80,11 +80,3 @@ function Sidebar() {
 }
 
 export default Sidebar;
-
-/*
-                <motion.li whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} transition={{ ease: "easeInOut", duration: 0.2}} tabIndex={-1}>
-                    <Link to='/wynncraft/guilds' data-tooltip="Search for a Wynncraft guild" className="tooltip">
-                        <img src={groupIcon} alt="Search for a Wynncraft guild" className="icon"/>
-                    </Link>
-                </motion.li>
-*/

@@ -1,7 +1,8 @@
 import DistributionChart from "./distributionChart";
 import LoadingIndicator from "./loadingIndicator";
+import { HistogramData } from "../../client";
 
-function DistributionChartWrapper({ metricData }) {
+function DistributionChartWrapper({ metricData }: {metricData: HistogramData | null | "notFound" | "error" | "loading"}) {
   if (metricData === null) {
     return <p className="distribution-graph center">There's no data to show</p>;
   }

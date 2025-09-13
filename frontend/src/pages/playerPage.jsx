@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./playerPage.css";
 import { useParams } from "react-router-dom";
-import MojangDataDisplay from "./playerComponents/mojangDataDisplay.jsx";
+import MojangDataDisplay from "./playerComponents/mojangDataDisplay.tsx";
 import QuickInfo from "./playerComponents/quickInfo.jsx";
 import SearchRow from "./playerComponents/searchRow.jsx";
 import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
@@ -228,7 +228,7 @@ export function PlayerPage() {
 
       {status === "loadedMojang" && (
         <div>
-          <MojangDataDisplay mojang_response={mojangData} />
+          <MojangDataDisplay mojangResponse={mojangData} />
         </div>
       )}
 
@@ -239,7 +239,7 @@ export function PlayerPage() {
       {(hypixelStatus === "playerloaded" || hypixelStatus === "loaded") && (
         <div>
           <QuickInfo
-            hypixel_response={hypixelData}
+            hypixelResponse={hypixelData}
             playerStatus={playerStatus}
           />
           <AdvancedInfoTabs

@@ -9,14 +9,21 @@ import {
 import { formatValue } from "./utils";
 import DistributionHelpDialog from "./distributionHelpDialog";
 
+type DistributionChartProps = {
+  buckets: number[];
+  counts: number[];
+  playerValue: number;
+  percentile: number;
+  sampleSize: number;
+};
+
 function DistributionChart({
   buckets,
   counts,
   playerValue,
   percentile,
-  unit,
   sampleSize,
-}) {
+}: DistributionChartProps) {
   const data = counts.map((count, i) => ({
     range: `${Math.round(buckets[i]).toLocaleString("en-US", {
       notation: "compact",

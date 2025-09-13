@@ -7,13 +7,25 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { useState } from "react";
 import BedwarsHeroIcon from "/src/assets/bedwars.png";
+import {
+  HypixelFullData,
+  HypixelGuildMemberFull,
+  BedwarsProfile,
+} from "../../client";
+
+type HypixelDataProps = {
+  hypixelData: HypixelFullData;
+  hypixelGuildData: HypixelGuildMemberFull[];
+  fetchHypixelGuildMembers: any;
+  setHypixelGuildData: any;
+};
 
 function HypixelTabbedData({
   hypixelData,
   hypixelGuildData,
   fetchHypixelGuildMembers,
   setHypixelGuildData,
-}) {
+}: HypixelDataProps) {
   return (
     <>
       <h3>Global Stats</h3>
@@ -42,7 +54,7 @@ function HypixelTabbedData({
   );
 }
 
-function HypixelBedwarsPopup({ bedwarsData }) {
+function HypixelBedwarsPopup({ bedwarsData }: { bedwarsData: BedwarsProfile }) {
   const stats_to_map = [
     "games_played",
     "winstreak",
@@ -65,6 +77,7 @@ function HypixelBedwarsPopup({ bedwarsData }) {
     "diamonds_collected",
     "emeralds_collected",
   ];
+
   const winrate =
     (
       (bedwarsData.overall_stats.wins /
@@ -73,7 +86,7 @@ function HypixelBedwarsPopup({ bedwarsData }) {
     ).toFixed(1) + "%";
 
   const iconVariants = {
-    initial: { scale: 1,  },
+    initial: { scale: 1 },
     hover: { scale: 1.15 },
   };
   return (
@@ -133,19 +146,39 @@ function HypixelBedwarsPopup({ bedwarsData }) {
                     {toProperCase(stat.replaceAll("_", " "))}
                   </td>
                   <td className="bedwars-stat-value">
-                    {formatValue(bedwarsData.overall_stats[stat])}
+                    {formatValue(
+                      bedwarsData.overall_stats[
+                        stat as keyof typeof bedwarsData.overall_stats
+                      ]
+                    )}
                   </td>
                   <td className="bedwars-stat-value">
-                    {formatValue(bedwarsData.solo_stats[stat])}
+                    {formatValue(
+                      bedwarsData.solo_stats[
+                        stat as keyof typeof bedwarsData.overall_stats
+                      ]
+                    )}
                   </td>
                   <td className="bedwars-stat-value">
-                    {formatValue(bedwarsData.duo_stats[stat])}
+                    {formatValue(
+                      bedwarsData.duo_stats[
+                        stat as keyof typeof bedwarsData.overall_stats
+                      ]
+                    )}
                   </td>
                   <td className="bedwars-stat-value">
-                    {formatValue(bedwarsData.trio_stats[stat])}
+                    {formatValue(
+                      bedwarsData.trio_stats[
+                        stat as keyof typeof bedwarsData.overall_stats
+                      ]
+                    )}
                   </td>
                   <td className="bedwars-stat-value">
-                    {formatValue(bedwarsData.quad_stats[stat])}
+                    {formatValue(
+                      bedwarsData.quad_stats[
+                        stat as keyof typeof bedwarsData.overall_stats
+                      ]
+                    )}
                   </td>
                 </tr>
               ))}
@@ -167,7 +200,7 @@ function HypixelGuild({
   hypixelGuildData,
   fetchHypixelGuildMembers,
   setHypixelGuildData,
-}) {
+}: HypixelDataProps) {
   let navigate = useNavigate();
   const [guildDisabled, setGuildDisabled] = useState(false);
 
@@ -175,10 +208,14 @@ function HypixelGuild({
     return <p>No guild members to show</p>;
   }
 
+  if (!hypixelData.guild) {
+    return <p>No guild to show</p>;
+  }
+
   const loadedAllMembers =
     hypixelData.guild.members.length <= hypixelGuildData.length;
 
-  const handleGuildMemberClick = (username) => {
+  const handleGuildMemberClick = (username: string) => {
     console.log("searching for " + username);
     navigate(`/player/${username}`);
   };
@@ -208,7 +245,6 @@ function HypixelGuild({
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.1, ease: "easeInOut" }}
-        key={member.name}
         className="guild-list-item"
         onClick={() => handleGuildMemberClick(member.username)}
         variants={{

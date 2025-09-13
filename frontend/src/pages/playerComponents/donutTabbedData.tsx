@@ -2,8 +2,14 @@ import InfoCard from "./infoCard";
 import { formatValue, handleStatClick } from "./utils";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
+import { DonutPlayerStats } from "../../client";
 
-function DonutTabbedData({ donutData, uuid }) {
+type DonutProps = {
+  donutData: DonutPlayerStats | "not found" | "error";
+  uuid: string;
+};
+
+function DonutTabbedData({ donutData, uuid }: DonutProps) {
   const [metricData, setMetricData] = useState(null);
 
   if (donutData === "not found") {

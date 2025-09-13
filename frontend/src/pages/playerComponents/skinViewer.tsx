@@ -4,18 +4,29 @@ import "./dialog.css";
 import { motion } from "motion/react";
 import View3DIcon from "/src/assets/view-3d-icon.svg";
 
-function SkinView({ skinUrl, capeUrl, username }) {
+type SkinViewProps = {
+  skinUrl: string;
+  capeUrl: string | null;
+  username: string;
+};
+
+function SkinView({ skinUrl, capeUrl, username }: SkinViewProps) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <motion.button
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.1, type: "spring", delay: 0.2, ease: "easeOut" }}
+          transition={{
+            duration: 0.1,
+            type: "spring",
+            delay: 0.2,
+            ease: "easeOut",
+          }}
           data-tooltip="View in 3D"
           className="tooltip"
         >
-          <img src={View3DIcon} alt="view skin in 3d viewer" />
+          <img src={View3DIcon} alt="View skin in 3d viewer" />
         </motion.button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -31,10 +42,9 @@ function SkinView({ skinUrl, capeUrl, username }) {
           >
             <ReactSkinview3d
               skinUrl={skinUrl}
-              capeUrl={capeUrl}
+              capeUrl={capeUrl || undefined}
               height="300"
               width="300"
-              options={{ zoom: "0.95" }}
             />
           </motion.div>
           <Dialog.Close>Close</Dialog.Close>
