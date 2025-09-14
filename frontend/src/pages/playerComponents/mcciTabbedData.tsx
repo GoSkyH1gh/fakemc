@@ -7,14 +7,15 @@ import { McciPlayer } from "../../client";
 function McciTabbedData({
   mcciData,
 }: {
-  mcciData: McciPlayer | "not found" | "error";
+  mcciData: McciPlayer | "not found" | "error" | null;
 }) {
   let navigator = useNavigate();
   if (mcciData === "not found") {
     return <p>MCC Island data not found for player</p>;
-  }
-  if (mcciData === "error") {
+  } else if (mcciData === "error") {
     return <p>An error happened while fetching MCC Island data</p>;
+  } else if (mcciData === null) {
+    return <p>No MCC Island data to show</p>
   }
   const friendElements = mcciData?.friends.map((friend) => (
     <li>

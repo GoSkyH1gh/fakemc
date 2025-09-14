@@ -3,6 +3,7 @@ import "./wynncraftCharacters.css";
 import { motion, AnimatePresence } from "motion/react";
 import InfoCard from "./infoCard";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { CharacterInfo } from "../../client";
 
 const modesMap = {
   ironman: "https://cdn.wynncraft.com/nextgen/badges/ironman.svg",
@@ -26,7 +27,7 @@ const modeAttributeMap = {
 const classImageUrl =
   "https://cdn.wynncraft.com/nextgen/themes/journey/assets/classes/";
 
-function CharacterDetails({ character }) {
+function CharacterDetails({ character }: { character: CharacterInfo }) {
   const professionList = [
     "fishing",
     "woodcutting",
@@ -42,11 +43,16 @@ function CharacterDetails({ character }) {
     "armouring",
   ];
   const professionElements = professionList.map((profession) => {
+    if (!(profession in professionList)) {
+      console.log("invalid profession detected for wynncraft character");
+      return <></>;
+    }
+    const validProfession = profession as keyof typeof character.professions;
     return (
       <InfoCard
         key={profession}
         label={profession}
-        value={character.professions[profession]}
+        value={character.professions[validProfession]}
       />
     );
   });
@@ -69,12 +75,16 @@ function CharacterDetails({ character }) {
   );
 }
 
-function WynncraftCharacters({ characterList }) {
+function WynncraftCharacters({
+  characterList,
+}: {
+  characterList: CharacterInfo[];
+}) {
   if (characterList.length === 0) {
     return <p>This player has no characters.</p>;
   }
-  const [expandedId, setExpandedId] = useState(null);
-  const handleToggle = (characterUuid) => {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const handleToggle = (characterUuid: string) => {
     setExpandedId(expandedId === characterUuid ? null : characterUuid);
   };
 
@@ -121,24 +131,33 @@ function WynncraftCharacters({ characterList }) {
             <div className="wynn-classname-c">
               <p className="em-text">{character.character_class}</p>
               <div className="wynn-modes">
-                {character.gamemodes.map((gamemode) => (
-                  <Tooltip.Provider>
-                    <Tooltip.Root delayDuration={100}>
-                      <Tooltip.Trigger asChild>
-                        <motion.img
-                          whileHover={{ scale: 1.3 }}
-                          src={modesMap[gamemode]}
-                          className="wynn-mode"
-                        />
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content className="TooltipContent">
-                          {modeAttributeMap[gamemode]}
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
-                ))}
+                {character.gamemodes.map((gamemode) => {
+                  if (!(gamemode in modesMap)) {
+                    console.log(
+                      "invalid gamemode detected for wynncraft character"
+                    );
+                    return <></>;
+                  }
+                  const validGamemode = gamemode as keyof typeof modesMap;
+                  return (
+                    <Tooltip.Provider>
+                      <Tooltip.Root delayDuration={100}>
+                        <Tooltip.Trigger asChild>
+                          <motion.img
+                            whileHover={{ scale: 1.3 }}
+                            src={modesMap[validGamemode]}
+                            className="wynn-mode"
+                          />
+                        </Tooltip.Trigger>
+                        <Tooltip.Portal>
+                          <Tooltip.Content className="TooltipContent">
+                            {modeAttributeMap[validGamemode]}
+                          </Tooltip.Content>
+                        </Tooltip.Portal>
+                      </Tooltip.Root>
+                    </Tooltip.Provider>
+                  );
+                })}
               </div>
             </div>
           </div>

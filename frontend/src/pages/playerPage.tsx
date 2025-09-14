@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import "./playerPage.css";
 import { useParams } from "react-router-dom";
-import MojangDataDisplay from "./playerComponents/mojangDataDisplay.tsx";
-import QuickInfo from "./playerComponents/quickInfo.jsx";
-import SearchRow from "./playerComponents/searchRow.jsx";
-import LoadingIndicator from "./playerComponents/loadingIndicator.jsx";
-import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
+import MojangDataDisplay from "./playerComponents/mojangDataDisplay";
+import QuickInfo from "./playerComponents/quickInfo";
+import SearchRow from "./playerComponents/searchRow";
+import LoadingIndicator from "./playerComponents/loadingIndicator";
+import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs";
+import {
+  HypixelFullData,
+  PlayerSummary,
+  GuildInfo,
+  DonutPlayerStats,
+  McciPlayer,
+  HypixelGuildMemberFull,
+  MojangData
+} from "../client";
 
 export function PlayerPage() {
   const { username } = useParams();
@@ -15,33 +24,57 @@ export function PlayerPage() {
     }
   }, [username]);
 
-  const [mojangData, setMojangData] = useState(null);
-  const [playerStatus, setPlayerStatus] = useState(null);
+  const [mojangData, setMojangData] = useState<MojangData | null>(null);
+  const [playerStatus, setPlayerStatus] = useState<{ status: string } | null>(
+    null
+  );
 
-  const [hypixelData, setHypixelData] = useState(null);
-  const [hypixelStatus, setHypixelStatus] = useState(null);
-  const [hypixelGuildData, setHypixelGuildData] = useState(null);
+  const [hypixelData, setHypixelData] = useState<
+    HypixelFullData | null | "not found" | "not found (server error)"
+  >(null);
+  const [hypixelStatus, setHypixelStatus] = useState<
+    null | "loading" | "playerLoaded" | "loaded"
+  >(null);
+  const [hypixelGuildData, setHypixelGuildData] = useState<
+    HypixelGuildMemberFull[] | "no guild" | null
+  >(null);
 
-  const [wynncraftData, setWynncraftData] = useState(null);
-  const [wynncraftStatus, setWynncraftStatus] = useState(null);
-  const [wynncraftGuildData, setWynncraftGuildData] = useState(null);
+  const [wynncraftData, setWynncraftData] = useState<
+    PlayerSummary | null | "not found" | "not found (server error)"
+  >(null);
+  const [wynncraftStatus, setWynncraftStatus] = useState<
+    null | "loading" | "playerLoaded" | "loaded"
+  >(null);
+  const [wynncraftGuildData, setWynncraftGuildData] = useState<
+    GuildInfo | null | "no guild"
+  >(null);
 
-  const [donutData, setDonutData] = useState(null);
-  const [donutStatus, setDonutStatus] = useState(null);
+  const [donutData, setDonutData] = useState<
+    DonutPlayerStats | null | "not found" | "error"
+  >(null);
+  const [donutStatus, setDonutStatus] = useState<null | "loading" | "loaded">(
+    null
+  );
 
-  const [mcciData, setMcciData] = useState(null);
-  const [mcciStatus, setMcciStatus] = useState(null);
+  const [mcciData, setMcciData] = useState<
+    McciPlayer | null | "not found" | "error"
+  >(null);
+  const [mcciStatus, setMcciStatus] = useState<null | "loading" | "loaded">(
+    null
+  );
 
   const [status, setStatus] = useState("idle");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
-  const [loadedTabs, setLoadedTabs] = useState([]);
+  const [loadedTabs, setLoadedTabs] = useState<string[]>([]);
 
-  const addLoadedTab = (tabToAdd) => {
+  const addLoadedTab = (
+    tabToAdd: "hypixel" | "wynncraft" | "donut" | "mcci"
+  ) => {
     setLoadedTabs((prev) => [...prev, tabToAdd]);
   };
 
-  const fetchDataForPlayer = async (search_term) => {
+  const fetchDataForPlayer = async (search_term: string) => {
     setMojangData(null);
     setHypixelData(null);
     setHypixelGuildData(null);
@@ -97,10 +130,11 @@ export function PlayerPage() {
       // hypixel
       let hypixelResponseRaw = await fetch(hypixelUrl + mojangResponse.uuid);
       if (hypixelResponseRaw.ok) {
-        const hypixelResponse = await hypixelResponseRaw.json();
+        const hypixelResponse: HypixelFullData =
+          await hypixelResponseRaw.json();
         console.log("got hypixel response: ", hypixelResponse);
         setHypixelData(hypixelResponse);
-        setHypixelStatus("playerloaded");
+        setHypixelStatus("playerLoaded");
         addLoadedTab("hypixel");
         fetchHypixelGuildMembers(hypixelResponse, setHypixelGuildData, 0);
         setHypixelStatus("loaded");
@@ -115,11 +149,11 @@ export function PlayerPage() {
 
       // wynncraft
       let wynnResponseRaw = await fetch(wynncraftUrl + mojangResponse.uuid);
-      const wynnResponse = await wynnResponseRaw.json();
+      const wynnResponse: PlayerSummary = await wynnResponseRaw.json();
       console.log("got wynncraft response: ", wynnResponse);
       if (wynnResponseRaw.ok) {
         setWynncraftData(wynnResponse);
-        setWynncraftStatus("playerloaded");
+        setWynncraftStatus("playerLoaded");
         addLoadedTab("wynncraft");
         if (wynnResponse.guild_name != null) {
           let wynnGuildResponseRaw = await fetch(
@@ -178,7 +212,7 @@ export function PlayerPage() {
         setMcciStatus("loaded");
         addLoadedTab("mcci");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("An error occurred:", error);
       setError(error);
       setWynncraftStatus(null);
@@ -186,21 +220,24 @@ export function PlayerPage() {
   };
 
   async function fetchHypixelGuildMembers(
-    hypixelResponse,
-    setHypixelGuildData,
-    offset
+    hypixelResponse: HypixelFullData,
+    setHypixelGuildData: React.Dispatch<React.SetStateAction<HypixelGuildMemberFull[] | "no guild" | null>>,
+    offset: number
   ) {
     const hypixelGuildUrl = `${
       import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com"
     }/v1/hypixel/guilds/`;
     if (hypixelResponse?.guild) {
+      if (hypixelGuildData === "no guild") {
+        return null
+      }
       let hypixelGuildResponseRaw = await fetch(
         `${hypixelGuildUrl}${hypixelResponse.guild.id}?limit=20&offset=${offset}`
       );
       const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
 
-      setHypixelGuildData((previousData) => {
-        if (!previousData) {
+      setHypixelGuildData((previousData: HypixelGuildMemberFull[] | "no guild" | null) => {
+        if (!previousData || previousData === "no guild") {
           return hypixelGuildResponse;
         } else {
           return previousData.concat(hypixelGuildResponse);
@@ -226,7 +263,7 @@ export function PlayerPage() {
         </div>
       )}
 
-      {status === "loadedMojang" && (
+      {status === "loadedMojang" && mojangData && (
         <div>
           <MojangDataDisplay mojangResponse={mojangData} />
         </div>
@@ -236,12 +273,16 @@ export function PlayerPage() {
         <LoadingIndicator />
       )}
 
-      {(hypixelStatus === "playerloaded" || hypixelStatus === "loaded") && (
+      {(hypixelStatus === "playerLoaded" || hypixelStatus === "loaded") && (mojangData) && (
         <div>
-          <QuickInfo
-            hypixelResponse={hypixelData}
-            playerStatus={playerStatus}
-          />
+          {hypixelData !== "not found" &&
+            hypixelData !== "not found (server error)" &&
+            hypixelData && (
+              <QuickInfo
+                hypixelResponse={hypixelData}
+                playerStatus={playerStatus}
+              />
+            )}
           <AdvancedInfoTabs
             hypixelResponse={hypixelData}
             hypixelGuildResponse={hypixelGuildData}

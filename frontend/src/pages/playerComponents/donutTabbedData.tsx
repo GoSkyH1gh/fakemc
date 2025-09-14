@@ -5,7 +5,7 @@ import DistributionChartWrapper from "./distributionChartWrapper";
 import { DonutPlayerStats } from "../../client";
 
 type DonutProps = {
-  donutData: DonutPlayerStats | "not found" | "error";
+  donutData: DonutPlayerStats | "not found" | "error" | null;
   uuid: string;
 };
 
@@ -14,9 +14,10 @@ function DonutTabbedData({ donutData, uuid }: DonutProps) {
 
   if (donutData === "not found") {
     return <p>Donut SMP data not found for player</p>;
-  }
-  if (donutData === "error") {
-    return <p>An error happened while fetching Donut SMP data</p>;
+  } else if (donutData === null) {
+    return <p>No DonutSMP data to show</p>;
+  } else if (donutData === "error") {
+    return <p>An error occurred while fetching Donut SMP data</p>;
   }
   return (
     <>

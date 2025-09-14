@@ -1,11 +1,25 @@
 import InfoCard from "./infoCard";
 import WynncraftCharacters from "./wynncraftCharacters";
-import { formatISOTimestamp, formatISOToDistance, formatValue, handleStatClick } from "./utils";
+import {
+  formatISOTimestamp,
+  formatISOToDistance,
+  formatValue,
+  handleStatClick,
+} from "./utils";
 import WynncraftGuild from "./wynncraftGuild";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
+import { PlayerSummary, GuildInfo } from "../../client";
 
-function WynncraftTabbedData({ wynncraftData, wynncraftGuildData }) {
+type WynncraftProps = {
+  wynncraftData: PlayerSummary;
+  wynncraftGuildData: GuildInfo | "no guild" | null;
+};
+
+function WynncraftTabbedData({
+  wynncraftData,
+  wynncraftGuildData,
+}: WynncraftProps) {
   const [metricData, setMetricData] = useState(null);
 
   let wynnGuildElements;

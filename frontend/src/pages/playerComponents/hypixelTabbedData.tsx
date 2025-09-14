@@ -15,7 +15,7 @@ import {
 
 type HypixelDataProps = {
   hypixelData: HypixelFullData;
-  hypixelGuildData: HypixelGuildMemberFull[];
+  hypixelGuildData: HypixelGuildMemberFull[] | "no guild" | null;
   fetchHypixelGuildMembers: any;
   setHypixelGuildData: any;
 };
@@ -208,7 +208,7 @@ function HypixelGuild({
     return <p>No guild members to show</p>;
   }
 
-  if (!hypixelData.guild) {
+  if (!hypixelData.guild || hypixelGuildData === "no guild") {
     return <p>No guild to show</p>;
   }
 
@@ -236,6 +236,8 @@ function HypixelGuild({
       }
     }
   };
+
+  
 
   const hypixelMemberElements = hypixelGuildData.map((member) => (
     <li key={member.uuid}>

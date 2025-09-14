@@ -2,8 +2,16 @@ import TimelinePart from "/src/assets/timeline_part.svg";
 import TimelineEnd from "/src/assets/timeline_end.svg";
 import { formatLogTime } from "./utils";
 import { motion } from "motion/react";
+import { SSEData } from "./trackPlayer";
 
-function TrackTimeline({ history }) {
+type TrackTimelineProps = {
+  history: {
+    data: SSEData
+    timestamp: Date;
+  }[];
+};
+
+function TrackTimeline({ history }: TrackTimelineProps) {
   if (history.length === 0) {
     return (
       <ul className="tracker-timeline">
@@ -27,7 +35,7 @@ function TrackTimeline({ history }) {
     return (
       <motion.li
         layout
-        key={event?.timestamp}
+        key={event.timestamp.toISOString()}
         className={`timeline-item ${
           lastElement === true ? "last-timeline-item" : ""
         }`}

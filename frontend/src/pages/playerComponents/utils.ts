@@ -25,8 +25,8 @@ function formatISOTimestamp(timestamp: string | null) {
   return readableDate;
 }
 
-const formatValue = (value: number | null, compact = true) => {
-  if (value === null) {
+const formatValue = (value: number | null | undefined, compact = true) => {
+  if (value === null || value === undefined) {
     return "Unknown";
   } else {
     if (compact) {
@@ -70,7 +70,7 @@ const formatLogTime = (date: Date) => {
 const fetchMetric = async (
   metric_key: string,
   player_uuid: string,
-  setMetricData: (arg0: any) => {}
+  setMetricData: React.Dispatch<React.SetStateAction<any>>
 ) => {
   setMetricData("loading");
   const baseUrl =
@@ -94,7 +94,7 @@ const fetchMetric = async (
 const handleStatClick = (
   metric_key: string,
   uuid: string,
-  setMetricData: (arg0: any) => {}
+  setMetricData: React.Dispatch<React.SetStateAction<any>>
 ) => {
   setMetricData(null);
   fetchMetric(metric_key, uuid, setMetricData);

@@ -1,9 +1,9 @@
-import { PlayerPage } from './pages/playerPage.jsx'
-import { HomePage } from './pages/homePage.jsx'
+import { PlayerPage } from './pages/playerPage'
+import { HomePage } from './pages/homePage'
 import { Route, Routes } from 'react-router-dom'
-import WynncraftGuilds from './pages/wynnGuilds.jsx'
-import Layout from './pages/layout.jsx'
-import TrackerPage from './pages/trackerPage.jsx'
+import WynncraftGuilds from './pages/wynnGuilds'
+import Layout from './pages/layout'
+import TrackerPage from './pages/trackerPage'
 
 function App() {
   return (

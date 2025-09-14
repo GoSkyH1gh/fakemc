@@ -13,6 +13,7 @@
     "src/**/*.tsx",
     "src/**/*.d.ts",
     "src/pages/playerComponents/donutTabbedData.tsx",
-    "src/pages/homePage.jsx"
-, "src/pages/playerComponents/distributionChart.tsx"  ]
+    "src/pages/homePage.tsx",
+    "src/pages/playerComponents/distributionChart.tsx"
+, "src/pages/playerComponents/trackPlayer.tsx", "src/main.jsx", "src/App.jsx"  ]
 }

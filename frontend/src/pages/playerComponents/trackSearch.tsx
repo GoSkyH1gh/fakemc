@@ -3,8 +3,16 @@ import SearchRow from "./searchRow";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import LoadingIndicator from "./loadingIndicator";
+import { MojangData } from "../../client";
 
-function TrackSearch({ handleStartTrack, mojangData, setMojangData }) {
+type TrackSearchProps = {
+  handleStartTrack: () => void;
+  mojangData: MojangData | "loading" | "error" | null;
+  setMojangData: React.Dispatch<React.SetStateAction<any>>
+}
+
+
+function TrackSearch({ handleStartTrack, mojangData, setMojangData }: TrackSearchProps) {
   const { username } = useParams();
 
   const baseUrl = import.meta.env.VITE_API_URL;

@@ -40,9 +40,9 @@ function InfoCard({
               </button>
             </Popover.Trigger>
             <Popover.Portal>
-              <Popover.Content sideOffset={-500} align="start">
+              <Popover.Content align="start" side="right">
                 <motion.div
-                  initial={{ scale: 0, y: 40, x: -40 }}
+                  initial={{ scale: 0, y: -30, x: -60 }}
                   animate={{ scale: 1, y: 0, x: 0 }}
                   transition={{ duration: 0.6, type: "spring" }}
                   layout

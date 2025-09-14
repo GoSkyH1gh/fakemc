@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatLogTime, formatSinceLastUpdate } from "./utils";
 import stopIcon from "/src/assets/stop_circle_icon.svg";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -6,15 +6,38 @@ import { motion } from "motion/react";
 import TrackTimeline from "./trackTimeline";
 import CodeIcon from "/src/assets/code_icon.svg";
 import TimelineIcon from "/src/assets/timeline_icon.svg";
+import { MojangData } from "../../client";
 
-function TrackPlayer({ mojangData, setTrackStatus }) {
-  const [history, setHistory] = useState([]);
-  const [status, setStatus] = useState(null);
+export type SSEData = {
+  wynncraft_online: boolean;
+  wynncraft_restricted: boolean;
+  wynncraft_server: string | null;
+  hypixel_online: boolean;
+  hypixel_game_type: string | null;
+  hypixel_mode: string | null;
+};
+
+type HistoryEvent = {
+  data: SSEData;
+  timestamp: Date;
+};
+
+function TrackPlayer({
+  mojangData,
+  setTrackStatus,
+}: {
+  mojangData: MojangData;
+  setTrackStatus: React.Dispatch<React.SetStateAction<"search" | "track">>;
+}) {
+  const [history, setHistory] = useState<HistoryEvent[]>([]);
+  const [status, setStatus] = useState<"error" | null | SSEData>(null);
   const baseUrl = import.meta.env.VITE_API_URL;
   const trackerUrl = `${baseUrl}/v1/tracker/${mojangData.uuid}/status`;
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [tick, setTick] = useState(0);
-  const [historyMode, setHistoryMode] = useState("timeline");
+  const [historyMode, setHistoryMode] = useState<"log" | "timeline">(
+    "timeline"
+  );
 
   useEffect(() => {
     const eventSource = new EventSource(trackerUrl);
@@ -51,17 +74,18 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
 
   if (status === "error") {
     onlineText = "An error occured";
-    descriptionText = "This usually happens if too many requests are sent at once\nSorry :/"
-  }
+    descriptionText =
+      "This usually happens if too many requests are sent at once\nSorry :/";
+  } else {
+    if (status?.wynncraft_online === true) {
+      onlineText = "Online • Wynncraft";
+      descriptionText = "on server " + status?.wynncraft_server;
+    }
 
-  if (status?.wynncraft_online === true) {
-    onlineText = "Online • Wynncraft";
-    descriptionText = "on server " + status?.wynncraft_server;
-  }
-
-  if (status?.hypixel_online === true) {
-    onlineText = "Online • Hypixel";
-    descriptionText = `on ${status?.hypixel_game_type} • ${status?.hypixel_mode}`;
+    if (status?.hypixel_online === true) {
+      onlineText = "Online • Hypixel";
+      descriptionText = `on ${status?.hypixel_game_type} • ${status?.hypixel_mode}`;
+    }
   }
 
   let historyElements;
@@ -76,7 +100,7 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
     }
 
     const logString = `[${time}] ${logInformation}`;
-    return <li key={event?.timestamp}>{logString}</li>;
+    return <li key={event?.timestamp.toISOString()}>{logString}</li>;
   });
 
   if (history.length === 0) {
@@ -105,7 +129,9 @@ function TrackPlayer({ mojangData, setTrackStatus }) {
           </Tooltip.Root>
         </Tooltip.Provider>
       </div>
-      <p className="compact-paragraph track-subheader">{formatSinceLastUpdate(lastUpdate)}</p>
+      <p className="compact-paragraph track-subheader">
+        {formatSinceLastUpdate(lastUpdate)}
+      </p>
       <div className="tracker-live-data">
         <h3>{onlineText}</h3>
         <p>{descriptionText}</p>

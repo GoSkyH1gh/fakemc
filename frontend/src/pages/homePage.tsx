@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import "./homePage.css";
-import MojangDataDisplay from "./playerComponents/mojangDataDisplay.tsx";
+import MojangDataDisplay from "./playerComponents/mojangDataDisplay.js";
 import PurpleOrangeGradient from "/src/assets/purple_to_orange_gradient.svg";
 import YellowGradient from "/src/assets/yellow_gradient.svg";
 import { MdSearch } from "react-icons/md";
 import { useState, useRef } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import QuickInfo from "./playerComponents/quickInfo.jsx";
-import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.jsx";
+import QuickInfo from "./playerComponents/quickInfo.js";
+import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs.js";
 import {
   sampleHypixelResponse,
   sampleHypixelGuildResponse,
@@ -16,12 +16,13 @@ import {
   sampleMojangResponse,
   sampleWynncraftGuildResponse,
   sampleWynncraftResponse,
-} from "./sampleData.js";
+} from "./sampleData";
 
 export function HomePage() {
   const [searchbarValue, setSerchbarValue] = useState("");
+  const [sampleState, setSampleState] = useState<object[]>([])
   const navigate = useNavigate();
-  const targetScroll = useRef(null);
+  const targetScroll = useRef<HTMLHeadingElement>(null);
   return (
     <>
       <div className="hero-background" />
@@ -29,18 +30,8 @@ export function HomePage() {
         src={PurpleOrangeGradient}
         className="purple-orange-gradient"
         alt=""
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, ease: "easeInOut" }}
       />
-      <img
-        src={YellowGradient}
-        className="yellow-gradient"
-        alt=""
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, ease: "easeInOut" }}
-      />
+      <img src={YellowGradient} className="yellow-gradient" alt="" />
       <div className="hero-section">
         <div className="hero-headings">
           <h1 className="hero-h1">Search for any Minecraft player</h1>
@@ -89,7 +80,9 @@ export function HomePage() {
           initial={{ scale: 1, backgroundColor: "#F4F077" }}
           whileHover={{ scale: 1.3, backgroundColor: "#f8d563ff" }}
           onClick={() => {
-            targetScroll.current.scrollIntoView({ behavior: "smooth" });
+            if (targetScroll.current != null) {
+              targetScroll.current.scrollIntoView({ behavior: "smooth" });
+            }
           }}
         >
           <MdKeyboardArrowDown color="#101e10" />
@@ -132,6 +125,8 @@ export function HomePage() {
             mcciStatus={"loaded"}
             loadedTabs={["hypixel", "wynncraft", "mcci"]}
             uuid={"5f8eb73b25be4c5aa50fd27d65e30ca0"}
+            fetchHypixelGuildMembers={() => {}}
+            setHypixelGuildData={setSampleState}
           />
         </div>
       </div>
