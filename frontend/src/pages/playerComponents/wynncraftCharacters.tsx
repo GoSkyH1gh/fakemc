@@ -43,10 +43,6 @@ function CharacterDetails({ character }: { character: CharacterInfo }) {
     "armouring",
   ];
   const professionElements = professionList.map((profession) => {
-    if (!(profession in professionList)) {
-      console.log("invalid profession detected for wynncraft character");
-      return <></>;
-    }
     const validProfession = profession as keyof typeof character.professions;
     return (
       <InfoCard

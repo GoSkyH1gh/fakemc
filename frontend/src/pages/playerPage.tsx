@@ -13,8 +13,9 @@ import {
   DonutPlayerStats,
   McciPlayer,
   HypixelGuildMemberFull,
-  MojangData
+  MojangData,
 } from "../client";
+import { motion } from "motion/react";
 
 export function PlayerPage() {
   const { username } = useParams();
@@ -221,7 +222,9 @@ export function PlayerPage() {
 
   async function fetchHypixelGuildMembers(
     hypixelResponse: HypixelFullData,
-    setHypixelGuildData: React.Dispatch<React.SetStateAction<HypixelGuildMemberFull[] | "no guild" | null>>,
+    setHypixelGuildData: React.Dispatch<
+      React.SetStateAction<HypixelGuildMemberFull[] | "no guild" | null>
+    >,
     offset: number
   ) {
     const hypixelGuildUrl = `${
@@ -229,20 +232,22 @@ export function PlayerPage() {
     }/v1/hypixel/guilds/`;
     if (hypixelResponse?.guild) {
       if (hypixelGuildData === "no guild") {
-        return null
+        return null;
       }
       let hypixelGuildResponseRaw = await fetch(
         `${hypixelGuildUrl}${hypixelResponse.guild.id}?limit=20&offset=${offset}`
       );
       const hypixelGuildResponse = await hypixelGuildResponseRaw.json();
 
-      setHypixelGuildData((previousData: HypixelGuildMemberFull[] | "no guild" | null) => {
-        if (!previousData || previousData === "no guild") {
-          return hypixelGuildResponse;
-        } else {
-          return previousData.concat(hypixelGuildResponse);
+      setHypixelGuildData(
+        (previousData: HypixelGuildMemberFull[] | "no guild" | null) => {
+          if (!previousData || previousData === "no guild") {
+            return hypixelGuildResponse;
+          } else {
+            return previousData.concat(hypixelGuildResponse);
+          }
         }
-      });
+      );
       console.log(hypixelGuildResponse);
     } else {
       setHypixelGuildData("no guild");
@@ -254,7 +259,19 @@ export function PlayerPage() {
       <SearchRow disabled={status === "loading"} urlToNavigate="/player" />
       <br />
 
-      {status === "loading" && <LoadingIndicator />}
+      {status === "loading" && (
+        <div>
+          <LoadingIndicator />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 4, duration: 1 }}
+          >
+            This seems to be taking a while. This usually only happens once when
+            the server starts and can take up to a minute
+          </motion.p>
+        </div>
+      )}
       {status === "idle" && <p>Enter a player to search</p>}
       {error != null && (
         <div>
@@ -273,34 +290,35 @@ export function PlayerPage() {
         <LoadingIndicator />
       )}
 
-      {(hypixelStatus === "playerLoaded" || hypixelStatus === "loaded") && (mojangData) && (
-        <div>
-          {hypixelData !== "not found" &&
-            hypixelData !== "not found (server error)" &&
-            hypixelData && (
-              <QuickInfo
-                hypixelResponse={hypixelData}
-                playerStatus={playerStatus}
-              />
-            )}
-          <AdvancedInfoTabs
-            hypixelResponse={hypixelData}
-            hypixelGuildResponse={hypixelGuildData}
-            fetchHypixelGuildMembers={fetchHypixelGuildMembers}
-            setHypixelGuildData={setHypixelGuildData}
-            hypixelStatus={hypixelStatus}
-            wynncraftData={wynncraftData}
-            wynncraftStatus={wynncraftStatus}
-            wynncraftGuildData={wynncraftGuildData}
-            donutData={donutData}
-            donutStatus={donutStatus}
-            mcciData={mcciData}
-            mcciStatus={mcciStatus}
-            loadedTabs={loadedTabs}
-            uuid={mojangData.uuid}
-          />
-        </div>
-      )}
+      {(hypixelStatus === "playerLoaded" || hypixelStatus === "loaded") &&
+        mojangData && (
+          <div>
+            {hypixelData !== "not found" &&
+              hypixelData !== "not found (server error)" &&
+              hypixelData && (
+                <QuickInfo
+                  hypixelResponse={hypixelData}
+                  playerStatus={playerStatus}
+                />
+              )}
+            <AdvancedInfoTabs
+              hypixelResponse={hypixelData}
+              hypixelGuildResponse={hypixelGuildData}
+              fetchHypixelGuildMembers={fetchHypixelGuildMembers}
+              setHypixelGuildData={setHypixelGuildData}
+              hypixelStatus={hypixelStatus}
+              wynncraftData={wynncraftData}
+              wynncraftStatus={wynncraftStatus}
+              wynncraftGuildData={wynncraftGuildData}
+              donutData={donutData}
+              donutStatus={donutStatus}
+              mcciData={mcciData}
+              mcciStatus={mcciStatus}
+              loadedTabs={loadedTabs}
+              uuid={mojangData.uuid}
+            />
+          </div>
+        )}
     </>
   );
 }
