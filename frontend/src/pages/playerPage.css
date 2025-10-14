@@ -643,3 +643,8 @@ button {
   image-rendering: pixelated;
   border-radius: 8px;
 }
+
+.chart-cursor {
+  border-radius: 5px;
+  
+}

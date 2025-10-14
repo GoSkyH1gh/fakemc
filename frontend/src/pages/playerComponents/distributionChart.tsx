@@ -51,12 +51,24 @@ function DistributionChart({
         <ResponsiveContainer>
           <BarChart data={data}>
             <XAxis dataKey="range" tick={{ fill: "#f3f3f7", fontSize: 13 }} />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                borderRadius: "15px",
+                color: "#F4EAE3",
+                backdropFilter: "blur(20px)",
+                backgroundColor: "#ccc4",
+                border: "var(--color-surfact-layer-2) 2px solid"
+              }}
+              cursor={false}
+              labelStyle={{ fontWeight: 600, color: "#F4EAE3" }}
+              itemStyle={{ color: "#F4EAE3",}}
+              offset={0}
+            />
             <Bar dataKey="count">
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={index === safeIndex ? "#e61fb4ff" : "#8884d8"}
+                  fill={index === safeIndex ? "#F4F077" : "#A130F6"}
                 />
               ))}
             </Bar>

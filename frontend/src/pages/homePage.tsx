@@ -18,10 +18,30 @@ import {
   sampleWynncraftResponse,
 } from "./sampleData";
 
-export function HomePage() {
+function HeroSearchbar() {
   const [searchbarValue, setSerchbarValue] = useState("");
-  const [sampleState, setSampleState] = useState<object[]>([])
   const navigate = useNavigate();
+  return (
+    <div className="hero-searchbar">
+      <MdSearch />
+      <input
+        placeholder="jeb_"
+        value={searchbarValue}
+        onChange={(e) => {
+          setSerchbarValue(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            navigate(`/player/${searchbarValue.trim()}`);
+          }
+        }}
+      ></input>
+    </div>
+  );
+}
+
+export function HomePage() {
+  const [sampleState, setSampleState] = useState<object[]>([]);
   const targetScroll = useRef<HTMLHeadingElement>(null);
   return (
     <>
@@ -37,21 +57,7 @@ export function HomePage() {
           <h1 className="hero-h1">Search for any Minecraft player</h1>
           <h2 className="hero-h2">All the info you need, in one place</h2>
         </div>
-        <div className="hero-searchbar">
-          <MdSearch />
-          <input
-            placeholder="jeb_"
-            value={searchbarValue}
-            onChange={(e) => {
-              setSerchbarValue(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                navigate(`/player/${searchbarValue.trim()}`);
-              }
-            }}
-          ></input>
-        </div>
+        <HeroSearchbar />
         <div className="hero-card-container">
           <motion.div className="hero-card" whileHover={{ y: -10 }}>
             <h3 className="hero-card-heading">All Stats, One Place</h3>
