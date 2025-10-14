@@ -1,5 +1,5 @@
 import InfoCard from "./infoCard";
-import { formatValue } from "./utils";
+import { formatValue, handleStatClick } from "./utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import "./dialog.css";
 import { toProperCase } from "./utils";
@@ -12,6 +12,7 @@ import {
   HypixelGuildMemberFull,
   BedwarsProfile,
 } from "../../client";
+import DistributionChartWrapper from "./distributionChartWrapper";
 
 type HypixelDataProps = {
   hypixelData: HypixelFullData;
@@ -26,19 +27,53 @@ function HypixelTabbedData({
   fetchHypixelGuildMembers,
   setHypixelGuildData,
 }: HypixelDataProps) {
+  const [metricData, setMetricData] = useState(null);
   return (
     <>
       <h3>Global Stats</h3>
       <ul className="info-card-list">
         <InfoCard
           label="Level"
+          hasStats={true}
+          onClick={() =>
+            handleStatClick(
+              "hypixel_level",
+              hypixelData.player.uuid,
+              setMetricData
+            )
+          }
           value={formatValue(hypixelData.player.network_level)}
-        />
-        <InfoCard label="Karma" value={formatValue(hypixelData.player.karma)} />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
+        <InfoCard
+          label="Karma"
+          hasStats={true}
+          onClick={() =>
+            handleStatClick(
+              "hypixel_karma",
+              hypixelData.player.uuid,
+              setMetricData
+            )
+          }
+          value={formatValue(hypixelData.player.karma)}
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
         <InfoCard
           label="Achievement Points"
+          hasStats={true}
+          onClick={() =>
+            handleStatClick(
+              "hypixel_achievement_points",
+              hypixelData.player.uuid,
+              setMetricData
+            )
+          }
           value={formatValue(hypixelData.player.achievement_points)}
-        />
+        >
+          <DistributionChartWrapper metricData={metricData} />
+        </InfoCard>
       </ul>
       <h3>Game Stats</h3>
       <HypixelBedwarsPopup bedwarsData={hypixelData.player.bedwars} />
@@ -236,8 +271,6 @@ function HypixelGuild({
       }
     }
   };
-
-  
 
   const hypixelMemberElements = hypixelGuildData.map((member) => (
     <li key={member.uuid}>
