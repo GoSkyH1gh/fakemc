@@ -22,7 +22,7 @@ import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy.orm import Session
-from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members, HypixelGuildMemberParams
+from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members, HypixelGuildMemberParams, add_hypixel_stats_to_db
 from minecraft_manager import get_minecraft_data
 from typing import List, Annotated
 
@@ -86,8 +86,9 @@ def get_profile(username, session: Session = Depends(get_db)) -> MojangData:
         },
     },
 )
-def get_hypixel(uuid, session: Session = Depends(get_db)) -> HypixelFullData:
+def get_hypixel(uuid, background_tasks: BackgroundTasks, session: Session = Depends(get_db)) -> HypixelFullData:
     data = get_hypixel_data(uuid, session)
+    background_tasks.add_task(add_hypixel_stats_to_db, data)
     return data
 
 

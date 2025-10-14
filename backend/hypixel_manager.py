@@ -18,6 +18,7 @@ from minecraft_manager import bulk_get_usernames_cache, get_minecraft_data
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from db import SessionLocal
 from pydantic import BaseModel, Field
+from metrics_manager import add_value
 
 # in seconds
 HYPIXEL_TTL = 180
@@ -244,6 +245,22 @@ def get_member(
                     rank=member.rank, joined=member.joined, **resolved_member
                 )
 
+def add_hypixel_stats_to_db(hypixel_data: HypixelFullData):
+    if not isinstance(hypixel_data, HypixelFullData):
+        print("Invalid data type passed to add_hypixel_stats_to_db")
+        return
+    
+    stats_to_add = {
+        21: hypixel_data.player.network_level,
+        22: hypixel_data.player.karma,
+        23: hypixel_data.player.achievement_points,
+    }
+
+    engine = get_engine()
+    with engine.begin() as conn:
+        for stat in stats_to_add:
+            if stats_to_add.get(stat, None) is not None:
+                add_value(conn, hypixel_data.player.uuid, stat, stats_to_add[stat])
 
 if __name__ == "__main__":
     db_engine = get_engine()
