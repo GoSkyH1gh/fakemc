@@ -6,7 +6,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { formatValue } from "./utils";
+import { formatValue } from "../../utils/utils";
 import DistributionHelpDialog from "./distributionHelpDialog";
 
 type DistributionChartProps = {
@@ -57,11 +57,11 @@ function DistributionChart({
                 color: "#F4EAE3",
                 backdropFilter: "blur(20px)",
                 backgroundColor: "#bbb4",
-                border: "var(--color-surfact-layer-2) 2px solid"
+                border: "var(--color-surfact-layer-2) 2px solid",
               }}
-              cursor={{fill: "#A130F645", radius: 5, }}
+              cursor={{ fill: "#A130F645", radius: 5 }}
               labelStyle={{ fontWeight: 600, color: "#F4EAE3" }}
-              itemStyle={{ color: "#F4EAE3",}}
+              itemStyle={{ color: "#F4EAE3" }}
               offset={0}
             />
             <Bar dataKey="count">

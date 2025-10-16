@@ -1,12 +1,12 @@
 import TimelinePart from "/src/assets/timeline_part.svg";
 import TimelineEnd from "/src/assets/timeline_end.svg";
-import { formatLogTime } from "./utils";
+import { formatLogTime } from "../../utils/utils";
 import { motion } from "motion/react";
 import { SSEData } from "./trackPlayer";
 
 type TrackTimelineProps = {
   history: {
-    data: SSEData
+    data: SSEData;
     timestamp: Date;
   }[];
 };

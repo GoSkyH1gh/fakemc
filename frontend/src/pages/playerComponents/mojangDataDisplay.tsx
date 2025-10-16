@@ -4,8 +4,24 @@ import CopyIcon from "./copyIcon.js";
 import { motion } from "motion/react";
 import SkinView from "./skinViewer.js";
 import { MojangData } from "../../client/types.gen.js";
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
+import {
+  addFavorite,
+  checkFavorite,
+  deleteFavorite,
+} from "../../utils/favorites.js";
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { useEffect, useState } from "react";
 
-function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData}) {
+function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  useEffect(() => {
+    if (checkFavorite(mojangResponse.uuid)) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+  }, [mojangResponse.uuid]);
   return (
     <motion.div
       className="mojang-data"
@@ -14,7 +30,48 @@ function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData}) {
       transition={{ duration: 0.25, ease: "easeInOut" }}
     >
       <div>
-        <p className="username">{mojangResponse.username}</p>
+        <div className="text-icon">
+          <p className="username">{mojangResponse.username}</p>
+
+          <Tooltip.Provider>
+            <Tooltip.Root delayDuration={100}>
+              <Tooltip.Trigger asChild>
+                  <motion.button
+                    className="icon-button flex"
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    {isFavorite && (
+                      <MdFavorite
+                        onClick={() => {
+                          deleteFavorite(mojangResponse.uuid);
+                          setIsFavorite(false);
+                        }}
+                      />
+                    )}
+                    {!isFavorite && (
+                      <MdFavoriteBorder
+                        onClick={() => {
+                          const now = new Date();
+                          addFavorite({
+                            username: mojangResponse.username,
+                            uuid: mojangResponse.uuid,
+                            addedOn: now.toISOString(),
+                          });
+                          setIsFavorite(true);
+                        }}
+                      />
+                    )}
+                  </motion.button>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content className="TooltipContent">
+                  Favorite {mojangResponse.username}
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        </div>
         <p className="uuid">
           uuid: {mojangResponse.uuid}
           <CopyIcon textToCopy={mojangResponse.uuid} />

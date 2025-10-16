@@ -31,7 +31,6 @@ body {
   overflow-x: hidden;
 }
 
-
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -55,19 +54,25 @@ button:focus-visible {
 
 .sidebar > img {
   transition: transform 0.2s ease, color 0.2 ease;
-  color: #ccc
+  color: #ccc;
 }
 
-.sidebar > ul  {
+.sidebar > ul {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  gap: 30px ;
+  gap: 30px;
 }
 
 .sidebar > ul > li {
-  display: block;
-  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar > ul > li > a > svg {
+  width: 22px;
+  height: 22px;
 }
 
 @media screen and (width < 750px) {
@@ -125,16 +130,11 @@ h1 {
 */
 
 .icon {
-  font-variation-settings: 
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
   transition: transform 0.2s ease, color 0.2s ease;
   color: #aaa;
   cursor: pointer;
 }
-
 
 .tooltip {
   position: relative;
@@ -162,7 +162,6 @@ h1 {
   opacity: 1;
 }
 
-
 .TooltipContent {
   border-radius: 5px;
   padding: 6px 10px;
@@ -171,21 +170,21 @@ h1 {
   border: 1px solid #ccc2;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   animation-duration: 400ms;
-	animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 
 @keyframes slideUpAndFade {
-	from {
-		opacity: 0;
-		transform: translateY(3px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .TooltipContent[data-state="delayed-open"] {
-	animation-name: slideUpAndFade;
+  animation-name: slideUpAndFade;
 }

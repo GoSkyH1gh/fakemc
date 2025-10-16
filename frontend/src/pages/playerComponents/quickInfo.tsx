@@ -1,6 +1,6 @@
 import InfoCard from "./infoCard.js";
 import { motion } from "motion/react";
-import { formatISOTimestamp, formatISOToDistance } from "./utils.js";
+import { formatISOTimestamp, formatISOToDistance } from "../../utils/utils.js";
 import { HypixelFullData } from "../../client/types.gen.js";
 
 type StatusData = {
@@ -22,22 +22,24 @@ function QuickInfo({ hypixelResponse, playerStatus }: QuickInfoProps) {
     hypixelResponse === "not found" ||
     hypixelResponse === "not found (server error)"
   ) {
-    return (<motion.div
-      className="hypixel-data"
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.25, ease: "easeInOut" },
-        },
-      }}
-      initial="hidden"
-      animate="show"
-    >
-      <p className="username">There's nothing here</p>
-      <p>We couldn't find any info here.</p>
-    </motion.div>)
+    return (
+      <motion.div
+        className="hypixel-data"
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          show: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.25, ease: "easeInOut" },
+          },
+        }}
+        initial="hidden"
+        animate="show"
+      >
+        <p className="username">There's nothing here</p>
+        <p>We couldn't find any info here.</p>
+      </motion.div>
+    );
   }
   return (
     <motion.div

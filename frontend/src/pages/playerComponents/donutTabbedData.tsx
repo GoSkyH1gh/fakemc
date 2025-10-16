@@ -1,5 +1,5 @@
 import InfoCard from "./infoCard";
-import { formatValue, handleStatClick } from "./utils";
+import { formatValue, handleStatClick } from "../../utils/utils";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";
 import { DonutPlayerStats } from "../../client";

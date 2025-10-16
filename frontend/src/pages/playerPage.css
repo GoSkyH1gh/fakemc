@@ -370,6 +370,9 @@ button {
 
 .icon-button {
   all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #aaa0;
   border-radius: 5px;
   height: 20px;
@@ -377,6 +380,9 @@ button {
 
 .icon-button:hover {
   all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #aaa0;
   border-radius: 5px;
   height: 20px;
@@ -686,3 +692,93 @@ button {
   margin-bottom: 5px;
   font-weight: 600;
 }
+
+.favorites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  margin: 0;
+  padding: 0px;
+  gap: 20px;
+}
+
+.favorites-list > li {
+  display: flex;
+  backdrop-filter: blur(10px);
+  background-color: var(--color-surfact-layer-2);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  height: 6em;
+}
+
+.favorites-list > li > img {
+  image-rendering: pixelated;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.favorites-list > li > div {
+  width: 100%;
+}
+
+.favorites-list > li > div > h2 {
+  font-weight: 600;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+.favorites-list > li > div > p {
+  margin: 0;
+  padding: 5px 10px;
+}
+
+.favorite-action {
+  height: 32px;
+  width: 32px;
+}
+
+.favorite-action:hover {
+  height: 32px;
+  width: 32px;
+}
+
+.favorite-action-container {
+  display: flex;
+  gap: 5px;
+  justify-content: end;
+  position:absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.text-icon {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.text-icon > button > svg{
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+}
+
+.favorite-action-container > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.favorite-action-container > button > svg {
+  height: 80%;
+  width: 80%;
+  cursor: pointer;
+}
+
+
+.favorite-content {
+  display: flex;
+  flex-direction: column;
+}
+

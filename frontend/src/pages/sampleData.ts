@@ -1,3 +1,6 @@
+const loadingSkin =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGISURBVHgBTVNbYgMhCAT1hj17b9K/rNJ5qJvNC0FgZiD59/uzsvWo1jN6q8iRsPHTYffM3ksx+KK10DkyAw+/RjwzC76iO1AoHchZsPHhETF/uoIVKMQaLWvE+iCCjsWaKNJCD9qiO7MQKiCLxUoRk/1RCGjhNwLkqwGgyOaBQaFU4cbuWYrxKDS6CwQPb+NQwrpq2dbtONBdWBd5HdoESVcCwaOEUKAompuWfbHIkDaMNXKVaUodvEfNR6JdocA4nSy5BJcOUuCQANpPc4Gc815Q3QcoWm0hGNEXUZY0OrwWR2sNoj7t0FDS5iDU2cdLp20/0bkJCky0JO/JqWNCZb4SSmPkeaSFDu/CqxH2YH6ueA50rcO7A56ONpSuvhBfB1lCxHkhlyBrGmcnzNtLGiKdu7mXjYv0eEyEwWTy2/Bij6r2hISSPLdeLC4R9dcgR2HeCWx+Equfgq+v24YG0+Nv1qAWOG498msqRJYeaZxXQmxO4SpaWmMvihS8nJf+uEfQPEoA2T8iAFJ0DRDb5AAAAABJRU5ErkJggg==";
+
 const sampleMojangResponse = {
   source: "mojang_api",
   uuid: "5f8eb73b25be4c5aa50fd27d65e30ca0",
@@ -671,4 +674,5 @@ export {
   sampleMojangResponse,
   sampleWynncraftGuildResponse,
   sampleWynncraftResponse,
+  loadingSkin
 };

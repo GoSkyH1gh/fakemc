@@ -1,8 +1,8 @@
 import InfoCard from "./infoCard";
-import { formatValue, handleStatClick } from "./utils";
+import { formatValue, handleStatClick } from "../../utils/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import "./dialog.css";
-import { toProperCase } from "./utils";
+import { toProperCase } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -281,7 +281,7 @@ function HypixelGuild({
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.1, ease: "easeInOut" }}
         className="guild-list-item"
-        onClick={() => handleGuildMemberClick(member.username)}
+        onClick={() => handleGuildMemberClick(member.uuid)}
         variants={{
           hidden: { opacity: 0 },
           show: { opacity: 1 },

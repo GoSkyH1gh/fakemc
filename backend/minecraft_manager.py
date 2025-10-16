@@ -16,7 +16,7 @@ def get_minecraft_data(search_term: str, session: Session) -> MojangData:
         pass
 
     if data is None:
-        if len(search_term) < 16:
+        if len(search_term) <= 20:
             mojang_instance = GetMojangAPIData(search_term)
         else:
             mojang_instance = GetMojangAPIData(None, search_term)
@@ -32,7 +32,7 @@ def get_minecraft_cache(search_term: str, session: Session) -> MojangData:
     if search_term is None:
         raise exceptions.InvalidCache()
 
-    if len(search_term) < 16:
+    if len(search_term) <= 20:
         cache_data = session.execute(
             text(
                 """

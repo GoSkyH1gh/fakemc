@@ -4,6 +4,7 @@ import searchIcon from "/src/assets/search-icon.svg";
 import footprintIcon from "/src/assets/footprint_icon.svg";
 import { motion } from "motion/react";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { MdFavoriteBorder } from "react-icons/md";
 
 function Sidebar() {
   return (
@@ -70,6 +71,26 @@ function Sidebar() {
             <Tooltip.Portal>
               <Tooltip.Content className="TooltipContent">
                 Track a player
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+          <Tooltip.Root delayDuration={100}>
+            <Tooltip.Trigger asChild>
+              <motion.li
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ ease: "easeInOut", duration: 0.2 }}
+                tabIndex={-1}
+                className="sidebar-icon"
+              >
+                <Link to="/favorites">
+                  <MdFavoriteBorder color="#eee"/>
+                </Link>
+              </motion.li>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className="TooltipContent">
+                Favorites
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>

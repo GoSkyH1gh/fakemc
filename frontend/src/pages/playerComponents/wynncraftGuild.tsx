@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import InfoCard from "./infoCard";
-import { formatISOTimestamp, formatValue } from "./utils";
+import { formatISOTimestamp, formatValue } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import { GuildInfo } from "../../client";
 
@@ -8,9 +8,9 @@ function WynncraftGuild({
   wynncraftGuildData,
 }: {
   wynncraftGuildData: GuildInfo | null;
-  }) {
+}) {
   if (wynncraftGuildData === null) {
-    return <>No Guild Data to show</>
+    return <>No Guild Data to show</>;
   }
   let navigator = useNavigate();
   const guildMemberElements = wynncraftGuildData.members.map((member) => {

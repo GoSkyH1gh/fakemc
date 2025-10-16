@@ -1,5 +1,9 @@
 import InfoCard from "./infoCard";
-import { formatValue, formatISOTimestamp, formatISOToDistance } from "./utils";
+import {
+  formatValue,
+  formatISOTimestamp,
+  formatISOToDistance,
+} from "../../utils/utils";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { McciPlayer } from "../../client";
@@ -15,7 +19,7 @@ function McciTabbedData({
   } else if (mcciData === "error") {
     return <p>An error happened while fetching MCC Island data</p>;
   } else if (mcciData === null) {
-    return <p>No MCC Island data to show</p>
+    return <p>No MCC Island data to show</p>;
   }
   const friendElements = mcciData?.friends.map((friend) => (
     <li>

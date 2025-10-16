@@ -5,7 +5,7 @@ import {
   formatISOToDistance,
   formatValue,
   handleStatClick,
-} from "./utils";
+} from "../../utils/utils";
 import WynncraftGuild from "./wynncraftGuild";
 import { useState } from "react";
 import DistributionChartWrapper from "./distributionChartWrapper";

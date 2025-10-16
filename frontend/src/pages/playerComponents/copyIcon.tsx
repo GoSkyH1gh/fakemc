@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import copyIcon from "/src/assets/copy-icon.svg";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
+
 function CopyIcon({ textToCopy }: { textToCopy: string }) {
   return (
     <Tooltip.Provider>

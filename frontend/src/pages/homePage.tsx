@@ -85,6 +85,7 @@ export function HomePage() {
           className="arrow-button"
           initial={{ scale: 1, backgroundColor: "#F4F077" }}
           whileHover={{ scale: 1.3, backgroundColor: "#f8d563ff" }}
+          whileTap={{scale: 0.9}}
           onClick={() => {
             if (targetScroll.current != null) {
               targetScroll.current.scrollIntoView({ behavior: "smooth" });
