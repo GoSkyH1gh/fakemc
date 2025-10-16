@@ -36,33 +36,28 @@ function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
           <Tooltip.Provider>
             <Tooltip.Root delayDuration={100}>
               <Tooltip.Trigger asChild>
-                  <motion.button
-                    className="icon-button flex"
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    {isFavorite && (
-                      <MdFavorite
-                        onClick={() => {
-                          deleteFavorite(mojangResponse.uuid);
-                          setIsFavorite(false);
-                        }}
-                      />
-                    )}
-                    {!isFavorite && (
-                      <MdFavoriteBorder
-                        onClick={() => {
-                          const now = new Date();
-                          addFavorite({
-                            username: mojangResponse.username,
-                            uuid: mojangResponse.uuid,
-                            addedOn: now.toISOString(),
-                          });
-                          setIsFavorite(true);
-                        }}
-                      />
-                    )}
-                  </motion.button>
+                <motion.button
+                  className="icon-button flex"
+                  whileHover={{ scale: 1.3 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => {
+                    if (isFavorite) {
+                      deleteFavorite(mojangResponse.uuid);
+                      setIsFavorite(false);
+                    } else {
+                      const now = new Date();
+                      addFavorite({
+                        username: mojangResponse.username,
+                        uuid: mojangResponse.uuid,
+                        addedOn: now.toISOString(),
+                      });
+                      setIsFavorite(true);
+                    }
+                  }}
+                > 
+                  {isFavorite && <MdFavorite />}
+                  {!isFavorite && <MdFavoriteBorder />}
+                </motion.button>
               </Tooltip.Trigger>
               <Tooltip.Portal>
                 <Tooltip.Content className="TooltipContent">

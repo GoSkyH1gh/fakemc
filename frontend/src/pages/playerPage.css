@@ -782,3 +782,17 @@ button {
   flex-direction: column;
 }
 
+.ul {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  gap: 10px;
+}
+
+.ul > li {
+  display: block;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ccc1;
+}

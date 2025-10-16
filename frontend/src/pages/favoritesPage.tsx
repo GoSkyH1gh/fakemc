@@ -64,12 +64,13 @@ function FavoriteElement({
             ? "data:image/png;base64," + mojangData.skin_showcase_b64
             : loadingSkin
         }
+        alt={`${username}'s skin`}
       />
       <div className="favorite-content">
         <h2 className="username">{mojangData?.username || username}</h2>
         <p className="info-card-label">added {formatISOToDistance(addedOn)}</p>
         <div className="favorite-action-container">
-          <motion.button
+          <motion.button aria-description="Remove from favorites"
             initial={{ scale: 1 }}
             whileHover={{ scale: 1.3 }}
             whileTap={{ scale: 0.9 }}
@@ -81,7 +82,7 @@ function FavoriteElement({
           >
             <MdDeleteOutline display={"flex"} />
           </motion.button>
-          <motion.button
+          <motion.button aria-description={`Search ${username}`}
             initial={{ scale: 1, backgroundColor: "#F4F077" }}
             whileHover={{ scale: 1.3, backgroundColor: "#f8d563ff" }}
             whileTap={{ scale: 0.9 }}

@@ -72,3 +72,7 @@
   overflow-y: scroll;
   backdrop-filter: blur(20px);
 }
+
+.HelpOverlay {
+  backdrop-filter: blur(15px);
+}

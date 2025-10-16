@@ -98,7 +98,7 @@ function WynncraftCharacters({
     };
 
     return (
-      <motion.li
+      <motion.button
         className={`wynncraft-character-item ${isExpanded ? "expanded" : ""}`}
         layout
         initial="initial"
@@ -166,7 +166,7 @@ function WynncraftCharacters({
         <AnimatePresence>
           {isExpanded && <CharacterDetails character={character} />}
         </AnimatePresence>
-      </motion.li>
+      </motion.button>
     );
   });
 
