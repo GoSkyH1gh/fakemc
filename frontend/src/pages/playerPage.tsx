@@ -16,6 +16,7 @@ import {
   MojangData,
 } from "../client";
 import { motion } from "motion/react";
+import { LuSearchX } from "react-icons/lu";
 
 export function PlayerPage() {
   const { username } = useParams();
@@ -273,10 +274,19 @@ export function PlayerPage() {
         </div>
       )}
       {status === "idle" && <p>Enter a player to search</p>}
-      {error != null && (
+      {error != null && error.message != "Player not found" && (
         <div>
           <h3>An error occured</h3>
           <p>{error.message}</p>
+        </div>
+      )}
+      {error != null && error.message == "Player not found" && (
+        <div className="not-found-container">
+          <LuSearchX />
+          <div>
+            <h2>We couldn't find {username}</h2>
+            <p>Try checking the spelling?</p>
+          </div>
         </div>
       )}
 

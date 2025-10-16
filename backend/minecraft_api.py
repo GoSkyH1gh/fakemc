@@ -55,6 +55,7 @@ CAPE_MAP = {
     "93199a2ee9e1585cb8d09d6f687cb761": "Mojang (Legacy)",
     "26b546a54d519e6a3ff01efa01acce81": "Cobalt",
     "e926b997d5e66c86483dfb1e031aee95": "Turtle",
+    "3a37ff2a14c2d157c659a07810b1bdca": "Copper",
 }
 
 

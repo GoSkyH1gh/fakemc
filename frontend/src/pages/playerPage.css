@@ -24,9 +24,7 @@
   }
 }
 
-
 :root {
-  
   --hue: 245;
 
   /* BACKGROUND (60%) - Very dark, low saturation */
@@ -37,11 +35,23 @@
 
   /* ELEMENT (10%) - The smaller info cards */
   --color-card: hsl(var(--hue), 15%, 30%);
-  --color-card-hover: hsl(var(--hue), 15%, 35%); /* A slightly lighter hover state */
+  --color-card-hover: hsl(
+    var(--hue),
+    15%,
+    35%
+  ); /* A slightly lighter hover state */
 
   /* TEXT */
-  --text-primary: hsl(var(--hue), 20%, 96%); /* A very light, slightly purplish white */
-  --text-secondary: hsl(var(--hue), 15%, 87%); /* A dimmer, grayer purple for labels */
+  --text-primary: hsl(
+    var(--hue),
+    20%,
+    96%
+  ); /* A very light, slightly purplish white */
+  --text-secondary: hsl(
+    var(--hue),
+    15%,
+    87%
+  ); /* A dimmer, grayer purple for labels */
 
   /* ACCENT (+): A contrasting color for primary actions */
   --color-accent: hsl(180, 65%, 55%); /* A bright cyan */
@@ -53,9 +63,9 @@
 }
 
 body {
-  background: linear-gradient(135deg, #394488 0%, #41284e 100% );
+  background: linear-gradient(135deg, #394488 0%, #41284e 100%);
   background: linear-gradient(135deg, #5c406d 0%, #5c3f83 100%);
-  
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   color: var(--text-primary);
 }
@@ -68,7 +78,7 @@ body {
   margin: -1px;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  border: 0
+  border: 0;
 }
 
 .searchbar {
@@ -79,7 +89,7 @@ body {
   background-color: var(--color-surfact-layer-2);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  color: var(--text-primary)
+  color: var(--text-primary);
 }
 
 button {
@@ -91,11 +101,10 @@ button {
   font-family: inherit;
   background-color: var(--color-card);
   cursor: pointer;
-
 }
 
 button:hover {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(2px);
 }
 .search-button {
@@ -193,7 +202,7 @@ button:hover {
 
 .guild-list-item:hover {
   cursor: pointer;
-  background: rgba(255,255,255,0.10);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(2px);
 }
 
@@ -333,7 +342,7 @@ button {
 
 .no-padding {
   padding: 0;
-  margin: 0
+  margin: 0;
 }
 
 .align-right {
@@ -420,10 +429,9 @@ button {
 }
 
 .tracker-live-data > h3,
-.tracker-live-data > p{
+.tracker-live-data > p {
   margin: 0;
   font-family: "Google Sans Code", monospace;
-  
 }
 
 .tracker-history {
@@ -545,8 +553,8 @@ button {
 }
 
 .selected-tab {
-  background-color: #F4F077;
-  color: #101e10
+  background-color: #f4f077;
+  color: #101e10;
 }
 
 .selected-tab:hover {
@@ -574,8 +582,6 @@ button {
   width: max(100%, 30rem);
 }
 
-
-
 .bedwars-table > tbody > tr > td,
 .bedwars-table > thead > tr > th {
   padding: 10px 10px;
@@ -591,8 +597,8 @@ button {
 
 @media screen and (width < 750px) {
   .bedwars-table > tr > td {
-  min-width: 3rem;
-}
+    min-width: 3rem;
+  }
 }
 
 .bedwars-table > tbody > tr:hover {
@@ -621,12 +627,12 @@ button {
 
 .load-more-button {
   transition: none;
-  color: #101e10
+  color: #101e10;
 }
 
 .load-more-container {
   display: flex;
-  justify-content: center ;
+  justify-content: center;
 }
 
 .bedwars-top-row {
@@ -646,5 +652,37 @@ button {
 
 .chart-cursor {
   border-radius: 5px;
-  
+}
+
+.not-found-container {
+  background-color: var(--color-surface-layer-1);
+  border: 1px solid var(--color-surfact-layer-2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 35px;
+  padding-left: 25px;
+  border-radius: 15px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.not-found-container > svg {
+  width: 80px;
+  height: 80px;
+}
+
+.not-found-container > div {
+  width: 100%;
+}
+
+.not-found-container > div > h2,
+.not-found-container > div > p {
+  margin: 0;
+}
+
+.not-found-container > div > h2 {
+  margin-bottom: 5px;
+  font-weight: 600;
 }

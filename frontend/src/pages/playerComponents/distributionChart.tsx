@@ -56,10 +56,10 @@ function DistributionChart({
                 borderRadius: "15px",
                 color: "#F4EAE3",
                 backdropFilter: "blur(20px)",
-                backgroundColor: "#ccc4",
+                backgroundColor: "#bbb4",
                 border: "var(--color-surfact-layer-2) 2px solid"
               }}
-              cursor={false}
+              cursor={{fill: "#A130F645", radius: 5, }}
               labelStyle={{ fontWeight: 600, color: "#F4EAE3" }}
               itemStyle={{ color: "#F4EAE3",}}
               offset={0}
