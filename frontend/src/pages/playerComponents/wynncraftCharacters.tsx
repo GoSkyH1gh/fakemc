@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import InfoCard from "./infoCard";
 import { Tooltip } from "radix-ui";
 import { CharacterInfo } from "../../client";
+import { toProperCase, formatValue } from "../../utils/utils";
 
 const modesMap = {
   ironman: "https://cdn.wynncraft.com/nextgen/badges/ironman.svg",
@@ -47,24 +48,21 @@ function CharacterDetails({ character }: { character: CharacterInfo }) {
     return (
       <InfoCard
         key={profession}
-        label={profession}
+        label={toProperCase(profession)}
         value={character.professions[validProfession]}
       />
     );
   });
   return (
     <>
-      <p>
-        Logged in {character.logins} times
-        <br />
-        Died {character.deaths} times
-        <br />
-        Killed {character.mobs_killed} mobs
-        <br />
-        Opened {character.chests_opened} chests
-        <br />
-        Completed {character.quests_completed} quests
-      </p>
+      <h3>Stats</h3>
+      <ul className="info-card-list">
+        <InfoCard label="Logged In" value={`${formatValue(character.logins)} times`} />
+        <InfoCard label="Deaths" value={formatValue(character.deaths)} />
+        <InfoCard label="Mobs Killed" value={formatValue(character.mobs_killed)} />
+        <InfoCard label="Chests Opened" value={formatValue(character.chests_opened)} />
+        <InfoCard label="Quests Completed" value={formatValue(character.quests_completed)} />
+      </ul>
       <h3>Professions</h3>
       <ul className="profession-list">{professionElements}</ul>
     </>
