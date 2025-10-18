@@ -3,7 +3,7 @@ import homeIcon from "/src/assets/home-icon.svg";
 import searchIcon from "/src/assets/search-icon.svg";
 import footprintIcon from "/src/assets/footprint_icon.svg";
 import { motion } from "motion/react";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Tooltip } from "radix-ui";
 import { MdFavoriteBorder } from "react-icons/md";
 
 function Sidebar() {

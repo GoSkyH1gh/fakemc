@@ -41,7 +41,7 @@ function HeroSearchbar() {
 }
 
 export function HomePage() {
-  const [sampleState, setSampleState] = useState<object[]>([]);
+  const [sampleState, setSampleState] = useState<any>([]);
   const targetScroll = useRef<HTMLHeadingElement>(null);
   return (
     <>

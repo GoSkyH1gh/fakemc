@@ -7,7 +7,12 @@ import {
   Cell,
 } from "recharts";
 import { formatValue } from "../../utils/utils";
-import DistributionHelpDialog from "./distributionHelpDialog";
+import { useState } from "react";
+import helpIcon from "/src/assets/help-icon.svg";
+import { motion, stagger } from "motion/react";
+import { MdAutoGraph } from "react-icons/md";
+import { MdPercent } from "react-icons/md";
+import { MdStackedBarChart } from "react-icons/md";
 
 type DistributionChartProps = {
   buckets: number[];
@@ -24,6 +29,13 @@ function DistributionChart({
   percentile,
   sampleSize,
 }: DistributionChartProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const animationVariants = {
+    hidden: { y: -30, opacity: 0 },
+    show: { y: 0, opacity: 1 },
+  };
+
   const data = counts.map((count, i) => ({
     range: `${Math.round(buckets[i]).toLocaleString("en-US", {
       notation: "compact",
@@ -46,8 +58,8 @@ function DistributionChart({
     playerBucketIndex === -1 ? data.length - 1 : playerBucketIndex;
 
   return (
-    <>
-      <div style={{ width: "100%", height: 200 }}>
+    <div className="distribution-graph">
+      <div className="distribution-chart">
         <ResponsiveContainer>
           <BarChart data={data}>
             <XAxis dataKey="range" tick={{ fill: "#f3f3f7", fontSize: 13 }} />
@@ -75,14 +87,51 @@ function DistributionChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <div className="flex">
-        <p style={{ textAlign: "center" }}>
-          Better than {percentile.toFixed(1)}% of {formatValue(sampleSize)}{" "}
-          recorded players
-        </p>
-        <DistributionHelpDialog />
+      <div>
+        <div className="text-icon flex">
+          <p style={{ textAlign: "center" }}>
+            Better than {percentile.toFixed(1)}% of {formatValue(sampleSize)}{" "}
+            recorded players
+          </p>
+          <button
+            className="icon-button"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <img src={helpIcon} />
+          </button>
+        </div>
+
+        {isExpanded && (
+          <div>
+            <motion.ul
+              className="help-ul"
+              initial={"hidden"}
+              animate={"show"}
+              transition={{
+                delayChildren: stagger(0.35, {
+                  ease: "easeInOut",
+                }),
+              }}
+            >
+              <motion.li variants={animationVariants}>
+                <MdAutoGraph />
+                Each bar represents a range of values — taller bars mean more
+                players in that range.
+              </motion.li>
+              <motion.li variants={animationVariants}>
+                <MdStackedBarChart />
+                The highlighted bar marks where your current value falls.
+              </motion.li>
+              <motion.li variants={animationVariants}>
+                <MdPercent />
+                The summary above compares your position with all recorded
+                players (shown as a percentile).
+              </motion.li>
+            </motion.ul>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

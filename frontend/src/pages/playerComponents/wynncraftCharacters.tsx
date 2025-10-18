@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./wynncraftCharacters.css";
 import { motion, AnimatePresence } from "motion/react";
 import InfoCard from "./infoCard";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Tooltip } from "radix-ui";
 import { CharacterInfo } from "../../client";
 
 const modesMap = {

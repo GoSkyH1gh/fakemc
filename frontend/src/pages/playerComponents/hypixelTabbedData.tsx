@@ -1,6 +1,6 @@
 import InfoCard from "./infoCard";
 import { formatValue, handleStatClick } from "../../utils/utils";
-import * as Dialog from "@radix-ui/react-dialog";
+import { Dialog } from "radix-ui";
 import "./dialog.css";
 import { toProperCase } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";

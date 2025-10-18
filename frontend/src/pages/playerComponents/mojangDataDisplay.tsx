@@ -10,7 +10,7 @@ import {
   checkFavorite,
   deleteFavorite,
 } from "../../utils/favorites.js";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Tooltip } from "radix-ui";
 import { useEffect, useState } from "react";
 
 function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
@@ -54,7 +54,7 @@ function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
                       setIsFavorite(true);
                     }
                   }}
-                > 
+                >
                   {isFavorite && <MdFavorite />}
                   {!isFavorite && <MdFavoriteBorder />}
                 </motion.button>
@@ -67,10 +67,10 @@ function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
             </Tooltip.Root>
           </Tooltip.Provider>
         </div>
-        <p className="uuid">
-          uuid: {mojangResponse.uuid}
+        <div className="text-icon uuid-container">
+          <p className="uuid">uuid: {mojangResponse.uuid}</p>
           <CopyIcon textToCopy={mojangResponse.uuid} />
-        </p>
+        </div>
       </div>
       <div className="mojang-img">
         <SkinShowcase skin_showcase_b64={mojangResponse.skin_showcase_b64} />

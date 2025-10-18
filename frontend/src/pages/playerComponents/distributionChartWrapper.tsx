@@ -2,15 +2,25 @@ import DistributionChart from "./distributionChart";
 import LoadingIndicator from "./loadingIndicator";
 import { HistogramData } from "../../client";
 
-function DistributionChartWrapper({ metricData }: {metricData: HistogramData | null | "notFound" | "error" | "loading"}) {
+function DistributionChartWrapper({
+  metricData,
+}: {
+  metricData: HistogramData | null | "notFound" | "error" | "loading";
+}) {
   if (metricData === null) {
     return <p className="distribution-graph center">There's no data to show</p>;
   }
   if (metricData === "notFound") {
-    return <p className="distribution-graph center">Data not found for player</p>
+    return (
+      <p className="distribution-graph center">Data not found for player</p>
+    );
   }
   if (metricData === "error") {
-    return <p className="distribution-graph center">An error occurred while fetching metrics</p>
+    return (
+      <p className="distribution-graph center">
+        An error occurred while fetching metrics
+      </p>
+    );
   }
   if (metricData === "loading") {
     return (
@@ -20,16 +30,13 @@ function DistributionChartWrapper({ metricData }: {metricData: HistogramData | n
     );
   }
   return (
-    <div className="distribution-graph">
-      <DistributionChart
-        buckets={metricData.buckets}
-        counts={metricData.counts}
-        playerValue={metricData.player_value}
-        percentile={metricData.percentile}
-        sampleSize={metricData.sample_size}
-      />
-      
-    </div>
+    <DistributionChart
+      buckets={metricData.buckets}
+      counts={metricData.counts}
+      playerValue={metricData.player_value}
+      percentile={metricData.percentile}
+      sampleSize={metricData.sample_size}
+    />
   );
 }
 
