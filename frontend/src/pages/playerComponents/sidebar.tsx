@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
-import homeIcon from "/src/assets/home-icon.svg";
-import searchIcon from "/src/assets/search-icon.svg";
+import { Link, useLocation } from "react-router-dom";
 import footprintIcon from "/src/assets/footprint_icon.svg";
 import { motion } from "motion/react";
 import { Tooltip } from "radix-ui";
-import { MdFavoriteBorder } from "react-icons/md";
+import { Icon } from "@iconify/react";
+import { MaterialSymbolsSearchFilled } from "../../assets/filledSearchIcon";
 
 function Sidebar() {
+  const location = useLocation();
   return (
     <aside className="sidebar">
       <ul>
@@ -20,7 +20,11 @@ function Sidebar() {
                 tabIndex={-1}
               >
                 <Link to="/">
-                  <img src={homeIcon} alt="Home" className="icon" />
+                  {location.pathname === "/" ? (
+                    <Icon icon="material-symbols:home-rounded" />
+                  ) : (
+                    <Icon icon="material-symbols:home-outline-rounded" />
+                  )}
                 </Link>
               </motion.li>
             </Tooltip.Trigger>
@@ -37,11 +41,11 @@ function Sidebar() {
                 tabIndex={-1}
               >
                 <Link to="/player">
-                  <img
-                    src={searchIcon}
-                    alt="Search for a player"
-                    className="icon"
-                  />
+                  {location.pathname.startsWith("/player") ? (
+                    <MaterialSymbolsSearchFilled />
+                  ) : (
+                    <Icon icon="material-symbols:search-rounded" />
+                  )}
                 </Link>
               </motion.li>
             </Tooltip.Trigger>
@@ -60,11 +64,11 @@ function Sidebar() {
                 tabIndex={-1}
               >
                 <Link to="/track/player">
-                  <img
-                    src={footprintIcon}
-                    alt="Track a player"
-                    className="icon"
-                  />
+                  {location.pathname.startsWith("/track/player") ? (
+                    <Icon icon="material-symbols:footprint" />
+                  ) : (
+                    <Icon icon="material-symbols:footprint-outline" />
+                  )}
                 </Link>
               </motion.li>
             </Tooltip.Trigger>
@@ -84,7 +88,11 @@ function Sidebar() {
                 className="sidebar-icon"
               >
                 <Link to="/favorites">
-                  <MdFavoriteBorder color="#eee"/>
+                  {location.pathname === "/favorites" ? (
+                    <Icon icon="material-symbols:favorite-rounded" />
+                  ) : (
+                    <Icon icon="material-symbols:favorite-outline-rounded" />
+                  )}
                 </Link>
               </motion.li>
             </Tooltip.Trigger>
