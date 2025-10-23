@@ -44,8 +44,8 @@ button:focus-visible {
   width: 3.5vw;
   min-width: 50px;
   backdrop-filter: blur(20px);
-  background-color: #ccc1;
-  border: 1px solid #ccc1;
+  background-color: #ccc2;
+  border: 1px solid #ccc2;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   position: fixed;
   border-radius: 15px;

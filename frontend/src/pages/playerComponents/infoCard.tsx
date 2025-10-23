@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import ArrowOutward from "/src/assets/arrow-outward.svg";
-import * as Popover from "@radix-ui/react-popover";
+import { Popover } from "radix-ui";
 import { ReactNode } from "react";
 
 type InfoCardProps = {

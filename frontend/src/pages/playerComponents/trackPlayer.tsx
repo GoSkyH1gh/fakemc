@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { formatLogTime, formatSinceLastUpdate } from "../../utils/utils";
 import stopIcon from "/src/assets/stop_circle_icon.svg";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import { Tooltip } from "radix-ui";
 import { motion } from "motion/react";
 import TrackTimeline from "./trackTimeline";
 import CodeIcon from "/src/assets/code_icon.svg";

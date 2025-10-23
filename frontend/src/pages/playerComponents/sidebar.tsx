@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import footprintIcon from "/src/assets/footprint_icon.svg";
 import { motion } from "motion/react";
 import { Tooltip } from "radix-ui";
 import { Icon } from "@iconify/react";

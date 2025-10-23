@@ -1,5 +1,5 @@
 import ReactSkinview3d from "react-skinview3d";
-import * as Dialog from "@radix-ui/react-dialog";
+import { Dialog } from "radix-ui";
 import "./dialog.css";
 import { motion } from "motion/react";
 import View3DIcon from "/src/assets/view-3d-icon.svg";
