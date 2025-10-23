@@ -1,4 +1,4 @@
-from fastapi import FastAPI, BackgroundTasks, Request, Depends, Query
+from fastapi import FastAPI, BackgroundTasks, Request, Depends, Query, HTTPException
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -22,9 +22,18 @@ import exceptions
 from player_tracker import subscribe, unsubscribe
 import asyncio
 from sqlalchemy.orm import Session
-from hypixel_manager import get_hypixel_data, HypixelFullData, HypixelGuildMemberFull, get_full_guild_members, HypixelGuildMemberParams, add_hypixel_stats_to_db
+from hypixel_manager import (
+    get_hypixel_data,
+    HypixelFullData,
+    HypixelGuildMemberFull,
+    get_full_guild_members,
+    HypixelGuildMemberParams,
+    add_hypixel_stats_to_db,
+)
 from minecraft_manager import get_minecraft_data
 from typing import List, Annotated
+import time
+from telemetry_manager import add_telemetry_event
 
 
 load_dotenv()
@@ -42,6 +51,29 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allow all headers
 )
+
+
+@app.middleware("http")
+async def telemetry_middleware(request: Request, call_next):
+    start = time.time()
+    status_code = 500
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+        return response
+    except Exception:
+        # Call_next didn't complete — still record telemetry
+        raise
+    finally:
+        latency_ms = int((time.time() - start) * 1000)
+        asyncio.create_task(
+            add_telemetry_event(
+                request.url.path,
+                request.url.path.split("/")[-1],
+                latency_ms,
+                status_code,
+            )
+        )
 
 
 @app.get("/")
@@ -86,14 +118,20 @@ def get_profile(username, session: Session = Depends(get_db)) -> MojangData:
         },
     },
 )
-def get_hypixel(uuid, background_tasks: BackgroundTasks, session: Session = Depends(get_db)) -> HypixelFullData:
+def get_hypixel(
+    uuid, background_tasks: BackgroundTasks, session: Session = Depends(get_db)
+) -> HypixelFullData:
     data = get_hypixel_data(uuid, session)
     background_tasks.add_task(add_hypixel_stats_to_db, data)
     return data
 
 
 @app.get("/v1/hypixel/guilds/{id}")
-def get_guild(id, query_params: Annotated[HypixelGuildMemberParams, Query()], session: Session = Depends(get_db)) -> List[HypixelGuildMemberFull] :
+def get_guild(
+    id,
+    query_params: Annotated[HypixelGuildMemberParams, Query()],
+    session: Session = Depends(get_db),
+) -> List[HypixelGuildMemberFull]:
     return get_full_guild_members(id, session, query_params.limit, query_params.offset)
 
 
@@ -129,14 +167,14 @@ def get_wynncraft_guild_list():
     return guild_list
 
 
-
 # donutsmp endpoint
 @app.get("/v1/players/donutsmp/{username}")
-def get_donut(username, background_tasks: BackgroundTasks, session: Session = Depends(get_db)) -> DonutPlayerStats:
+def get_donut(
+    username, background_tasks: BackgroundTasks, session: Session = Depends(get_db)
+) -> DonutPlayerStats:
     player_data = get_donut_stats(username)
     background_tasks.add_task(add_donut_stats_to_db, player_data, username, session)
     return player_data
-
 
 
 # mcci endpoint
