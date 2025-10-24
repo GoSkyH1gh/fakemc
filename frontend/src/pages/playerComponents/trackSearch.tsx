@@ -68,8 +68,8 @@ function TrackSearch({ handleStartTrack, mojangData, setMojangData }: TrackSearc
               />
               <motion.button
                 whileHover={{
-                  borderColor: "#7d5df1ff",
-                  backgroundColor: "#7355E355",
+                  borderColor: "#f8d563ff",
+                  backgroundColor: "#f4f07777",
                 }}
                 className="motion-button"
                 onClick={handleStartTrack}

@@ -34,7 +34,6 @@ async def add_telemetry_event(
 
 ) -> None:
     with SessionLocal() as session:
-        print(f"Adding telemetry event for {path}")
         session.execute(
             text(
                 """
@@ -52,7 +51,6 @@ async def add_telemetry_event(
             },
         )
         session.commit()
-        print("Telemetry event added.")
 
 if __name__ == "__main__":
     init_telemetry_manager()

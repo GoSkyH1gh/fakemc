@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
 
 type SearchbarProps = {
   handleInputChange: (input: any) => void;
@@ -8,7 +9,11 @@ type SearchbarProps = {
   handleKeyPress: (keyPress: any) => void;
 };
 
-function Searchbar({ handleInputChange, inputValue, handleKeyPress }: SearchbarProps) {
+function Searchbar({
+  handleInputChange,
+  inputValue,
+  handleKeyPress,
+}: SearchbarProps) {
   return (
     <>
       <label className="visually-hidden" htmlFor="search">
@@ -32,8 +37,8 @@ function Searchbar({ handleInputChange, inputValue, handleKeyPress }: SearchbarP
 
 type SearchButtonProps = {
   onClick: () => void;
-  disabled?: boolean; 
-}
+  disabled?: boolean;
+};
 
 function SearchButtonProps({ onClick, disabled }: SearchButtonProps) {
   return (
@@ -45,7 +50,7 @@ function SearchButtonProps({ onClick, disabled }: SearchButtonProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeInOut", delay: 0.2 }}
     >
-      Search
+      <Icon icon="material-symbols:search-rounded"/>
     </motion.button>
   );
 }
