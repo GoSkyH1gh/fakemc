@@ -141,7 +141,6 @@ function HypixelBedwarsPopup({ bedwarsData }: { bedwarsData: BedwarsProfile }) {
           <div className="bedwars-top-row">
             <motion.img
               src={BedwarsHeroIcon}
-              loading="lazy"
               alt="Bedwars"
               variants={iconVariants}
             />

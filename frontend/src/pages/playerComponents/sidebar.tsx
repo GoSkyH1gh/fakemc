@@ -1,108 +1,108 @@
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "motion/react";
-import { Tooltip } from "radix-ui";
 import { Icon } from "@iconify/react";
 import { MaterialSymbolsSearchFilled } from "../../assets/filledSearchIcon";
+import { useState } from "react";
 
 function Sidebar() {
   const location = useLocation();
+  const [isHovered, setIsHovered] = useState(false);
+  const isHomePage = location.pathname === "/";
   return (
-    <aside className="sidebar">
-      <ul>
-        <Tooltip.Provider>
-          <Tooltip.Root delayDuration={100}>
-            <Tooltip.Trigger asChild>
-              <motion.li
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ ease: "easeInOut", duration: 0.2 }}
-                tabIndex={-1}
-              >
-                <Link to="/">
-                  {location.pathname === "/" ? (
-                    <Icon icon="material-symbols:home-rounded" />
-                  ) : (
-                    <Icon icon="material-symbols:home-outline-rounded" />
-                  )}
-                </Link>
-              </motion.li>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Content className="TooltipContent">Home</Tooltip.Content>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-          <Tooltip.Root delayDuration={100}>
-            <Tooltip.Trigger asChild>
-              <motion.li
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ ease: "easeInOut", duration: 0.2 }}
-                tabIndex={-1}
-              >
-                <Link to="/player">
-                  {location.pathname.startsWith("/player") ? (
-                    <MaterialSymbolsSearchFilled />
-                  ) : (
-                    <Icon icon="material-symbols:search-rounded" />
-                  )}
-                </Link>
-              </motion.li>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Content className="TooltipContent">
-                Search for a player
-              </Tooltip.Content>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-          <Tooltip.Root delayDuration={100}>
-            <Tooltip.Trigger asChild>
-              <motion.li
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ ease: "easeInOut", duration: 0.2 }}
-                tabIndex={-1}
-              >
-                <Link to="/track/player">
-                  {location.pathname.startsWith("/track/player") ? (
-                    <Icon icon="material-symbols:footprint" />
-                  ) : (
-                    <Icon icon="material-symbols:footprint-outline" />
-                  )}
-                </Link>
-              </motion.li>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Content className="TooltipContent">
-                Track a player
-              </Tooltip.Content>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-          <Tooltip.Root delayDuration={100}>
-            <Tooltip.Trigger asChild>
-              <motion.li
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ ease: "easeInOut", duration: 0.2 }}
-                tabIndex={-1}
-                className="sidebar-icon"
-              >
-                <Link to="/favorites">
-                  {location.pathname === "/favorites" ? (
-                    <Icon icon="material-symbols:favorite-rounded" />
-                  ) : (
-                    <Icon icon="material-symbols:favorite-outline-rounded" />
-                  )}
-                </Link>
-              </motion.li>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Content className="TooltipContent">
-                Favorites
-              </Tooltip.Content>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-        </Tooltip.Provider>
-      </ul>
+    <aside
+      className={`sidebar ${isHovered ? "sidebar-hover" : ""}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link to="/" className="sidebar-row" draggable={false}>
+        <div className="sidebar-icon">
+          {location.pathname === "/" ? (
+            <Icon
+              icon="material-symbols:home-rounded"
+              color={isHomePage ? "#101e10" : ""}
+            />
+          ) : (
+            <Icon
+              icon="material-symbols:home-outline-rounded"
+              color={isHomePage ? "#101e10" : ""}
+            />
+          )}
+        </div>
+        {isHovered && (
+          <span
+            className={`sidebar-label ${
+              isHomePage ? "sidebar-label-homepage" : ""
+            }`}
+          >
+            Home
+          </span>
+        )}
+      </Link>
+
+      <Link to="/player" className="sidebar-row" draggable={false}>
+        <div className="sidebar-icon">
+          {location.pathname.startsWith("/player") ? (
+            <MaterialSymbolsSearchFilled />
+          ) : (
+            <Icon
+              icon="material-symbols:search-rounded"
+              color={isHomePage ? "#101e10" : ""}
+            />
+          )}
+        </div>
+        {isHovered && (
+          <span
+            className={`sidebar-label ${
+              isHomePage ? "sidebar-label-homepage" : ""
+            }`}
+          >
+            Search
+          </span>
+        )}
+      </Link>
+
+      <Link to="/track/player" className="sidebar-row" draggable={false}>
+        <div className="sidebar-icon">
+          {location.pathname.startsWith("/track/player") ? (
+            <Icon icon="material-symbols:footprint" />
+          ) : (
+            <Icon
+              icon="material-symbols:footprint-outline"
+              color={isHomePage ? "#101e10" : ""}
+            />
+          )}
+        </div>
+        {isHovered && (
+          <span
+            className={`sidebar-label ${
+              isHomePage ? "sidebar-label-homepage" : ""
+            }`}
+          >
+            Track
+          </span>
+        )}
+      </Link>
+
+      <Link to="/favorites" className="sidebar-row" draggable={false}>
+        <div className="sidebar-icon">
+          {location.pathname === "/favorites" ? (
+            <Icon icon="material-symbols:favorite-rounded" />
+          ) : (
+            <Icon
+              icon="material-symbols:favorite-outline-rounded"
+              color={isHomePage ? "#101e10" : ""}
+            />
+          )}
+        </div>
+        {isHovered && (
+          <span
+            className={`sidebar-label ${
+              isHomePage ? "sidebar-label-homepage" : ""
+            }`}
+          >
+            Favorites
+          </span>
+        )}
+      </Link>
     </aside>
   );
 }
