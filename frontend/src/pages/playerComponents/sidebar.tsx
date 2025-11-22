@@ -1,19 +1,38 @@
 import { Link, useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { MaterialSymbolsSearchFilled } from "../../assets/filledSearchIcon";
-import { useState } from "react";
+import { useState, FocusEvent } from "react";
 
 function Sidebar() {
   const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const isHomePage = location.pathname === "/";
+
+  const isExpanded = isHovered || isFocused;
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = (e: FocusEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsFocused(false);
+    }
+  };
+
   return (
     <aside
-      className={`sidebar ${isHovered ? "sidebar-hover" : ""}`}
+      className={`sidebar ${isExpanded ? "sidebar-hover" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
-      <Link to="/" className="sidebar-row" draggable={false}>
+      <Link
+        to="/"
+        className="sidebar-row"
+        draggable={false}
+        aria-label="Home"
+        onClick={(e) => e.currentTarget.blur()}
+      >
         <div className="sidebar-icon">
           {location.pathname === "/" ? (
             <Icon
@@ -27,7 +46,7 @@ function Sidebar() {
             />
           )}
         </div>
-        {isHovered && (
+        {isExpanded && (
           <span
             className={`sidebar-label ${
               isHomePage ? "sidebar-label-homepage" : ""
@@ -38,7 +57,13 @@ function Sidebar() {
         )}
       </Link>
 
-      <Link to="/player" className="sidebar-row" draggable={false}>
+      <Link
+        to="/player"
+        className="sidebar-row"
+        draggable={false}
+        aria-label="Search"
+        onClick={(e) => e.currentTarget.blur()}
+      >
         <div className="sidebar-icon">
           {location.pathname.startsWith("/player") ? (
             <MaterialSymbolsSearchFilled />
@@ -49,7 +74,7 @@ function Sidebar() {
             />
           )}
         </div>
-        {isHovered && (
+        {isExpanded && (
           <span
             className={`sidebar-label ${
               isHomePage ? "sidebar-label-homepage" : ""
@@ -60,7 +85,13 @@ function Sidebar() {
         )}
       </Link>
 
-      <Link to="/track/player" className="sidebar-row" draggable={false}>
+      <Link
+        to="/track/player"
+        className="sidebar-row"
+        draggable={false}
+        aria-label="Track Player"
+        onClick={(e) => e.currentTarget.blur()}
+      >
         <div className="sidebar-icon">
           {location.pathname.startsWith("/track/player") ? (
             <Icon icon="material-symbols:footprint" />
@@ -71,7 +102,7 @@ function Sidebar() {
             />
           )}
         </div>
-        {isHovered && (
+        {isExpanded && (
           <span
             className={`sidebar-label ${
               isHomePage ? "sidebar-label-homepage" : ""
@@ -82,7 +113,13 @@ function Sidebar() {
         )}
       </Link>
 
-      <Link to="/favorites" className="sidebar-row" draggable={false}>
+      <Link
+        to="/favorites"
+        className="sidebar-row"
+        draggable={false}
+        aria-label="Favorites"
+        onClick={(e) => e.currentTarget.blur()}
+      >
         <div className="sidebar-icon">
           {location.pathname === "/favorites" ? (
             <Icon icon="material-symbols:favorite-rounded" />
@@ -93,7 +130,7 @@ function Sidebar() {
             />
           )}
         </div>
-        {isHovered && (
+        {isExpanded && (
           <span
             className={`sidebar-label ${
               isHomePage ? "sidebar-label-homepage" : ""
