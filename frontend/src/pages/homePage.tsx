@@ -140,9 +140,10 @@ export function HomePage() {
       <footer className="hero-footer">
         Not associated with Mojang, Hypixel, Wynncraft, Donut SMP, nor MCC
         Island. <br />
-        &lt;3 to <a href="https://vzge.me">VGZE</a>, which renders some player
+        &lt;3 to <a href="https://vzge.me" target="_blank">VGZE</a>, which renders some player
         heads <br />
-        Check it out on <a href="https://github.com/GoSkyH1gh/fakemc">GitHub</a>
+        Check it out on <a href="https://github.com/GoSkyH1gh/fakemc" target="_blank">GitHub</a> <br />
+        See availability at <a href="https://stats.uptimerobot.com/4SlpKHo4uS" target="_blank">FakeMC Status</a>
       </footer>
     </>
   );

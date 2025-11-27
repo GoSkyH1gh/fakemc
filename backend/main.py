@@ -55,6 +55,9 @@ app.add_middleware(
 
 @app.middleware("http")
 async def telemetry_middleware(request: Request, call_next):
+    if request.url.path == "/healthz":
+        # Just process the request and return, DON'T touch the DB
+        return await call_next(request)
     start = time.time()
     status_code = 500
     try:
