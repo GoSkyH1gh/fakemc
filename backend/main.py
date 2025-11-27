@@ -82,6 +82,11 @@ def root():
     return response
 
 
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
+
+
 @app.get(
     "/v1/players/mojang/{username}",
     responses={
@@ -138,6 +143,7 @@ def get_guild(
 @app.get("/v1/players/status/{uuid}")
 async def get_status(uuid):
     return await get_online_status(uuid, hypixel_api_key)
+
 
 # wynncraft endpoints
 
