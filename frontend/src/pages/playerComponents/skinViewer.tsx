@@ -3,6 +3,7 @@ import { Dialog } from "radix-ui";
 import "./dialog.css";
 import { motion } from "motion/react";
 import View3DIcon from "/src/assets/view-3d-icon.svg";
+import { Icon } from "@iconify/react";
 
 type SkinViewProps = {
   skinUrl: string;
@@ -32,7 +33,16 @@ function SkinView({ skinUrl, capeUrl, username }: SkinViewProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent">
-          <Dialog.Title>{username}'s skin</Dialog.Title>
+          <div className="skin-viewer-header">
+            <Dialog.Title className="gallery-title-text">
+              {username}'s skin
+            </Dialog.Title>
+            <Dialog.Close asChild>
+              <button className="dialog-close">
+                <Icon icon={"material-symbols:close-rounded"} />
+              </button>
+            </Dialog.Close>
+          </div>
           <Dialog.Description />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -47,7 +57,6 @@ function SkinView({ skinUrl, capeUrl, username }: SkinViewProps) {
               width="300"
             />
           </motion.div>
-          <Dialog.Close>Close</Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

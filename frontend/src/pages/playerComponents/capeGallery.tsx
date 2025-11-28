@@ -24,6 +24,7 @@ function CapeGallery({ capeData, capeStatus }: CapeGalleryProps) {
   if (capeStatus === "loading") {
     <p>Loading capes...</p>;
   }
+  // ^^^ these should never happen because the button is only shown when this is loaded and there is content
 
   return (
     <Dialog.Root>
@@ -46,19 +47,25 @@ function CapeGallery({ capeData, capeStatus }: CapeGalleryProps) {
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="DialogContent cape-gallery">
-          <Dialog.Title className="gallery-title">
-            <span className="gallery-title-text">Cape Gallery</span>
-            <span className="credit-pill">
-              Data from {" "}
-              <a href="https://capes.me/" target="_blank">
-                capes.me
-              </a>
-            </span>
-          </Dialog.Title>
+          <div className="gallery-title-container">
+            <Dialog.Title className="gallery-title">
+              <span className="gallery-title-text">Cape Gallery</span>
+              <span className="credit-pill">
+                Data from{" "}
+                <a href="https://capes.me/" target="_blank">
+                  capes.me
+                </a>
+              </span>
+            </Dialog.Title>
+            <Dialog.Close asChild>
+              <button className="dialog-close">
+                <Icon icon={"material-symbols:close-rounded"} />
+              </button>
+            </Dialog.Close>
+          </div>
           <Dialog.Description />
           <p></p>
           <div className="cape-gallery-container">{capeElements}</div>
-          <Dialog.Close>Close</Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
@@ -68,16 +75,18 @@ function CapeGallery({ capeData, capeStatus }: CapeGalleryProps) {
 function CapeElement({ cape }: { cape: UserCapeData }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <div className="cape-gallery-element">
+    <div
+      className={`cape-gallery-element ${
+        isHovered ? "cape-gallery-element-hover" : ""
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      key={cape.name}
+    >
       <img
-        src={`data:image/png;base64,${
-          isHovered ? cape.images.back_b64 : cape.images.front_b64
-        }`}
+        src={`data:image/png;base64,${cape.images.front_b64}`}
         alt={cape.name}
         className="cape-gallery-cape"
-        key={cape.name}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       ></img>
       <p className="cape-label">
         {cape.name}

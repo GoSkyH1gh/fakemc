@@ -91,15 +91,19 @@ function MojangDataDisplay({
           has_cape={mojangResponse.has_cape}
           cape_name={mojangResponse.cape_name}
         />
-        <motion.div className="skin-options-container" layout>
+        <motion.div className="skin-options-container">
           <SkinView
             skinUrl={mojangResponse.skin_url}
             capeUrl={mojangResponse.cape_url}
             username={mojangResponse.username}
             key={"skin-view"}
           />
-          {(capeStatus === "loaded" && capeData !== "not found" )&& (
-            <CapeGallery capeData={capeData} capeStatus={capeStatus} key={"cape-gallery"}/>
+          {capeStatus === "loaded" && capeData !== "not found" && (
+            <CapeGallery
+              capeData={capeData}
+              capeStatus={capeStatus}
+              key={"cape-gallery"}
+            />
           )}
         </motion.div>
       </div>

@@ -13,6 +13,7 @@ import {
   BedwarsProfile,
 } from "../../client";
 import DistributionChartWrapper from "./distributionChartWrapper";
+import { Icon } from "@iconify/react";
 
 type HypixelDataProps = {
   hypixelData: HypixelFullData;
@@ -156,12 +157,20 @@ function HypixelBedwarsPopup({ bedwarsData }: { bedwarsData: BedwarsProfile }) {
       <Dialog.Portal>
         <Dialog.Overlay className="DialogOverlay" />
         <Dialog.Content className="BedwarsOverlay">
-          <Dialog.Title>Bedwars Stats</Dialog.Title>
+          <div className="skin-viewer-header">
+            <Dialog.Title className="gallery-title-text">Bedwars Stats</Dialog.Title>
+            <Dialog.Close asChild>
+              <button className="dialog-close">
+                <Icon icon={"material-symbols:close-rounded"} />
+              </button>
+            </Dialog.Close>
+          </div>
           <ul className="info-card-list">
             <InfoCard label="Level" value={bedwarsData.level} />
             <InfoCard label="Tokens" value={formatValue(bedwarsData.tokens)} />
             <InfoCard label="Winrate" value={winrate} />
           </ul>
+
           <table className="bedwars-table">
             <thead>
               <tr>
@@ -218,11 +227,6 @@ function HypixelBedwarsPopup({ bedwarsData }: { bedwarsData: BedwarsProfile }) {
               ))}
             </tbody>
           </table>
-          <Dialog.Close asChild>
-            <div className="dialog-close">
-              <button>Close</button>
-            </div>
-          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -636,12 +636,6 @@ button {
   font-weight: 550;
 }
 
-.dialog-close {
-  display: flex;
-  justify-content: end;
-  margin: 10px 0;
-}
-
 .bedwars-showcase {
   padding: 20px;
   border: 1px solid var(--color-surfact-layer-2);
@@ -842,6 +836,15 @@ button {
   display: grid;
   grid-template-rows: 8rem 1fr;
   justify-content: center;
+  border: 1px solid var(--color-surfact-layer-2);
+  padding: 10px;
+  border-radius: 8px;
+  background-color: var(--color-surface-layer-1);
+}
+
+.cape-gallery-element-hover > img {
+  height: 9rem;
+  transform: translateY(-4px);
 }
 
 .cape-gallery-cape {
@@ -850,15 +853,16 @@ button {
   height: 8rem;
   align-self: center;
   justify-self: center;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 5;
 }
 
 .cape-gallery-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  gap: 25px;
+  gap: 15px;
   padding: 15px 30px;
-  
 }
 
 .skin-button {
@@ -868,6 +872,7 @@ button {
 .cape-label {
   text-align: center;
   font-family: "Google Sans Code", monospace;
+  margin: 10px 0 0 0;
 }
 
 .fill-button {
@@ -896,6 +901,7 @@ button {
 .gallery-title-text {
   font-family: "Epunda Slab", serif;
   font-size: 3rem;
+  margin: 0;
 }
 
 .credit-pill {
@@ -907,4 +913,35 @@ button {
   padding: 0.4rem;
   font-size: 0.8rem;
   font-family: "Google Sans Code", monospace;
+}
+
+.cape-gallery::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(
+    from var(--color-surfact-layer-2) h calc(s + 10) calc(l + 30)
+  );
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(
+    from var(--color-surfact-layer-2) h calc(s + 10) calc(l + 120)
+  );
+}
+
+.gallery-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 30px;
+}
+
+.skin-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
