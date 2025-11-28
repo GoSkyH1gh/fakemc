@@ -34,6 +34,7 @@ from minecraft_manager import get_minecraft_data
 from typing import List, Annotated
 import time
 from telemetry_manager import add_telemetry_event
+from capes import get_capes_for_user, UserCapeData
 
 
 load_dotenv()
@@ -109,6 +110,9 @@ def health_check():
 def get_profile(username, session: Session = Depends(get_db)) -> MojangData:
     return get_minecraft_data(username, session)
 
+@app.get("/v1/players/capes/{uuid}")
+def get_capes(uuid: str) -> List[UserCapeData]:
+    return get_capes_for_user(uuid)
 
 @app.get(
     "/v1/players/hypixel/{uuid}",
