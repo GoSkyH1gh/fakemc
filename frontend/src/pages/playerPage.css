@@ -22,6 +22,10 @@
     padding: 1rem;
     margin: 0 0 2vh 0;
   }
+
+  .bedwars-table > tr > td {
+    min-width: 3rem;
+  }
 }
 
 :root {
@@ -619,12 +623,6 @@ button {
   text-align: center;
 }
 
-@media screen and (width < 750px) {
-  .bedwars-table > tr > td {
-    min-width: 3rem;
-  }
-}
-
 .bedwars-table > tbody > tr:hover {
   transition: 0.1s;
   background-color: #aaa3;
@@ -822,4 +820,91 @@ button {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.skin-options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: space-between;
+}
+.skin-options-container > button {
+  height: 100%;
+}
+
+.cape-gallery {
+  min-width: min(50rem, 80vw);
+  overflow-y: auto;
+}
+
+.cape-gallery-element {
+  width: 6rem;
+  display: grid;
+  grid-template-rows: 8rem 1fr;
+  justify-content: center;
+}
+
+.cape-gallery-cape {
+  image-rendering: pixelated;
+  border-radius: 4px;
+  height: 8rem;
+  align-self: center;
+  justify-self: center;
+}
+
+.cape-gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 25px;
+  padding: 15px 30px;
+  
+}
+
+.skin-button {
+  border: 1px solid var(--color-surfact-layer-2);
+}
+
+.cape-label {
+  text-align: center;
+  font-family: "Google Sans Code", monospace;
+}
+
+.fill-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fill-button > svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+@media screen and (width < 500px) {
+  .skin-options-container {
+    flex-direction: row;
+  }
+}
+
+.gallery-title {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.gallery-title-text {
+  font-family: "Epunda Slab", serif;
+  font-size: 3rem;
+}
+
+.credit-pill {
+  display: block;
+  margin-top: 0.6rem;
+  border-radius: 30px;
+  margin-left: 1rem;
+  background: linear-gradient(to right, #be77f4, #a130f6);
+  padding: 0.4rem;
+  font-size: 0.8rem;
+  font-family: "Google Sans Code", monospace;
 }

@@ -24,7 +24,7 @@ function SkinView({ skinUrl, capeUrl, username }: SkinViewProps) {
             ease: "easeOut",
           }}
           data-tooltip="View in 3D"
-          className="tooltip"
+          className="tooltip skin-button fill-button"
         >
           <img src={View3DIcon} alt="View skin in 3d viewer" />
         </motion.button>

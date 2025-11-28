@@ -3,7 +3,7 @@ import CapeShowcase from "./capeShowcase.js";
 import CopyIcon from "./copyIcon.js";
 import { motion } from "motion/react";
 import SkinView from "./skinViewer.js";
-import { MojangData } from "../../client/types.gen.js";
+import { MojangData, UserCapeData } from "../../client/types.gen.js";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import {
   addFavorite,
@@ -12,8 +12,19 @@ import {
 } from "../../utils/favorites.js";
 import { Tooltip } from "radix-ui";
 import { useEffect, useState } from "react";
+import CapeGallery from "./capeGallery.js";
 
-function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
+type MojangProps = {
+  mojangResponse: MojangData;
+  capeData: UserCapeData[] | null | "not found" | "error";
+  capeStatus: null | "loading" | "loaded";
+};
+
+function MojangDataDisplay({
+  mojangResponse,
+  capeData,
+  capeStatus,
+}: MojangProps) {
   const [isFavorite, setIsFavorite] = useState(false);
   useEffect(() => {
     if (checkFavorite(mojangResponse.uuid)) {
@@ -80,11 +91,17 @@ function MojangDataDisplay({ mojangResponse }: { mojangResponse: MojangData }) {
           has_cape={mojangResponse.has_cape}
           cape_name={mojangResponse.cape_name}
         />
-        <SkinView
-          skinUrl={mojangResponse.skin_url}
-          capeUrl={mojangResponse.cape_url}
-          username={mojangResponse.username}
-        />
+        <motion.div className="skin-options-container" layout>
+          <SkinView
+            skinUrl={mojangResponse.skin_url}
+            capeUrl={mojangResponse.cape_url}
+            username={mojangResponse.username}
+            key={"skin-view"}
+          />
+          {(capeStatus === "loaded" && capeData !== "not found" )&& (
+            <CapeGallery capeData={capeData} capeStatus={capeStatus} key={"cape-gallery"}/>
+          )}
+        </motion.div>
       </div>
     </motion.div>
   );

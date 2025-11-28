@@ -95,8 +95,6 @@ def get_generic_cape_data() -> list[GenericCapeData]:
 def get_capes_for_user(uuid: str):
     """Fetches capes for a specific user by UUID."""
 
-    generic_cape_data = get_generic_cape_data()
-
     user_cape_data_raw = redis.get(f"user_capes_me_data_{uuid}")
     if user_cape_data_raw:
         capes = []
@@ -128,6 +126,7 @@ def get_capes_for_user(uuid: str):
 
     user_cape_data = response_data.get("capes", [])
 
+    generic_cape_data = get_generic_cape_data()
     cape_dictionary = get_cape_dictionary(
         generic_cape_data
     )  # this is to easily map cape type from capes.me to url

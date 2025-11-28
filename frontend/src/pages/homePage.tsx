@@ -16,6 +16,7 @@ import {
   sampleMojangResponse,
   sampleWynncraftGuildResponse,
   sampleWynncraftResponse,
+  sampleCapeResponse,
 } from "./sampleData";
 
 function HeroSearchbar() {
@@ -25,7 +26,7 @@ function HeroSearchbar() {
     <div className="hero-searchbar">
       <MdSearch />
       <input
-        placeholder="jeb_"
+        placeholder="Technoblade"
         value={searchbarValue}
         onChange={(e) => {
           setSerchbarValue(e.target.value);
@@ -85,7 +86,7 @@ export function HomePage() {
           className="arrow-button"
           initial={{ scale: 1, backgroundColor: "#F4F077" }}
           whileHover={{ scale: 1.3, backgroundColor: "#f8d563ff" }}
-          whileTap={{scale: 0.9}}
+          whileTap={{ scale: 0.9 }}
           onClick={() => {
             if (targetScroll.current != null) {
               targetScroll.current.scrollIntoView({ behavior: "smooth" });
@@ -107,7 +108,11 @@ export function HomePage() {
             <div className="mojang-data-text">
               <h3 className="vertical-text">Get the core info you need</h3>
             </div>
-            <MojangDataDisplay mojangResponse={sampleMojangResponse} />
+            <MojangDataDisplay
+              mojangResponse={sampleMojangResponse}
+              capeData={sampleCapeResponse}
+              capeStatus={"loaded"}
+            />
           </div>
           <div className="info-card-showcase">
             <QuickInfo
@@ -140,10 +145,20 @@ export function HomePage() {
       <footer className="hero-footer">
         Not associated with Mojang, Hypixel, Wynncraft, Donut SMP, nor MCC
         Island. <br />
-        &lt;3 to <a href="https://vzge.me" target="_blank">VGZE</a>, which renders some player
-        heads <br />
-        Check it out on <a href="https://github.com/GoSkyH1gh/fakemc" target="_blank">GitHub</a> <br />
-        See availability at <a href="https://stats.uptimerobot.com/4SlpKHo4uS" target="_blank">FakeMC Status</a>
+        &lt;3 to{" "}
+        <a href="https://vzge.me" target="_blank">
+          VGZE
+        </a>
+        , which renders some player heads <br />
+        Check it out on{" "}
+        <a href="https://github.com/GoSkyH1gh/fakemc" target="_blank">
+          GitHub
+        </a>{" "}
+        <br />
+        See availability at{" "}
+        <a href="https://stats.uptimerobot.com/4SlpKHo4uS" target="_blank">
+          FakeMC Status
+        </a>
       </footer>
     </>
   );

@@ -14,6 +14,7 @@ import {
   McciPlayer,
   HypixelGuildMemberFull,
   MojangData,
+  UserCapeData,
 } from "../client";
 import { motion } from "motion/react";
 import { LuSearchX } from "react-icons/lu";
@@ -65,6 +66,13 @@ export function PlayerPage() {
     null
   );
 
+  const [capesData, setCapesData] = useState<
+    UserCapeData[] | null | "not found" | "error"
+  >(null);
+  const [capesStatus, setCapesStatus] = useState<null | "loading" | "loaded">(
+    null
+  );
+
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState<Error | null>(null);
 
@@ -87,11 +95,13 @@ export function PlayerPage() {
 
     setDonutData(null);
     setMcciData(null);
+    setCapesData(null);
 
     setWynncraftStatus("loading");
     setHypixelStatus("loading");
     setDonutStatus("loading");
     setMcciStatus("loading");
+    setCapesStatus("loading");
 
     setLoadedTabs([]);
 
@@ -106,6 +116,7 @@ export function PlayerPage() {
     const wynncraftGuildUrl = `${baseUrl}/v1/wynncraft/guilds/`;
     const donutUrl = `${baseUrl}/v1/players/donutsmp/`;
     const mcciUrl = `${baseUrl}/v1/players/mccisland/`;
+    const capesUrl = `${baseUrl}/v1/players/capes/`;
 
     try {
       let mojangResponseRaw = await fetch(mojangUrl + search_term);
@@ -214,6 +225,22 @@ export function PlayerPage() {
         setMcciStatus("loaded");
         addLoadedTab("mcci");
       }
+
+      let capesResponseRaw = await fetch(capesUrl + mojangResponse.uuid);
+      if (!capesResponseRaw.ok) {
+        if (capesResponseRaw.status === 404) {
+          setCapesData("not found");
+        } else {
+          setCapesData("error");
+          throw new Error("error for capes.me data");
+        }
+        setCapesStatus("loaded");
+      } else {
+        const capesResponse = await capesResponseRaw.json();
+        console.log("got capes response: ", capesResponse);
+        setCapesData(capesResponse);
+        setCapesStatus("loaded");
+      }
     } catch (error: any) {
       console.error("An error occurred:", error);
       setError(error);
@@ -292,7 +319,7 @@ export function PlayerPage() {
 
       {status === "loadedMojang" && mojangData && (
         <div>
-          <MojangDataDisplay mojangResponse={mojangData} />
+          <MojangDataDisplay mojangResponse={mojangData} capeData={capesData} capeStatus={capesStatus}/>
         </div>
       )}
 
