@@ -16,7 +16,6 @@ import {
   MojangData,
   UserCapeData,
 } from "../client";
-import { motion } from "motion/react";
 import { LuSearchX } from "react-icons/lu";
 
 export function PlayerPage() {
@@ -259,7 +258,7 @@ export function PlayerPage() {
       import.meta.env.VITE_API_URL ?? "https://fastapi-fakemc.onrender.com"
     }/v1/hypixel/guilds/`;
     if (hypixelResponse?.guild) {
-      if (hypixelGuildData === "no guild") {
+      if (hypixelGuildData === "no guild" && offset !== 0) {
         return null;
       }
       let hypixelGuildResponseRaw = await fetch(
@@ -290,14 +289,6 @@ export function PlayerPage() {
       {status === "loading" && (
         <div>
           <LoadingIndicator />
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 4, duration: 1 }}
-          >
-            This seems to be taking a while. This usually only happens once when
-            the server starts and can take up to a minute
-          </motion.p>
         </div>
       )}
       {status === "idle" && <p>Enter a player to search</p>}

@@ -1,6 +1,5 @@
 import { Dialog } from "radix-ui";
 import { UserCapeData } from "../../client";
-import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { motion } from "motion/react";
 
@@ -73,27 +72,19 @@ function CapeGallery({ capeData, capeStatus }: CapeGalleryProps) {
 }
 
 function CapeElement({ cape }: { cape: UserCapeData }) {
-  const [isHovered, setIsHovered] = useState(false);
   return (
-    <div
-      className={`cape-gallery-element ${
-        isHovered ? "cape-gallery-element-hover" : ""
-      }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      key={cape.name}
-    >
+    <div className="cape-gallery-element" key={cape.name}>
       <img
         src={`data:image/png;base64,${cape.images.front_b64}`}
         alt={cape.name}
-        className="cape-gallery-cape"
+        className={`cape-gallery-cape ${cape.removed ? "removed-cape" : ""}`}
       ></img>
       <p className="cape-label">
         {cape.name}
         {cape.removed ? (
           <>
             <br />
-            [REMOVED]
+            (Removed)
           </>
         ) : (
           ""

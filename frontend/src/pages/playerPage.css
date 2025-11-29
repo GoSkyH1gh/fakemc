@@ -842,9 +842,10 @@ button {
   background-color: var(--color-surface-layer-1);
 }
 
-.cape-gallery-element-hover > img {
+.cape-gallery-element:hover > img {
   height: 9rem;
   transform: translateY(-4px);
+  filter: grayscale(0);
 }
 
 .cape-gallery-cape {
@@ -944,4 +945,8 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.removed-cape {
+  filter: grayscale(90%);
 }

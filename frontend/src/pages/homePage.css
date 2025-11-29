@@ -183,7 +183,7 @@ footer {
   border: 1px solid #dddf;
   background: linear-gradient(to right, #f4eae3, #e8d5fd);
   background-color: unset;
-  min-width: 550px;
+  min-width: min(550px, 70vw);
   z-index: 10;
   padding: 20px 40px;
   border-radius: 10px;
