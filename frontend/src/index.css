@@ -15,6 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 */
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -237,4 +238,13 @@ h1 {
 
 .TooltipContent[data-state="delayed-open"] {
   animation-name: slideUpAndFade;
+}
+
+
+h2 {
+  font-weight: 600;
+}
+
+h3 {
+  font-weight: 550;
 }

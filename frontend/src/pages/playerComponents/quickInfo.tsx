@@ -36,7 +36,7 @@ function QuickInfo({ hypixelResponse, playerStatus }: QuickInfoProps) {
         initial="hidden"
         animate="show"
       >
-        <p className="username">There's nothing here</p>
+        <h2 className="compact-heading">There's nothing here</h2>
         <p>We couldn't find any info here.</p>
       </motion.div>
     );
@@ -55,7 +55,7 @@ function QuickInfo({ hypixelResponse, playerStatus }: QuickInfoProps) {
       initial="hidden"
       animate="show"
     >
-      <p className="username">Quick Info</p>
+      <h2 className="compact-heading">Quick Info</h2>
       <motion.ul
         className="info-card-list"
         variants={{

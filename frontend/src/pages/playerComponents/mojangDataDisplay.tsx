@@ -42,7 +42,7 @@ function MojangDataDisplay({
     >
       <div>
         <div className="text-icon">
-          <p className="username">{mojangResponse.username}</p>
+          <h2 className="username compact-heading">{mojangResponse.username}</h2>
 
           <Tooltip.Provider>
             <Tooltip.Root delayDuration={100}>

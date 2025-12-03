@@ -70,7 +70,10 @@ body {
   background: linear-gradient(135deg, #394488 0%, #41284e 100%);
   background: linear-gradient(135deg, #5c406d 0%, #5c3f83 100%);
 
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /*font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+  font-family: "Rubik", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
   color: var(--text-primary);
 }
 
@@ -101,7 +104,7 @@ button {
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
-  font-weight: 500;
+  font-weight: 400;
   font-family: inherit;
   background-color: var(--color-card);
   cursor: pointer;
@@ -175,7 +178,6 @@ button:hover {
 .username {
   font-size: 1.4rem;
   margin: 0;
-  font-family: "Google Sans Code", monospace;
 }
 
 .uuid {
@@ -949,4 +951,8 @@ button {
 
 .removed-cape {
   filter: grayscale(90%);
+}
+
+.compact-heading {
+  margin: 0;
 }
