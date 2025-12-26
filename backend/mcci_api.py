@@ -28,7 +28,7 @@ class MCCIStats(BaseModel):
 
 class MCCIPlayer(BaseModel):
     uuid: str
-    username: str
+    username: Optional[str]
     rank: Optional[str]
     online: bool
     first_join: Optional[str]
@@ -194,6 +194,7 @@ def get_mcci_data(uuid):
 
 
 if __name__ == "__main__":
-    data = get_mcci_data("03fa539c41d34b86b0f47a0d695757e7")
+    # data = get_mcci_data("03fa539c41d34b86b0f47a0d695757e7")
     # good testing uuid 03fa539c41d34b86b0f47a0d695757e7
+    data = get_mcci_data("069a79f444e94726a5befca90e38aaf5")
     print(data)

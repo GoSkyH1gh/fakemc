@@ -54,8 +54,9 @@ export function HomePage() {
       />
       <img src={YellowGradient} className="yellow-gradient" alt="" />
       <div className="hero-section">
+        
         <div className="hero-headings">
-          <h1 className="hero-h1">Search for any Minecraft player</h1>
+          <h1 className="wordmark hero-h1">Aspexis</h1>
           <h2 className="hero-h2">All the info you need, in one place</h2>
         </div>
         <HeroSearchbar />
@@ -151,13 +152,13 @@ export function HomePage() {
         </a>
         , which renders some player heads <br />
         Check it out on{" "}
-        <a href="https://github.com/GoSkyH1gh/fakemc" target="_blank">
+        <a href="https://github.com/GoSkyH1gh/aspexis" target="_blank">
           GitHub
         </a>{" "}
         <br />
         See availability at{" "}
         <a href="https://stats.uptimerobot.com/4SlpKHo4uS" target="_blank">
-          FakeMC Status
+          Aspexis Status
         </a>
       </footer>
     </>

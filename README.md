@@ -1,8 +1,8 @@
-# FakeMC
+# Aspexis
 
 A fullstack Minecraft player lookup tool build with React and FastAPI
 
-**Check it out live at: [fake-mc.netlify.app](https://fake-mc.netlify.app/)**
+**Check it out live at: [aspexis.netlify.app](https://aspexis.netlify.app/)**
 
 ## Features
 

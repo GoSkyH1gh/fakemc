@@ -82,7 +82,7 @@ async def telemetry_middleware(request: Request, call_next):
 
 @app.get("/")
 def root():
-    response = {"message": "hi, this is the fakemc api"}
+    response = {"message": "hi, this is the Aspexis API"}
     return response
 
 

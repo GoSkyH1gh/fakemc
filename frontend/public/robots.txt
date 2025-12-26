@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Allow: /assets/
+Allow: /static/
+
+Sitemap: https://aspexis.netlify.com/sitemap.xml
