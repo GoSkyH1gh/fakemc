@@ -16,6 +16,37 @@
 }
 */
 
+/* 1. Rubik (Primary - Body, Links, Hero) */
+@font-face {
+  font-family: 'Rubik';
+  /* Ensure the file names match exactly what's in your /public/fonts/ folder */
+  src: url('/fonts/rubik-variable.woff2') format('woff2-variations'),
+       url('/fonts/rubik-variable.woff2') format('woff2'); 
+  font-weight: 300 900; /* Covers your 300, 400, 500, 550, 600, 650, and 900 */
+  font-style: normal;
+  font-display: swap; /* Fixes the 'Red' performance warning */
+}
+
+/* 2. Epunda Slab (Display - Hero Headers) */
+@font-face {
+  font-family: 'Epunda Slab';
+  src: url('/fonts/epunda-slab-variable.woff2') format('woff2-variations'),
+       url('/fonts/epunda-slab-variable.woff2') format('woff2');
+  font-weight: 300 900; /* Covers your 300, 500, 600, and 900 */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3. Google Sans Code (Technical - UUID, Stats, Tech Data) */
+@font-face {
+  font-family: 'Google Sans Code';
+  src: url('/fonts/GoogleSansCode-Variable.woff2') format('woff2-variations'),
+       url('/fonts/GoogleSansCode-Variable.woff2') format('woff2');
+  font-weight: 300 800; /* Covers your 300, 400, and 800 */
+  font-style: normal;
+  font-display: swap;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
