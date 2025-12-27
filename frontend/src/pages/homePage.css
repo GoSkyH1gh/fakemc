@@ -133,7 +133,7 @@ footer {
 .hero-h1,
 .hero-h2 {
   margin: 0;
-  font-family: "Epunda Slab", serif;
+  font-family: "Epunda Slab", Georgia, serif;
   letter-spacing: 0.05rem;
   z-index: 5;
 }

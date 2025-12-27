@@ -71,7 +71,7 @@ body {
   background: linear-gradient(135deg, #5c406d 0%, #5c3f83 100%);
 
   /*font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-  font-family: "Rubik", sans-serif;
+  font-family: "Rubik", system-ui, -apple-system, sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   color: var(--text-primary);

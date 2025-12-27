@@ -40,8 +40,8 @@
 /* 3. Google Sans Code (Technical - UUID, Stats, Tech Data) */
 @font-face {
   font-family: 'Google Sans Code';
-  src: url('/fonts/GoogleSansCode-Variable.woff2') format('woff2-variations'),
-       url('/fonts/GoogleSansCode-Variable.woff2') format('woff2');
+  src: url('/fonts/google-sans-code-variable.woff2') format('woff2-variations'),
+       url('/fonts/google-sans-code-variable.woff2') format('woff2');
   font-weight: 300 800; /* Covers your 300, 400, and 800 */
   font-style: normal;
   font-display: swap;
