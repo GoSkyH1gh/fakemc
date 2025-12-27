@@ -1,9 +1,12 @@
-import ReactSkinview3d from "react-skinview3d";
+import { lazy, Suspense } from "react";
 import { Dialog } from "radix-ui";
 import "./dialog.css";
 import { motion } from "motion/react";
 import View3DIcon from "/src/assets/view-3d-icon.svg";
 import { Icon } from "@iconify/react";
+
+// Lazy load the heavy 3D skin viewer library
+const ReactSkinview3d = lazy(() => import("react-skinview3d"));
 
 type SkinViewProps = {
   skinUrl: string;
@@ -50,12 +53,14 @@ function SkinView({ skinUrl, capeUrl, username }: SkinViewProps) {
             transition={{ delay: 0.1, ease: "easeInOut", duration: 0.3 }}
             className="skin-container"
           >
-            <ReactSkinview3d
-              skinUrl={skinUrl}
-              capeUrl={capeUrl || undefined}
-              height="300"
-              width="300"
-            />
+            <Suspense fallback={<div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading 3D viewer...</div>}>
+              <ReactSkinview3d
+                skinUrl={skinUrl}
+                capeUrl={capeUrl || undefined}
+                height="300"
+                width="300"
+              />
+            </Suspense>
           </motion.div>
         </Dialog.Content>
       </Dialog.Portal>

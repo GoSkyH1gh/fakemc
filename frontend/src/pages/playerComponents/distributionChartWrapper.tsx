@@ -1,6 +1,9 @@
-import DistributionChart from "./distributionChart";
+import { lazy, Suspense } from "react";
 import LoadingIndicator from "./loadingIndicator";
 import { HistogramData } from "../../client";
+
+// Lazy load the heavy recharts dependency
+const DistributionChart = lazy(() => import("./distributionChart"));
 
 function DistributionChartWrapper({
   metricData,
@@ -30,13 +33,19 @@ function DistributionChartWrapper({
     );
   }
   return (
-    <DistributionChart
-      buckets={metricData.buckets}
-      counts={metricData.counts}
-      playerValue={metricData.player_value}
-      percentile={metricData.percentile}
-      sampleSize={metricData.sample_size}
-    />
+    <Suspense fallback={
+      <div className="distribution-graph center">
+        <LoadingIndicator />
+      </div>
+    }>
+      <DistributionChart
+        buckets={metricData.buckets}
+        counts={metricData.counts}
+        playerValue={metricData.player_value}
+        percentile={metricData.percentile}
+        sampleSize={metricData.sample_size}
+      />
+    </Suspense>
   );
 }
 

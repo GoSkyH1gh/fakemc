@@ -6,6 +6,7 @@ import QuickInfo from "./playerComponents/quickInfo";
 import SearchRow from "./playerComponents/searchRow";
 import LoadingIndicator from "./playerComponents/loadingIndicator";
 import AdvancedInfoTabs from "./playerComponents/advancedInfoTabs";
+import { usePrefetch } from "../utils/usePrefetch";
 import {
   HypixelFullData,
   PlayerSummary,
@@ -25,6 +26,12 @@ export function PlayerPage() {
       fetchDataForPlayer(username);
     }
   }, [username]);
+
+  // Prefetch heavy components in the background after page loads
+  usePrefetch([
+    () => import("./playerComponents/distributionChart"),
+    () => import("./playerComponents/skinViewer"),
+  ]);
 
   const [mojangData, setMojangData] = useState<MojangData | null>(null);
   const [playerStatus, setPlayerStatus] = useState<{ status: string } | null>(
@@ -350,3 +357,4 @@ export function PlayerPage() {
     </>
   );
 }
+
