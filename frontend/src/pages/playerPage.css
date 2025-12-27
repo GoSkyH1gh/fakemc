@@ -136,6 +136,7 @@ button:hover {
 
 .skin-showcase {
   height: 150px;
+  width: 150px;
   image-rendering: pixelated;
   border-radius: 5px;
 }
@@ -272,6 +273,7 @@ button:hover {
   image-rendering: pixelated;
   height: 80px;
   border-radius: 3px;
+  width: 80px;
 }
 
 .guild-member-flex-container {

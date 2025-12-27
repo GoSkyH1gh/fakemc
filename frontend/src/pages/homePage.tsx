@@ -54,7 +54,6 @@ export function HomePage() {
       />
       <img src={YellowGradient} className="yellow-gradient" alt="" />
       <div className="hero-section">
-        
         <div className="hero-headings">
           <h1 className="wordmark hero-h1">Aspexis</h1>
           <h2 className="hero-h2">All the info you need, in one place</h2>
@@ -88,6 +87,7 @@ export function HomePage() {
           initial={{ scale: 1, backgroundColor: "#F4F077" }}
           whileHover={{ scale: 1.3, backgroundColor: "#f8d563ff" }}
           whileTap={{ scale: 0.9 }}
+          aria-label="Scroll to Showcase"
           onClick={() => {
             if (targetScroll.current != null) {
               targetScroll.current.scrollIntoView({ behavior: "smooth" });
@@ -164,4 +164,3 @@ export function HomePage() {
     </>
   );
 }
-

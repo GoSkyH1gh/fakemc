@@ -42,7 +42,9 @@ function MojangDataDisplay({
     >
       <div>
         <div className="text-icon">
-          <h2 className="username compact-heading">{mojangResponse.username}</h2>
+          <h2 className="username compact-heading">
+            {mojangResponse.username}
+          </h2>
 
           <Tooltip.Provider>
             <Tooltip.Root delayDuration={100}>
@@ -51,6 +53,11 @@ function MojangDataDisplay({
                   className="icon-button flex"
                   whileHover={{ scale: 1.3 }}
                   whileTap={{ scale: 0.9 }}
+                  aria-label={
+                    !isFavorite
+                      ? `Add ${mojangResponse.username} to Favorites`
+                      : `Remove ${mojangResponse.username} from Favorites`
+                  }
                   onClick={() => {
                     if (isFavorite) {
                       deleteFavorite(mojangResponse.uuid);
@@ -72,7 +79,9 @@ function MojangDataDisplay({
               </Tooltip.Trigger>
               <Tooltip.Portal>
                 <Tooltip.Content className="TooltipContent">
-                  Favorite {mojangResponse.username}
+                  {!isFavorite
+                    ? `Add ${mojangResponse.username} to Favorites`
+                    : `Remove ${mojangResponse.username} from Favorites`}
                 </Tooltip.Content>
               </Tooltip.Portal>
             </Tooltip.Root>
