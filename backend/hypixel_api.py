@@ -128,9 +128,12 @@ class HypixelFullData(BaseModel):
 
 
 def get_core_hypixel_data(
-    uuid, hypixel_api_key=os.getenv("hypixel_api_key")
+    uuid, hypixel_api_key=None
 ) -> HypixelPlayer:
     payload = {"uuid": uuid}
+
+    if hypixel_api_key is None:
+        hypixel_api_key = os.getenv("hypixel_api_key")
 
     try:
         player_data_raw = requests.get(
